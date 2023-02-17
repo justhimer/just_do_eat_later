@@ -1,14 +1,12 @@
 import express from 'express';
 import expressSession from "express-session";
 import { isLoggedIn } from './util/guard';
+import { userRoute } from './routes/userRoute';
 
 export const PORT = 8080;
 export const app = express();
 
-/*************************/
-/****** Use Session ******/
-/*************************/
-
+/* #region session */
 interface User {
     id: number;
     email: string,
@@ -16,38 +14,33 @@ interface User {
     icon?: string,
     password: string;
 }
-
 declare module "express-session" {
     interface SessionData {
         user?: User;
     }
 }
-
 const sessionMiddleware = expressSession({
     secret: "Just Do. Eat Later...",
     resave: true,
     saveUninitialized: true,
     cookie: { secure: false },
 })
-
 app.use(sessionMiddleware);
+/* #endregion */
 
-/**************************/
-/****** Go To Routes ******/
-/**************************/
 
-// app.use('/users', userRoute)
+/* #region routes */
+app.use('/users', userRoute);
+/* #endregion */
 
-/*********************************/
-/****** Go To Static Folder ******/
-/*********************************/
 
+/* #region static folders */
 app.use(isLoggedIn, express.static('protect'));
+/* #endregion */
 
-/**************************/
-/****** Start Server ******/
-/**************************/
 
+/* #region start server */
 app.listen(PORT, () => {
     console.log(`Listening at http://localhost:${PORT}`);
 });
+/* #endregion */
