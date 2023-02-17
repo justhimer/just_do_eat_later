@@ -1,2 +1,2 @@
-mediapipe-silicon==0.8.11
-opencv-python==4.7.0.68
+# mediapipe-silicon==0.8.11
+# opencv-python==4.7.0.68
