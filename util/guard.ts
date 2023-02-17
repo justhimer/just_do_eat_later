@@ -8,6 +8,6 @@ export const isLoggedIn = (
     if (req.session?.user) {
         next();
     } else {
-        res.redirect('/?error=no access right');
+        res.status(403).redirect('/?error=no access right');
     }
 }

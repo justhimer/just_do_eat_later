@@ -32,6 +32,12 @@ const sessionMiddleware = expressSession({
 
 app.use(sessionMiddleware);
 
+/**************************/
+/****** Go To Routes ******/
+/**************************/
+
+// app.use('/users', userRoute)
+
 /*********************************/
 /****** Go To Static Folder ******/
 /*********************************/
