@@ -13,8 +13,10 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.17",
     "@types/pg": "^8.6.6",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-session": "^1.17.3",

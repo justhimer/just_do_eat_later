@@ -1,19 +1,16 @@
 import express from 'express';
 import expressSession from "express-session";
 import { isLoggedIn } from './util/guard';
-import { userRoute } from './routes/userRoute';
+import { knex } from './util/db';
+import { UserService } from './services/userService';
+import { UserController } from './controllers/userController';
+import { makeUserRoutes } from './routes/userRoute';
+import { User } from './util/model';
 
 export const PORT = 8080;
 export const app = express();
 
 /* #region session */
-interface User {
-    id: number;
-    email: string,
-    username: string,
-    icon?: string,
-    password: string;
-}
 declare module "express-session" {
     interface SessionData {
         user?: User;
@@ -30,7 +27,9 @@ app.use(sessionMiddleware);
 
 
 /* #region routes */
-app.use('/users', userRoute);
+export const userService = new UserService(knex);
+export const userController = new UserController(userService);
+app.use('/users', makeUserRoutes());
 /* #endregion */
 
 
