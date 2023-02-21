@@ -23,7 +23,7 @@ const config: { [key: string]: Knex.Config } = {
 
   staging: {
     client: 'postgresql',
-    debug: true,
+    debug: false,
     connection: {
       database: process.env.DB_NAME,
       user: process.env.DB_USERNAME,
@@ -40,7 +40,7 @@ const config: { [key: string]: Knex.Config } = {
 
   production: {
     client: 'postgresql',
-    debug: true,
+    debug: false,
     connection: {
       database: process.env.DB_NAME,
       user: process.env.DB_USERNAME,
