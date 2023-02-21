@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import type { User } from "../util/model";
+import type { User } from "../util/interfaces";
 import { hashPassword } from "../util/hash";
 
 export class UserService {
