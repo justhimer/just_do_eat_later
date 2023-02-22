@@ -5,7 +5,7 @@ import { knex } from './util/db';
 import { UserService } from './services/userService';
 import { UserController } from './controllers/userController';
 import { makeUserRoutes } from './routes/userRoute';
-import { User } from './util/model';
+import { User } from './util/interfaces';
 
 export const PORT = 8080;
 export const app = express();
