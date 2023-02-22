@@ -34,6 +34,8 @@ app.use('/users', makeUserRoutes());
 
 
 /* #region static folders */
+app.use(express.static('mediapipe'));
+app.use(express.static('public'));
 app.use(isLoggedIn, express.static('protect'));
 /* #endregion */
 
