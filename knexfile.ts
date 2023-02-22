@@ -1,12 +1,12 @@
 import type { Knex } from "knex";
 import dotenv from 'dotenv';
-dotenv.config();
 
-// Update with your config settings.
+dotenv.config();
 
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: "postgresql",
+    client: 'postgresql',
+    debug: true,
     connection: {
       database: process.env.DB_NAME,
       user: process.env.DB_USERNAME,
@@ -17,12 +17,13 @@ const config: { [key: string]: Knex.Config } = {
       max: 10
     },
     migrations: {
-      tableName: "knex_migrations"
+      tableName: 'knex_migrations'
     }
   },
 
   staging: {
-    client: "postgresql",
+    client: 'postgresql',
+    debug: false,
     connection: {
       database: process.env.DB_NAME,
       user: process.env.DB_USERNAME,
@@ -33,12 +34,13 @@ const config: { [key: string]: Knex.Config } = {
       max: 10
     },
     migrations: {
-      tableName: "knex_migrations"
+      tableName: 'knex_migrations'
     }
   },
 
   production: {
-    client: "postgresql",
+    client: 'postgresql',
+    debug: false,
     connection: {
       database: process.env.DB_NAME,
       user: process.env.DB_USERNAME,
@@ -49,7 +51,7 @@ const config: { [key: string]: Knex.Config } = {
       max: 10
     },
     migrations: {
-      tableName: "knex_migrations"
+      tableName: 'knex_migrations'
     }
   },
 
