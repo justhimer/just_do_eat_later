@@ -34,17 +34,17 @@ const hands = new Hands({
         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
     }
 });
-hands.setOptions({
+pose.setOptions({
     maxNumHands: 2,
     modelComplexity: 1,
     minDetectionConfidence: 0.5,
     minTrackingConfidence: 0.5
 });
-hands.onResults(onResults);
+pose.onResults(onResults);
 
 const camera = new Camera(videoElement, {
     onFrame: async () => {
-        await hands.send({ image: videoElement });
+        await pose.send({ image: videoElement });
     },
     width: 1280,
     height: 720

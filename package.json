@@ -5,6 +5,9 @@
   "repository": "git@github.com:justhimer/tecky_project03.git",
   "author": "Justin Cheng <justinhimercheng01@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev server.ts"
+  },
   "devDependencies": {
     "@types/express-session": "^1.17.6",
     "@types/node": "^18.13.0",
