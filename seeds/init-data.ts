@@ -21,6 +21,7 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("menus").del();
     await knex("transactions").del();
     await knex("transaction_details").del();
+
     const [{ id }]: Array<{ id: number }> = await knex
         .insert([
             {
@@ -66,23 +67,32 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("weight_history").insert([
         {
             weight: "70kg",
+            user_id: id,
         }
 
     ])
         .into("weight_history")
 
+
+    let targetsId = await knex.select("id").from("targets").first();
+    console.log("targetsId = ", targetsId);
+
     await knex("targets").insert([
         {
-            name: "keep fit"
+            name: "keep fit",
+            targetsId: targetsId.id
         },
         {
-            name: "weight loss"
+            name: "weight loss",
+            targetsId: targetsId.id
         },
         {
-            name: "build muscle"
+            name: "build muscle",
+            targetsId: targetsId.id
         }
     ])
-        .into("targets");
+        .into("targets")
+        .returning("id")
 
     await knex("goals").insert([
         {

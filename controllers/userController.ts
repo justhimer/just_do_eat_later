@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/userService";
 import { checkPassword } from "../util/hash";
+import { knex } from "../util/db";
+import { formidableUserDetails } from "../util/formidable";
+
 
 export class UserController {
 
@@ -9,6 +12,9 @@ export class UserController {
     loginGoogle = async (req: Request, res: Response) => {
         try {
             // add codes here
+            console.log(req.session?.['grant'].response)
+            console.log("loading google login");
+            
         } catch (error) {
             res.status(500).json({
                 message: '[USR003] - Server error'
@@ -20,18 +26,18 @@ export class UserController {
         try {
 
             // get username & password
-            let { username, password } = req.body;
-            if (!username || !password) {
+            let { email, password } = req.body;
+            if (!email || !password) {
                 res.status(402).json({ message: 'Invalid input' });
                 return;
             }
 
             // get user's info from userService
-            let foundUser = await this.userService.getUserByUsername(username)
+            let foundUser = await this.userService.getUserByEmail(email)
 
             // check if user exists
             if (!foundUser) {
-                res.status(402).json({ message: 'Invalid username' });
+                res.status(402).json({ message: 'Invalid email' });
                 return;
             }
 
@@ -50,7 +56,7 @@ export class UserController {
             req.session.user = foundUser;
 
             // return to client
-            res.json({ message: "log-in success" });
+            res.status(200).json({ message: "Log-in success" });
 
         } catch (error) {
             res.status(500).json({
@@ -74,7 +80,21 @@ export class UserController {
 
     signUp = async (req: Request, res: Response) => {
         try {
-            // add codes here
+            if (!req.session.user){
+                let data = await formidableUserDetails(req)
+                const reqData = data.fields
+                let user = await this.userService.createUser(reqData,data.icon)
+                req.session.user = {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    password: user.password,
+                    icon: user.icon
+                }
+                console.log(req.session.user)
+                res.status(200).json({message:"Logged in"})
+            }else{res.status(400).json({message:"Already logged in"})}
         } catch (error) {
             res.status(500).json({
                 message: '[USR004] - Server error'
