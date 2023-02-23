@@ -92,11 +92,9 @@ BUTTON
 }
 
 #toggle-btn span {
+    pointer-events: none;
     position: relative;
     width: 100%;
-}
-
-#toggle-btn span {
     margin-top: -4px;
 }
 
