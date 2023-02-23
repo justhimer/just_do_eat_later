@@ -205,4 +205,21 @@ export class UserController {
         
     }
 
+    loginStatus = async (req:Request, res:Response) => {
+        try {
+            if (req.session.user){
+                res.status(200).json({login:true})
+                return
+            }else{
+                res.status(400).json({login:false})
+                return
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+        
+    }
+
 }

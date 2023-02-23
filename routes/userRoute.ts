@@ -12,6 +12,7 @@ export function makeUserRoutes() {
     userRoutes.put('/password', userController.changePassword);
     userRoutes.put('/icon', userController.changeIcon);
     userRoutes.delete('/', userController.deleteUser);
+    userRoutes.get('/loginStatus',userController.loginStatus)
 
     userRoutes.get('/test',(req,res)=>{
         console.log(req.session.user? "there is a user logged in: ": "there is no user");
