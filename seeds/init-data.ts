@@ -76,20 +76,15 @@ export async function seed(knex: Knex): Promise<void> {
 
 
         let targetsId = await txn.select("id").from("targets").first();
-        console.log("this is targetsID: ", targetsId);
-
         await txn("targets").insert([
             {
                 name: "keep fit",
-                targetsId: targetsId.id
             },
             {
                 name: "weight loss",
-                targetsId: targetsId.id
             },
             {
                 name: "build muscle",
-                targetsId: targetsId.id
             }
         ])
             .into("targets")
@@ -101,7 +96,7 @@ export async function seed(knex: Knex): Promise<void> {
                 target_date: "30days",
                 status: "success",
                 achieved_date: "28days",
-                user_id: id,
+                user_id: 1,
                 targetsId: targetsId.id
             }
         ])
