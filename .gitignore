@@ -1,3 +1,4 @@
 mediapipe/mp_env
 node_modules
 .DS_Store
+.env
