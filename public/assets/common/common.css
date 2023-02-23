@@ -6,16 +6,19 @@ IMPORTS
 /* =========
 VARIABLES
 ========= */
+/* #region session */
 :root {
     --offset-value: 30;
     --btn-size: 60;
 
     --orange: #FFAA33;
 }
+/* #endregion */
 
 /* =======
 GOOGLE
 ======= */
+/* #region session */
 nav .material-symbols-outlined {
     color: #FFAA33;
     font-size: 3rem;
@@ -25,18 +28,20 @@ nav .material-symbols-outlined {
         'GRAD' 0,
         'opsz' 48
 }
-nav .other_container {
-    margin: 2rem auto 0 auto;
+.other_container {
+    margin: 2rem;
     padding: 1rem;
-    pointer-events: auto;
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
-
-
+/* #endregion */
 
 /* =======
 WRAPPER
 ======= */
+/* #region session */
 .wrapper {
     font-family: 'Encode Sans Condensed', sans-serif;
     font-weight: 600;
@@ -45,24 +50,29 @@ WRAPPER
     position: relative;
     /* background: linear-gradient(to top right, #4ECA78, #D0DB68); */
 }
+/* #endregion */
+
 
 
 /* =====================
 NAVIGATION BACKGROUND
 ===================== */
+/* #region session */
 #nav-bg {
     transform-origin: center center;
     transition: transform .3s;
     transform: translate(var(--translate-x), var(--translate-y)) scale(var(--scale));
     will-change: transform;
     pointer-events: none;
-    /* background-color: #3B3836; */
 }
+/* #endregion */
+
 
 
 /* ======
 BUTTON
 ====== */
+/* #region session */
 .btn {
     position: fixed;
     height: calc(var(--btn-size)*1px);
@@ -71,7 +81,6 @@ BUTTON
     left: calc(var(--offset-value)*1px);
     /*left: calc(50% - (var(--btn-size)/2*1px)); if you wish to center it */
     border-radius: 50%;
-    /* background: #fafafa; */
     cursor: pointer;
     margin: 0;
     padding: 0 15px;
@@ -188,13 +197,16 @@ BUTTON
     height: 100%;
     border-radius: inherit;
     border-width: 0;
-    background: #fafafa;
+    background: #3B3836;
     z-index: -1;
 }
+/* #endregion */
+
 
 /* ==========
 NAVIGATION
 ========== */
+/* #region session */
 nav {
     width: 100%;
     height: 100%;
@@ -247,10 +259,13 @@ nav li+li {
 #toggle-btn.shown~.wrapper nav li:nth-child(3) {
     transition-delay: .1s;
 }
+/* #endregion */
+
 
 /* ============
 LINK EFFECT
 ============ */
+/* #region session */
 .link {
     position: relative;
     touch-action: manipulation;
@@ -289,11 +304,12 @@ LINK EFFECT
     transform: translateX(calc(100% + 10px)) scaleX(1);
     transform-origin: left;
 }
-
+/* #endregion */
 
 /* =======
 CONTENT
 ======= */
+/* #region session */
 #content {
     display: flex;
     height: 100%;
@@ -306,11 +322,10 @@ CONTENT
     color: #fff;
     text-shadow: 0 6px 18px rgba(0, 0, 0, .1);
 }
-
-
-
+/* #endregion */
 
 /* Usual suspects */
+/* #region session */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -346,27 +361,25 @@ img {
     height: auto;
     width: 100%;
 }
+/* #endregion */
+
 
 /* ============
 OTHER SHIT
 ============ */
-
+/* #region session */
 .nav_container{
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.other_container{
-    display: flex;
-    flex-direction: row;
-}
-
 .icon_container p{
     color: #FFAA33;
 }
 
-nav .icon_container {
+.icon_container {
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
     user-select: none;
@@ -381,10 +394,6 @@ nav .icon_container {
 nav a{
     color: inherit;
     text-decoration: none;
-}
-
-nav .icon_container+.icon_container {
-    margin: 0 1rem;
 }
 
 #toggle-btn.shown~.wrapper nav .icon_container {
@@ -405,3 +414,46 @@ nav .icon_container+.icon_container {
 #toggle-btn.shown~.wrapper nav .icon_container:nth-child(3) {
     transition-delay: .1s;
 }
+/* #endregion */
+
+/* ============
+pulse
+============ */
+.circle {
+    /* width: 35px;
+    height: 35px; */
+    border-radius: 50%;
+    height: 6rem;
+    width: 6rem;
+    aspect-ratio: 1/1;
+    /* box-shadow: 0px 0px 1px 1px #0000001a; */
+  }
+
+  .pulse:hover:after{
+    animation: pulse-animation 300ms 150ms 2 ;
+}
+
+.pulse:hover {
+    animation: pulse-scale 300ms;
+  }
+
+  
+  @keyframes pulse-scale {
+    0% {
+      box-shadow: 0 0 0 0px #3B3836, 0 0 0 0px #FFAA33;
+      transform: scale(1.2);
+    }
+    100% {
+      box-shadow: 0 0 0 14px #3B3836, 0 0 0 16px #FFAA33;
+      transform: scale(1)
+    }
+  }
+
+  @keyframes pulse-animation {
+    0% {
+      box-shadow: 0 0 0 0px #3B3836, 0 0 0 0px #FFAA33;
+    }
+    100% {
+      box-shadow: 0 0 0 14px #3B3836, 0 0 0 16px #FFAA33;
+    }
+  }
