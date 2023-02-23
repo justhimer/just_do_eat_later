@@ -1,6 +1,6 @@
 import { Knex } from 'knex'
 import path from 'path'
-import { hashPassword } from '../utils/hash'
+import { hashPassword } from '../util/hash';
 
 interface User {
     username: string
@@ -8,8 +8,8 @@ interface User {
 }
 
 export async function seed(knex: Knex): Promise<void> {
-    await knex("user").del();
-    await knex("weight").del();
+    await knex("users").del();
+    await knex("weight_history").del();
     await knex("targets").del();
     await knex("goals").del();
     await knex("intensities").del();
@@ -24,48 +24,48 @@ export async function seed(knex: Knex): Promise<void> {
     const [{ id }]: Array<{ id: number }> = await knex
         .insert([
             {
-                firstname: "Messi",
-                lastname: "Lionel Andrés",
+                first_name: "Messi",
+                last_name: "Lionel Andrés",
                 email: "messi@gamil.com",
                 password: "immessi",
                 icon: "messi.webp",
-                calorise: "3000",
+                calories: "3000",
                 gender: "M",
-                dateofbirth: "1987-06-24",
-                height: "170cm",
-                weight: "70kg",
+                birth_date: "1987-06-24",
+                height: 170,
+                weight: 70,
             },
             {
-                firstname: "Ronaldo",
-                lastname: "Cristiano",
+                first_name: "Ronaldo",
+                last_name: "Cristiano",
                 email: "ronaldo@gamil.com",
                 password: "imcronaldo",
                 icon: "clong.jpeg",
-                calorise: "3000",
+                calories: "3000",
                 gender: "M",
-                dateofbirth: "1985-02-05",
-                height: "187cm",
-                weight: "80kg",
+                birth_date: "1985-02-05",
+                height: 187,
+                weight: 80,
             },
             {
-                firstname: "Neymar",
-                lastname: "da Silva",
+                first_name: "Neymar",
+                last_name: "da Silva",
                 email: "neymar@gamil.com",
                 password: "imneymar",
                 icon: "neymaer.jpeg",
-                calorise: "3000",
+                calories: "3000",
                 gender: "M",
-                dateofbirth: "1992-02-05",
-                height: "175cm",
-                weight: "75kg",
+                birth_date: "1992-02-05",
+                height: 170,
+                weight: 75,
             }
         ])
-        .into("user")
+        .into("users")
         .returning("id");
 
     await knex("weight_history").insert([
         {
-            weight: "70kg",
+            weight: 70,
             user_id: id,
         }
 
@@ -74,6 +74,8 @@ export async function seed(knex: Knex): Promise<void> {
 
 
     let targetsId = await knex.select("id").from("targets").first();
+    console.log("this is targetsID: ",targetsId);
+    
     await knex("targets").insert([
         {
             name: "keep fit",
