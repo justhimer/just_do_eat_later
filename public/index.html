@@ -1,15 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/assets/index/index.css" rel="stylesheet">
+    <link href="/assets/common/common.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>Just Do Eat Later</title>
 </head>
+
 <body>
     <h1>Homepage</h1><br>
     <a href="/login.html">login/signup</a>
+    <a href="/users/logout">logout</a>
+    <a href="/users/test">test</a>
+
+    <div id="hamburger">
+        <div id="nav-bg" class="btn"></div>
+        <div id="toggle-btn" class="btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="wrapper">
+            <nav>
+                <ul class="nav_ul">
+                    <li><a class="nav link" href="#0">Projects</a></li>
+                    <li><a class="nav link" href="#0">About</a></li>
+                    <li><a class="nav link" href="#0">Contact</a></li>
+                </ul>
+                <span class="material-symbols-outlined">
+                    account_circle
+                    </span>
+            </nav>
+        </div>
+    </div>
+    <script src="/assets/common/common.js" type="module"></script>
     <script src="/assets/index/index.js"></script>
 </body>
+
 </html>
