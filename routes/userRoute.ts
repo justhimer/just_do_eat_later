@@ -5,7 +5,7 @@ export function makeUserRoutes() {
 	const userRoutes = express.Router();
 
     userRoutes.get('/login/google', userController.loginGoogle);
-	userRoutes.get('/login', userController.login);
+	userRoutes.post('/login', userController.login);
 	userRoutes.get('/logout', userController.logout);
     userRoutes.post('/signup', userController.signUp);
     userRoutes.put('/password', userController.changePassword);

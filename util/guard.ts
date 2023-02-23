@@ -7,7 +7,12 @@ export const isLoggedIn = (
 ) => {
     if (req.session?.user) {
         next();
+        return
     } else {
-        res.status(403).redirect('/?error=no access right');
+        res.status(403);
     }
+}
+
+export function loggedInForSocket (req: express.Request){
+    req.session.user? true : false
 }

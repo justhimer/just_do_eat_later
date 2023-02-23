@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/login/login.css" rel="stylesheet">
+    <title>Login</title>
+</head>
+
+<body>
+    <a href="/">home</a><br>
+    <form id="login">
+        <fieldset>
+            <legend>login</legend>
+            email: <input type="email" id="login_email" name="email"><br>
+            password: <input type="password" id="login_password" name="password"><br>   
+            <input type="submit" value="Submit"><br>
+            <a href="/connect/google">
+                <button type="button" class="login-with-google-btn">
+                    Sign in with Google
+                </button>
+            </a>
+        </fieldset>
+
+
+    </form>
+
+    <form id="signup">
+        <fieldset>
+            <legend>signup</legend>
+            <img id="img_preview" src=""><br>
+            profile pic: <input type="file" name="icon" id="signup_icon"  accept="image/*"><br>
+            first name: <input id="signup_first_name" name="first_name" type="text"><br>
+            last name: <input id="signup_last_name" name="last_name" type="text"><br>
+            email: <input id="signup_email" name="email" type="email"><br>
+            password: <input id="signup_password" name="password" type="text"><br>
+            confirm password: <input id="signup_confirm" name="confirm" type="text">
+            date of birth: <input type="date" name="date_of_birth" id="signup_date_of_birth"><br>
+            gender: <br>
+            <input type="radio" id="gender_male" name="gender" value="Male"><label for="gender_male">Male</label><br>
+            <input type="radio" id="gender_female" name="gender" value="Female"><label for="gender_female">Female</label> <br>
+            height: <input type="number" id="signup_height" name="height"><br>
+            weight: <input type="number" id="signup_weight" name="weight"><br>
+        <input type="submit" value="Submit">
+        </fieldset>
+    </form>
+    <script src="/assets/login/login.js"></script>
+</body>
+
+</html>
