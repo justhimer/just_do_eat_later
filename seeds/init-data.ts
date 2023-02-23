@@ -1,6 +1,6 @@
 import { Knex } from 'knex'
 import path from 'path'
-import { hashPassword } from '../utils/hash'
+import { hashPassword } from '../util/hash'
 
 interface User {
     username: string
