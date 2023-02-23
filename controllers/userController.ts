@@ -3,6 +3,8 @@ import { UserService } from "../services/userService";
 import { checkPassword } from "../util/hash";
 import { knex } from "../util/db";
 import { formidableUserDetails } from "../util/formidable";
+import fetch from 'cross-fetch'
+import { hashPassword } from "../util/hash";
 
 
 export class UserController {
@@ -12,8 +14,54 @@ export class UserController {
     loginGoogle = async (req: Request, res: Response) => {
         try {
             // add codes here
-            console.log(req.session?.['grant'].response)
-            console.log("loading google login");
+            const accessToken = req.session?.['grant'].response.access_token;
+            const fetchRes = await (await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{
+                method:"GET",
+                headers:{
+                    "Authorization":`Bearer ${accessToken}`
+                }
+            })).json()
+            let user = (await knex
+                .select('*')
+                .from('users')
+                .where('email','=',`${fetchRes.email}`))[0]
+            
+           if (!user){
+            //falsy
+            let userPassword = await hashPassword('google')
+            let user = (await knex
+                .insert({
+                    first_name:`${fetchRes.given_name}`,
+                    last_name:`${fetchRes.family_name}`,
+                    email:`${fetchRes.email}`,
+                    password:`${userPassword}`
+                })
+                .into("users")
+                .returning("*"))[0]
+                req.session.user = {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    password: user.password,
+                    icon: user.icon
+                }
+            res.redirect('/login.html?registration=continue')
+            return
+           }else{
+            //have user
+            req.session.user = {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                password: user.password,
+                icon: user.icon
+            }
+            res.redirect('/?message=Successfully+Logged+In')
+            return
+           }
+            
             
         } catch (error) {
             res.status(500).json({
@@ -69,7 +117,7 @@ export class UserController {
         try {
 
             delete req.session.user;
-            res.json({ message: "log-out success" });
+            res.redirect('/?message=Successfully+Logged+Out');
 
         } catch (error) {
             res.status(500).json({
@@ -130,6 +178,31 @@ export class UserController {
                 message: '[USR007] - Server error'
             });
         }
+    }
+
+    googleContinue = async (req:Request,res:Response) => {
+        try{
+            let reqData = req.body
+            console.log("reqData",reqData);
+            
+            let user = await this.userService.complete(reqData,req.session.user!.id)
+            console.log("user:",user);
+            
+                req.session.user = {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    password: user.password,
+                    icon: user.icon
+                }
+                res.status(200).json({message:"Registration Complete"})
+        }catch(error){
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+        
     }
 
 }

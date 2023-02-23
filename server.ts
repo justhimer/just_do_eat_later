@@ -8,6 +8,7 @@ import { makeUserRoutes } from './routes/userRoute';
 import { User } from './util/interfaces';
 import { sessionMiddleware,io,server,app, grantExpress} from './util/middleware';
 import path from "path"
+import { GrantSessionStore } from 'grant';
 
 /* #region session */
 /* #endregion */
