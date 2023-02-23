@@ -7,26 +7,26 @@ export async function up(knex: Knex): Promise<void> {
     /***** user info *****/
     /*********************/
 
-    await knex.schema.createTable('weight_history', (table) => {
-        table.increments();
-        table.integer('weight');
-        table.timestamps(false, true);
-    });
-
     await knex.schema.createTable('users', (table) => {
         table.increments();
-        table.string('first_name').notNullable();
-        table.string('last_name').notNullable();
-        table.string('email');
-        table.text('password');
+        table.string('first_name');
+        table.string('last_name')
+        table.string('email').notNullable();
+        table.text('password').notNullable();
         table.string('icon');
         table.integer('calories');
         table.string('gender');
         table.date('birth_date');
         table.integer('height').unsigned();
         table.integer('weight').unsigned();
-        table.integer('weight_history_id').unsigned();
-        table.foreign('weight_history_id').references('weight_history.id');
+        table.timestamps(false, true);
+    });
+
+    await knex.schema.createTable('weight_history', (table) => {
+        table.increments();
+        table.integer('user_id').unsigned();
+        table.foreign('user_id').references('users.id');
+        table.integer('weight');
         table.timestamps(false, true);
     });
 
@@ -171,7 +171,7 @@ export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTable('intensities');
     await knex.schema.dropTable('goals');
     await knex.schema.dropTable('targets');
-    await knex.schema.dropTable('users');
     await knex.schema.dropTable('weight_history');
+    await knex.schema.dropTable('users');
 }
 

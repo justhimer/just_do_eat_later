@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import type { User } from "../util/interfaces";
+import type { User,UserSignup,signupIcon } from '../util/interfaces';
 import { hashPassword } from "../util/hash";
 
 export class UserService {
@@ -10,13 +10,13 @@ export class UserService {
         // add codes here
     }
 
-    async getUserByUsername(username: string): Promise<User> {
+    async getUserByEmail(email: string): Promise<User> {
 
         let user = await this.knex
             .select('*')
             .from('users')
             .where({
-                username
+                email
             })
             .first();
 
@@ -24,16 +24,22 @@ export class UserService {
 
     }
 
-    async createUser(username: string, password: string): Promise<User> {
-
+    async createUser(reqData: any, icon: any): Promise<User> {
+        let {first_name,last_name,email,password,confirm,date_of_birth,gender,height,weight} = reqData
         let hashedPassword = await hashPassword(password);
-
         let users = await this.knex('users')
             .insert({
-                username,
-                password: hashedPassword
+                first_name:first_name,
+                last_name:last_name,
+                email:email,
+                password: hashedPassword,
+                birth_date: date_of_birth,
+                gender: gender,
+                height: height,
+                weight:weight,
+                icon:icon
             })
-            .returning('*');
+            .returning(["id","email","first_name","last_name","password","icon"]);
 
         return users[0];
 

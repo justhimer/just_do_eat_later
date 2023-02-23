@@ -1,7 +1,6 @@
 import { Knex } from 'knex'
 import path from 'path'
 import { hashPassword } from '../utils/hash'
-import XLSX from 'xlsx'
 
 interface User {
     username: string
@@ -75,8 +74,6 @@ export async function seed(knex: Knex): Promise<void> {
 
 
     let targetsId = await knex.select("id").from("targets").first();
-    console.log("targetsId = ", targetsId);
-
     await knex("targets").insert([
         {
             name: "keep fit",
@@ -92,7 +89,7 @@ export async function seed(knex: Knex): Promise<void> {
         }
     ])
         .into("targets")
-        .returning("id")
+        .returning("targetsId")
 
     await knex("goals").insert([
         {
@@ -100,10 +97,14 @@ export async function seed(knex: Knex): Promise<void> {
             target_date: "30days",
             status: "success",
             achieved_date: "28days",
+            user_id: id,
+            targetsId: targetsId.id
         }
     ])
         .into("goals");
 
+
+    let intensitiesId = await knex.select("id").from("intensities").first();
     await knex("intensities").insert([
         {
             level: "low"
@@ -115,38 +116,50 @@ export async function seed(knex: Knex): Promise<void> {
             level: "high"
         }
     ])
-        .into("intensities");
+        .into("intensities")
+        .returning("intensitiesId");
 
+    let exercisesId = await knex.select("id").from("exercises").first();
     await knex("exercises").insert([
         {
-            name: "push up"
+            name: "push up",
+            intensitiesId: intensitiesId.id
         },
         {
-            name: "burbee"
+            name: "burbee",
+            intensitiesId: intensitiesId.id
         },
         {
-            name: "planks"
+            name: "planks",
+            intensitiesId: intensitiesId.id
         },
         {
-            name: "leg rasise"
+            name: "leg rasise",
+            intensitiesId: intensitiesId.id
         },
         {
-            name: "lunges"
+            name: "lunges",
+            intensitiesId: intensitiesId.id
         },
         {
-            name: "squats"
+            name: "squats",
+            intensitiesId: intensitiesId.id
         }
     ])
         .into("exercises")
+        .returning("exercisesId");
 
     await knex("exercises_history").insert([
         {
             repetitions: "8-15reps",
             calories_burn: "50 cal",
+            user_id: id,
+            exercisesId: exercisesId.id
         }
     ])
         .into("exercises_history")
 
+    let locationsId = await knex.select("id").from("locations").first();
     await knex("locations").insert([
         {
             address: "15/F Lee Theatre, 99 Percival St, Causeway Bay",
@@ -165,7 +178,9 @@ export async function seed(knex: Knex): Promise<void> {
         }
     ])
         .into("locations")
+        .returning("locationsid")
 
+    let food_detailsID = await knex.select("id").from("food_details").first();
     await knex("food_details").insert([
         {
             portion: "Regular",
@@ -368,7 +383,93 @@ export async function seed(knex: Knex): Promise<void> {
 
     ])
         .into("food_details")
+        .returning("food_detailsID");
 
+    let food_typeID = await knex.select("id").from("food_type").first();
+    await knex("food_type").insert([
+        {
+            name: "MEATBALLS WITH SPANAKOPITA RICE"
+        },
+        {
+            name: "BEEF MEX LOADED & SWEET POTATO"
+        },
+        {
+            name: "CREAMY CHICKEN KORMA"
+        },
+        {
+            name: "CHILLI CON CARNE"
+        },
+        {
+            name: "PORTUGUESE CHICKEN WITH BROCCOLI RICE"
+        },
+        {
+            name: "CHIPOTLE CHICKEN BURRITO BOWL"
+        },
+        {
+            name: "MANGO CHICKEN & BASMATI RICE"
+        },
+        {
+            name: "DELUXE CHICKEN & QUINOA BROWN RICE"
+        },
+        {
+            name: "CRUMBED CHICKEN PARMIGIANA"
+        },
+        {
+            name: "BUTTER CHICKEN & CAULIFLOWER RICE"
+        },
+        {
+            name: "MOROCCAN CHICKEN & PUMPKIN PUREE"
+        },
+        {
+            name: "HONEY SOY CHICKEN STIR FRY"
+        },
+        {
+            name: "THAI GREEN CURRY WITH CAULIFLOWER RICE"
+        },
+        {
+            name: "BUTTER CHICKEN & BASMATI RICE"
+        },
+        {
+            name: "BLACK PEPPER BEEF, PICKLED CABBAGE & VEGGIE FRIED RICE"
+        },
+        {
+            name: "MOROCCAN MEATBALLS & COUS COUS"
+        },
+        {
+            name: "BEEF BOLOGNESE & PASTA"
+        },
+        {
+            name: "BEEF HOKKIEN NOODLES"
+        },
+        {
+            name: "PEPPERCORN STEAK & CHIPS"
+        },
+        {
+            name: "THYME LEMON CHICKEN & PUMPKIN PUREE"
+        },
+        {
+            name: "MONGOLIAN BEEF WITH BROWN RICE"
+        },
+        {
+            name: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES"
+        },
+        {
+            name: "CHICKEN & CHORIZO PAELLA"
+        },
+        {
+            name: "PERI PERI CHICKEN & VEG"
+        },
+        {
+            name: "TURKEY MINCE POKE BOWL"
+        },
+        {
+            name: "BBQ GRILLED CHICKEN & SWEET POTATO"
+        },
+    ])
+        .into("food_type")
+        .returning("food_typeID")
+
+    let food_ID = await knex.select("id").from("food").first();
     await knex("food").insert([
         {
             name: "MEATBALLS WITH SPANAKOPITA RICE",
@@ -376,7 +477,8 @@ export async function seed(knex: Knex): Promise<void> {
             description: "Prized for its high nutritional value, our Meatballs, and Spanakopita Rice dish is an excellent food source, low in fat and packed with vitamins and minerals and a guaranteed source of Vitamin E, B and Potassium boosts your well-being and energy level.",
             ingredients: "Spanakopita rice (44.1%), Basmati Rice (99.9%), Curly Kale (24%), Olive Oil (3.4%), Beef Meatballs (44.1%), Tomato and Basil Sauce (11.8%), Carrots (5.5%), Onions (4.4%), Olive Oil (2.6%), Basil (0.66%), Salt (0.22%), Dried basil (0.09%), White pepper (0.04%).",
             allergens: "null",
-            preaparatoin: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! "
+            preaparatoin: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
+            food_typeID: food_typeID.id
         },
         {
             name: "BEEF MEX LOADED & SWEET POTATO",
@@ -580,101 +682,25 @@ export async function seed(knex: Knex): Promise<void> {
         },
     ])
         .into("food")
+        .returning("food_ID")
 
-    await knex("food_type").insert([
-        {
-            name: "MEATBALLS WITH SPANAKOPITA RICE"
-        },
-        {
-            name: "BEEF MEX LOADED & SWEET POTATO"
-        },
-        {
-            name: "CREAMY CHICKEN KORMA"
-        },
-        {
-            name: "CHILLI CON CARNE"
-        },
-        {
-            name: "PORTUGUESE CHICKEN WITH BROCCOLI RICE"
-        },
-        {
-            name: "CHIPOTLE CHICKEN BURRITO BOWL"
-        },
-        {
-            name: "MANGO CHICKEN & BASMATI RICE"
-        },
-        {
-            name: "DELUXE CHICKEN & QUINOA BROWN RICE"
-        },
-        {
-            name: "CRUMBED CHICKEN PARMIGIANA"
-        },
-        {
-            name: "BUTTER CHICKEN & CAULIFLOWER RICE"
-        },
-        {
-            name: "MOROCCAN CHICKEN & PUMPKIN PUREE"
-        },
-        {
-            name: "HONEY SOY CHICKEN STIR FRY"
-        },
-        {
-            name: "THAI GREEN CURRY WITH CAULIFLOWER RICE"
-        },
-        {
-            name: "BUTTER CHICKEN & BASMATI RICE"
-        },
-        {
-            name: "BLACK PEPPER BEEF, PICKLED CABBAGE & VEGGIE FRIED RICE"
-        },
-        {
-            name: "MOROCCAN MEATBALLS & COUS COUS"
-        },
-        {
-            name: "BEEF BOLOGNESE & PASTA"
-        },
-        {
-            name: "BEEF HOKKIEN NOODLES"
-        },
-        {
-            name: "PEPPERCORN STEAK & CHIPS"
-        },
-        {
-            name: "THYME LEMON CHICKEN & PUMPKIN PUREE"
-        },
-        {
-            name: "MONGOLIAN BEEF WITH BROWN RICE"
-        },
-        {
-            name: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES"
-        },
-        {
-            name: "CHICKEN & CHORIZO PAELLA"
-        },
-        {
-            name: "PERI PERI CHICKEN & VEG"
-        },
-        {
-            name: "TURKEY MINCE POKE BOWL"
-        },
-        {
-            name: "BBQ GRILLED CHICKEN & SWEET POTATO"
-        },
-    ])
-        .into("food_type")
+
 
     await knex("meun").insert([
         {
-
+            food_ID: food_ID.id,
+            locationsId: locationsId.id
         }
     ])
         .into("meun")
 
-
+    let transactionsID = await knex.select("id").from("transactions").first();
     await knex("transactions").insert([
         {
             total_calories: "400cal",
             status: "pending",
+            user_id: id,
+            locationsId: locationsId.id
         },
         {
             total_calories: "400cal",
@@ -682,11 +708,16 @@ export async function seed(knex: Knex): Promise<void> {
         }
     ])
         .into("transaction")
+        .returning("transactionsID");
 
+    let transaction_detailsID = await knex.select("id").from("transaction_details").first();
     await knex("transaction_details").insert([
         {
             quantity: "1",
+            transactionsID: transactionsID.id,
+            food_detailsID: food_detailsID.id
         }
     ])
         .into("transaction_details")
+        .returning("transaction_detailsID");
 }

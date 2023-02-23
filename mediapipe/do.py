@@ -12,6 +12,20 @@ cap = cv2.VideoCapture(0)  # 0 is the number representing my webcam
 cap_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 cap_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
+# setup pose detection variable
+joint_status_description = ("stright", "half-bent", "full-bent")
+left_arm_status = None  # can be set to index of joint_status_description
+right_arm_status = None  # can be set to index of joint_status_description
+# push_up_requirement = (
+#    (left_arm_status == 0, right_arm_status == 0),
+#    (left_arm_status == 1, right_arm_status == 1),
+#    (left_arm_status == 2, right_arm_status == 2),
+#    (left_arm_status == 1, right_arm_status == 1),
+#    (left_arm_status == 0, right_arm_status == 0)
+#    )
+# push_up_check = 0
+# push_up_counter = 0
+
 # using pose model, bump up confidence to detect more accurate match
 with mp_pose.Pose(
     min_detection_confidence=0.5,
@@ -48,11 +62,25 @@ with mp_pose.Pose(
         left_elbow_angle = calculate_angle(left_shoulder, left_elbow, left_wrist)
         right_elbow_angle = calculate_angle(right_shoulder, right_elbow, right_wrist)
 
+        # fuzzy logic
+        if left_elbow_angle > 130:
+           left_arm_status = 0  # stright
+        if left_elbow_angle < 130 and left_elbow_angle > 50:
+           left_arm_status = 1  # half-bent
+        if left_elbow_angle < 50:
+           left_arm_status = 2  # full-bent
+        if right_elbow_angle > 130:
+           right_arm_status = 0  # stright
+        if right_elbow_angle < 130 and right_elbow_angle > 50:
+           right_arm_status = 1  # half-bent
+        if right_elbow_angle < 50:
+           right_arm_status = 2  # full-bent
+
         # visualize angle
-        cv2.putText(image, str(left_elbow_angle),
+        cv2.putText(image, str(round(left_elbow_angle, 1)),
                     tuple(np.multiply(left_elbow, [cap_width, cap_height]).astype(int)),
                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(image, str(right_elbow_angle),
+        cv2.putText(image, str(round(right_elbow_angle, 1)),
                     tuple(np.multiply(right_elbow, [cap_width, cap_height]).astype(int)),
                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
 
