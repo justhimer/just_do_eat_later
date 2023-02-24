@@ -14,8 +14,8 @@
             "server": "localhost",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "pj3",
-            "database": "pj3",
+            "name": "just_do_eat_later",
+            "database": "just_do_eat_later",
             "username": "postgres",
             "password": "postgres"
         }
