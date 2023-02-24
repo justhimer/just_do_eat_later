@@ -53,4 +53,19 @@ export class UserService {
         // add codes here
     }
 
+    async complete(reqData: any,id:number): Promise<User>{
+        let {birth_date,gender,height,weight} = reqData
+        let users = await this.knex('users')
+            .update({
+                birth_date: birth_date,
+                gender: gender,
+                height: height,
+                weight:weight
+            })
+            .where("id",`${id}`)
+            .returning(["id","email","first_name","last_name","password","icon"]);
+
+        return users[0];
+    }
+
 }
