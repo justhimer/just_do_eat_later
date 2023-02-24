@@ -1,4 +1,3 @@
-import { Knex } from 'knex'
 import path from 'path'
 import { hashPassword } from '../utils/hash'
 import XLSX from 'xlsx'

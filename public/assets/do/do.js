@@ -1,4 +1,5 @@
 import { calculateAngle } from "./do_utils.js";
+import { hammerCurl } from "./do_models.js";
 
 // setup video, canvas and mediapipe
 const videoElement = document.getElementsByClassName("input_video")[0];
@@ -6,12 +7,16 @@ const canvasElement = document.getElementsByClassName("output_canvas")[0];
 const canvasCtx = canvasElement.getContext("2d");
 
 // setup poses variables
-const jointStatusDescription = ["straight", "half-bent", "full-bent"];
+const visT = 0.01; // visibilityThreshold, larger than visT means visible
+const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
 let jointStatus = {
   // can be set to index of jointStatusDescription
   leftShoulder: null, leftElbow: null, leftHip: null, leftKnee: null,
   rightShoulder: null, rightElbow: null, rightHip: null, rightKnee: null,
 };
+let milestone = 0;
+let reachHalf = false;
+let repes = 0;  // repetition counter
 
 // functions
 function onResults(results) {
@@ -48,19 +53,19 @@ function onResults(results) {
   // get normalized coordinates
   const coors = {
     // left
-    leftShoulder: [landmarks[11].x, landmarks[11].y],
-    leftElbow: [landmarks[13].x, landmarks[13].y],
-    leftWrist: [landmarks[15].x, landmarks[15].y],
-    leftHip: [landmarks[23].x, landmarks[23].y],
-    leftKnee: [landmarks[25].x, landmarks[25].y],
-    leftAnkle: [landmarks[27].x, landmarks[27].y],
+    leftShoulder: landmarks[11].visibility > visT ? [landmarks[11].x, landmarks[11].y] : null,
+    leftElbow: landmarks[13].visibility > visT ? [landmarks[13].x, landmarks[13].y] : null,
+    leftWrist: landmarks[15].visibility > visT ? [landmarks[15].x, landmarks[15].y] : null,
+    leftHip: landmarks[23].visibility > visT ? [landmarks[23].x, landmarks[23].y] : null,
+    leftKnee: landmarks[25].visibility > visT ? [landmarks[25].x, landmarks[25].y] : null,
+    leftAnkle: landmarks[27].visibility > visT ? [landmarks[27].x, landmarks[27].y] : null,
     // right
-    rightShoulder: [landmarks[12].x, landmarks[12].y],
-    rightElbow: [landmarks[14].x, landmarks[14].y],
-    rightWrist: [landmarks[16].x, landmarks[16].y],
-    rightHip: [landmarks[24].x, landmarks[24].y],
-    rightKnee: [landmarks[26].x, landmarks[26].y],
-    rightAnkle: [landmarks[28].x, landmarks[28].y],
+    rightShoulder: landmarks[12].visibility > visT ? [landmarks[12].x, landmarks[12].y] : null,
+    rightElbow: landmarks[14].visibility > visT ? [landmarks[14].x, landmarks[14].y] : null,
+    rightWrist: landmarks[16].visibility > visT ? [landmarks[16].x, landmarks[16].y] : null,
+    rightHip: landmarks[24].visibility > visT ? [landmarks[24].x, landmarks[24].y] : null,
+    rightKnee: landmarks[26].visibility > visT ? [landmarks[26].x, landmarks[26].y] : null,
+    rightAnkle: landmarks[28].visibility > visT ? [landmarks[28].x, landmarks[28].y] : null,
   };
 
   // calculate angles
@@ -77,35 +82,58 @@ function onResults(results) {
     rightKnee: calculateAngle(coors.rightHip,coors.rightKnee, coors.rightAnkle),
   };
 
-  // fuzzy logic
+  // fuzzy logic for joints
   for (let key in angles) {
-    if (angles[key] > 140) {
+    if (angles[key] === null) { continue }
+    if (angles[key] > 150) {
       jointStatus[key] = 0; // straight
-    } else if (angles[key] < 140 && angles[key] > 70) {
-      jointStatus[key] = 1; // half-bent
-    } else if (angles[key] < 70) {
-      jointStatus[key] = 2; // full-bent
+    } else if (angles[key] < 150 && angles[key] > 90) {
+      jointStatus[key] = 1; // half-stright
+    } else if (angles[key] < 90 && angles[key] > 60) {
+      jointStatus[key] = 2; // half-bent
+    } else if (angles[key] < 60) {
+      jointStatus[key] = 3; // full-bent
     }
   }
-
-  // if (angles.leftElbow > 140) {
-  //   jointStatus.leftElbow = 0; // straight
-  // } else if (angles.leftElbow < 140 && angles.leftElbow > 70) {
-  //   jointStatus.leftElbow = 1; // half-bent
-  // } else if (angles.leftElbow < 70) {
-  //   jointStatus.leftElbow = 2; // full-bent
-  // }
 
   // visualize angle
   canvasCtx.font = "18px Arial";
   canvasCtx.fillStyle = "#ffffff";
   for (let key in angles) {
+    if (angles[key] === null) { continue }
     canvasCtx.fillText(
       `${angles[key].toFixed(1)} ${jointStatusDescription[jointStatus[key]]}`,
       coors[key][0] * canvasElement.width,
       coors[key][1] * canvasElement.height - 10
     );
   }
+
+  // fuzzy logic for exercise
+  if ( milestone === -1 ) {  // milestone = -1 means one repetition is completed
+    repes++;
+    milestone = 0;  // init milstone
+    reachHalf = false;  // init reachHalf
+  }
+  if ( milestone === hammerCurl.length - 1 ) {
+    reachHalf = true;
+  }
+
+  let clear = true;
+  for (let key in hammerCurl[milestone]) {
+    if (jointStatus[key] !== hammerCurl[milestone][key]) {
+      clear = false;
+    }
+  }
+  if ( clear & !reachHalf ) { milestone++ }
+  else if ( clear & reachHalf ) { milestone-- }
+
+  // visualize counter
+  canvasCtx.fillText(
+    `milestone: ${milestone}
+    完成次數 : ${repes}`,
+    canvasElement.width * 2/5,
+    canvasElement.height / 2
+  );
 
   canvasCtx.restore();
 }
