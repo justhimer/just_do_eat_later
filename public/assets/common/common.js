@@ -2,7 +2,7 @@ const menu = document.querySelector("#hamburger")
 const loginStatus = getStatus
 
 
-window.onload = async () => {
+async function main(){
     //init important variables
     /* #region session */
     let elem,
@@ -104,7 +104,10 @@ window.onload = async () => {
             elemH = elem.getBoundingClientRect().height,
             elemW = elem.getBoundingClientRect().width;
     }
+
 }
+
+main()
 
 async function getStatus() {
     const res = await fetch('/users/loginStatus')
@@ -137,7 +140,7 @@ async function menuLoader() {
                         <li><a class="nav link" href="#0">Eat Later</a></li>
                     </ul>
                     <div class="other_container">
-                        <a href="*"><div class="icon_container circle">
+                        <a href="/profile.html"><div class="icon_container circle">
                             <span class="material-symbols-outlined">account_circle</span>
                             <p>Profile</p>
                         </div></a>
@@ -175,26 +178,4 @@ async function menuLoader() {
 }
 
 
-async function messageChecker(query){
-    if (query){
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-          });
-          console.log('params',params);
-          if (params){
-            let value = params.message
-            console.log('value',value)
-  
-
-          }
-    }else{
-        // Swal.fire({
-        //     position: 'top-end',
-        //     icon: 'success',
-        //     title: 'Your work has been saved',
-        //     showConfirmButton: false,
-        //     timer: 1500
-        //   })
-    }
-}
 
