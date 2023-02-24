@@ -1,7 +1,8 @@
 const menu = document.querySelector("#hamburger")
 const loginStatus = getStatus
 
-window.onload = async () => {
+
+async function main(){
     //init important variables
     /* #region session */
     let elem,
@@ -83,6 +84,17 @@ window.onload = async () => {
             toggleMenu()
         }
     })
+    
+    document.querySelectorAll(".icon_container").forEach(element => {
+        element.addEventListener("mouseover",async (event)=>{
+            if (!event.target.classList.contains('pulse'))
+            {await event.target.classList.add('pulse')
+            setTimeout(async()=>{
+                await event.target.classList.remove('pulse')
+            },749)}
+        })
+    });
+        
     /* #endregion */
 
 
@@ -92,7 +104,10 @@ window.onload = async () => {
             elemH = elem.getBoundingClientRect().height,
             elemW = elem.getBoundingClientRect().width;
     }
+
 }
+
+main()
 
 async function getStatus() {
     const res = await fetch('/users/loginStatus')
@@ -125,15 +140,15 @@ async function menuLoader() {
                         <li><a class="nav link" href="#0">Eat Later</a></li>
                     </ul>
                     <div class="other_container">
-                        <a href="*"><div class="icon_container pulse circle">
+                        <a href="/profile.html"><div class="icon_container circle">
                             <span class="material-symbols-outlined">account_circle</span>
                             <p>Profile</p>
                         </div></a>
-                        <a href="/users/logout"><div class="icon_container pulse circle">
+                        <a href="/users/logout"><div class="icon_container circle">
                             <span class="material-symbols-outlined">logout</span>
                             <p>Logout</p>
                         </div></a>
-                        <a href="*"><div class="icon_container pulse circle">
+                        <a href="*"><div class="icon_container circle">
                             <span class="material-symbols-outlined">shopping_cart</span>
                             <p>Cart</p>
                         </div></a>
@@ -151,7 +166,7 @@ async function menuLoader() {
                         <li><a class="nav link" href="#0">Eat Later</a></li>
                     </ul>
                     <div class="other_container">
-                        <a href="/login.html"><div class="icon_container pulse circle">
+                        <a href="/login.html"><div class="icon_container circle">
                             <span class="material-symbols-outlined">account_circle</span>
                             <p>Login/Signup</p>
                         </div></a>
@@ -161,3 +176,6 @@ async function menuLoader() {
         `
     }
 }
+
+
+

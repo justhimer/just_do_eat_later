@@ -376,6 +376,10 @@ OTHER SHIT
 
 .icon_container p{
     color: #FFAA33;
+    pointer-events: none;
+}
+.icon_container span{
+    pointer-events: none;
 }
 
 .icon_container {
@@ -429,22 +433,18 @@ pulse
     /* box-shadow: 0px 0px 1px 1px #0000001a; */
   }
 
-  .pulse:hover:after{
-    animation: pulse-animation 300ms 150ms 2 ;
-}
-
-.pulse:hover {
-    animation: pulse-scale 300ms;
+.pulse{
+    animation: pulse-scale 300ms ease-out, pulse-animation 300ms 150ms ease-out, pulse-animation 300ms 300ms ease-out;
   }
 
   
   @keyframes pulse-scale {
     0% {
-      box-shadow: 0 0 0 0px #3B3836, 0 0 0 0px #FFAA33;
+      box-shadow: 0 0 0 0 #3B3836, 0 0 0 0 #FFAA33;
       transform: scale(1.2);
     }
     100% {
-      box-shadow: 0 0 0 14px #3B3836, 0 0 0 16px #FFAA33;
+      box-shadow: 0 0 0 16px #3B3836, 0 0 0 18px #FFAA33;
       transform: scale(1)
     }
   }
@@ -454,6 +454,6 @@ pulse
       box-shadow: 0 0 0 0px #3B3836, 0 0 0 0px #FFAA33;
     }
     100% {
-      box-shadow: 0 0 0 14px #3B3836, 0 0 0 16px #FFAA33;
+      box-shadow: 0 0 0 16px #3B3836, 0 0 0 18px #FFAA33;
     }
   }

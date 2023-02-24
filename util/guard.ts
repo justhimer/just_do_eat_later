@@ -9,7 +9,7 @@ export const isLoggedIn = (
         next();
         return
     } else {
-        res.status(403);
+        res.redirect('/login.html?message=Please+Login');
     }
 }
 
