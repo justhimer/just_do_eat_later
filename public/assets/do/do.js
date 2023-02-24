@@ -7,7 +7,7 @@ const canvasElement = document.getElementsByClassName("output_canvas")[0];
 const canvasCtx = canvasElement.getContext("2d");
 
 // setup poses variables
-const visT = 0.01; // visibilityThreshold, larger than visT means visible
+const visT = 0.0001; // visibilityThreshold, larger than visT means visible
 const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
 let jointStatus = {
   // can be set to index of jointStatusDescription
@@ -27,6 +27,10 @@ function onResults(results) {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
+  // Flip the canvas horizontally
+  canvasCtx.scale(-1, 1);
+  canvasCtx.translate(-canvasElement.width, 0);
+
   // draw image
   canvasCtx.drawImage(
     results.image,
@@ -36,36 +40,43 @@ function onResults(results) {
     canvasElement.height
   );
 
+  // Flip the canvas horizontally again
+  canvasCtx.scale(-1, 1);
+  canvasCtx.translate(-canvasElement.width, 0);
+
   // get all landmarks
-  const landmarks = results.poseLandmarks; // each landmark has x, y, z and visibility
+  // const landmarks = results.poseLandmarks; // each landmark has x, y, z and visibility
+  const mirroredLandmarks = results.poseLandmarks.map((landmark) => {
+    return { x: 1 - landmark.x, y: landmark.y, z: landmark.z, visibility: landmark.visibility };
+  });
 
   // draw landmarks and connectors
   canvasCtx.globalCompositeOperation = "source-over";
-  drawConnectors(canvasCtx, landmarks, POSE_CONNECTIONS, {
-    color: "#00FF00",
+  drawConnectors(canvasCtx, mirroredLandmarks, POSE_CONNECTIONS, {
+    color: "#FFFF00",
     lineWidth: 4,
   });
-  drawLandmarks(canvasCtx, landmarks, {
-    color: "#FF0000",
+  drawLandmarks(canvasCtx, mirroredLandmarks, {
+    color: "#00FF00",
     lineWidth: 2,
   });
 
   // get normalized coordinates
   const coors = {
     // left
-    leftShoulder: landmarks[11].visibility > visT ? [landmarks[11].x, landmarks[11].y] : null,
-    leftElbow: landmarks[13].visibility > visT ? [landmarks[13].x, landmarks[13].y] : null,
-    leftWrist: landmarks[15].visibility > visT ? [landmarks[15].x, landmarks[15].y] : null,
-    leftHip: landmarks[23].visibility > visT ? [landmarks[23].x, landmarks[23].y] : null,
-    leftKnee: landmarks[25].visibility > visT ? [landmarks[25].x, landmarks[25].y] : null,
-    leftAnkle: landmarks[27].visibility > visT ? [landmarks[27].x, landmarks[27].y] : null,
+    leftShoulder: mirroredLandmarks[11].visibility > visT ? [mirroredLandmarks[11].x, mirroredLandmarks[11].y] : null,
+    leftElbow: mirroredLandmarks[13].visibility > visT ? [mirroredLandmarks[13].x, mirroredLandmarks[13].y] : null,
+    leftWrist: mirroredLandmarks[15].visibility > visT ? [mirroredLandmarks[15].x, mirroredLandmarks[15].y] : null,
+    leftHip: mirroredLandmarks[23].visibility > visT ? [mirroredLandmarks[23].x, mirroredLandmarks[23].y] : null,
+    leftKnee: mirroredLandmarks[25].visibility > visT ? [mirroredLandmarks[25].x, mirroredLandmarks[25].y] : null,
+    leftAnkle: mirroredLandmarks[27].visibility > visT ? [mirroredLandmarks[27].x, mirroredLandmarks[27].y] : null,
     // right
-    rightShoulder: landmarks[12].visibility > visT ? [landmarks[12].x, landmarks[12].y] : null,
-    rightElbow: landmarks[14].visibility > visT ? [landmarks[14].x, landmarks[14].y] : null,
-    rightWrist: landmarks[16].visibility > visT ? [landmarks[16].x, landmarks[16].y] : null,
-    rightHip: landmarks[24].visibility > visT ? [landmarks[24].x, landmarks[24].y] : null,
-    rightKnee: landmarks[26].visibility > visT ? [landmarks[26].x, landmarks[26].y] : null,
-    rightAnkle: landmarks[28].visibility > visT ? [landmarks[28].x, landmarks[28].y] : null,
+    rightShoulder: mirroredLandmarks[12].visibility > visT ? [mirroredLandmarks[12].x, mirroredLandmarks[12].y] : null,
+    rightElbow: mirroredLandmarks[14].visibility > visT ? [mirroredLandmarks[14].x, mirroredLandmarks[14].y] : null,
+    rightWrist: mirroredLandmarks[16].visibility > visT ? [mirroredLandmarks[16].x, mirroredLandmarks[16].y] : null,
+    rightHip: mirroredLandmarks[24].visibility > visT ? [mirroredLandmarks[24].x, mirroredLandmarks[24].y] : null,
+    rightKnee: mirroredLandmarks[26].visibility > visT ? [mirroredLandmarks[26].x, mirroredLandmarks[26].y] : null,
+    rightAnkle: mirroredLandmarks[28].visibility > visT ? [mirroredLandmarks[28].x, mirroredLandmarks[28].y] : null,
   };
 
   // calculate angles
@@ -97,7 +108,7 @@ function onResults(results) {
   }
 
   // visualize angle
-  canvasCtx.font = "18px Arial";
+  canvasCtx.font = "22px Arial";
   canvasCtx.fillStyle = "#ffffff";
   for (let key in angles) {
     if (angles[key] === null) { continue }
@@ -129,10 +140,12 @@ function onResults(results) {
 
   // visualize counter
   canvasCtx.fillText(
-    `milestone: ${milestone}
+    `Visibility Threshold: ${visT}
+    milestone: ${milestone}
     完成次數 : ${repes}`,
-    canvasElement.width * 2/5,
-    canvasElement.height / 2
+    10, 30
+    // canvasElement.width * 2/5,
+    // canvasElement.height / 2
   );
 
   canvasCtx.restore();
