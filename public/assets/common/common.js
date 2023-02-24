@@ -1,6 +1,7 @@
 const menu = document.querySelector("#hamburger")
 const loginStatus = getStatus
 
+
 window.onload = async () => {
     //init important variables
     /* #region session */
@@ -161,3 +162,28 @@ async function menuLoader() {
         `
     }
 }
+
+
+async function messageChecker(query){
+    if (query){
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+          });
+          console.log('params',params);
+          if (params){
+            let value = params.message
+            console.log('value',value)
+  
+
+          }
+    }else{
+        // Swal.fire({
+        //     position: 'top-end',
+        //     icon: 'success',
+        //     title: 'Your work has been saved',
+        //     showConfirmButton: false,
+        //     timer: 1500
+        //   })
+    }
+}
+
