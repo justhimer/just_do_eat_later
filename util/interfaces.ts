@@ -22,3 +22,10 @@ export interface UserSignup {
 export interface signupIcon {
     icon?: string | null
 }
+
+export interface transactionDetails{
+    id: number,
+    food_details: number,
+    quantity: number
+
+}
