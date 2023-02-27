@@ -57,7 +57,7 @@ export const userController = new UserController(userService);
 app.use('/users', makeUserRoutes());
 
 export const shopService = new ShopService(knex);
-export const shopController = new ShopController(shopService);
+export const shopController = new ShopController(shopService,userService);
 app.use('/shop',isLoggedIn,makeShopRoutes());
 
 /* #endregion */
