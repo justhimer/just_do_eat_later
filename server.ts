@@ -12,6 +12,7 @@ import { GrantSessionStore } from 'grant';
 import { ShopService } from './services/shopService';
 import { ShopController } from './controllers/shopController';
 import { makeShopRoutes } from './routes/shopRoutes';
+import { TransactionService } from './services/transactionService';
 
 /* #region session */
 /* #endregion */
@@ -56,8 +57,12 @@ export const userService = new UserService(knex);
 export const userController = new UserController(userService);
 app.use('/users', makeUserRoutes());
 
+export const transactionService = new TransactionService(knex)
+
+
+
 export const shopService = new ShopService(knex);
-export const shopController = new ShopController(shopService);
+export const shopController = new ShopController(shopService,userService,transactionService);
 app.use('/shop',isLoggedIn,makeShopRoutes());
 
 /* #endregion */
