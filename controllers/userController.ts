@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import { UserService } from "../services/userService";
 import { checkPassword } from "../util/hash";
 import { knex } from "../util/db";
-import { formidableUserDetails } from "../util/formidable";
+import { formidableIconUpdate, formidableUserDetails } from "../util/formidable";
 import fetch from 'cross-fetch'
 import { hashPassword } from "../util/hash";
+import {format} from "fecha";
 
 
 export class UserController {
@@ -72,7 +73,7 @@ export class UserController {
 
     login = async (req: Request, res: Response) => {
         try {
-
+            
             // get username & password
             let { email, password } = req.body;
             if (!email || !password) {
@@ -140,7 +141,6 @@ export class UserController {
                     password: user.password,
                     icon: user.icon
                 }
-                console.log(req.session.user)
                 res.status(200).json({message:"Logged in"})
             }else{res.status(400).json({message:"Already logged in"})}
         } catch (error) {
@@ -182,11 +182,9 @@ export class UserController {
 
     googleContinue = async (req:Request,res:Response) => {
         try{
-            let reqData = req.body
-            console.log("reqData",reqData);
+            let reqData = req.body;
             
-            let user = await this.userService.complete(reqData,req.session.user!.id)
-            console.log("user:",user);
+            let user = await this.userService.complete(reqData,req.session.user!.id);
             
                 req.session.user = {
                     id: user.id,
@@ -195,8 +193,8 @@ export class UserController {
                     last_name: user.last_name,
                     password: user.password,
                     icon: user.icon
-                }
-                res.status(200).json({message:"Registration Complete"})
+                };
+                res.status(200).json({message:"Registration Complete"});
         }catch(error){
             res.status(500).json({
                 message: '[USR007] - Server error'
@@ -220,6 +218,85 @@ export class UserController {
             });
         }
         
+    }
+
+    updateImg = async (req:Request, res:Response) => {
+        try {
+            let data = (await formidableIconUpdate(req)).icon;
+            await this.userService.changeImg(data,req.session.user!.id);
+            res.status(200).json({message:'success'});
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    updateAccount = async (req:Request, res:Response) => {
+        try {
+            await this.userService.changeAccount(req.body,req.session.user!.id)
+            res.status(200).json({message: "success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    updatePersonal = async (req:Request, res:Response) => {
+        try {
+            console.log('updatePersonal');
+            console.log(req.body)
+            await this.userService.changePersonal(req.body,req.session.user!.id)
+            res.status(200).json({message: "success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    updateBody = async (req:Request, res:Response) => {
+        try {
+            await this.userService.changeBody(req.body,req.session.user!.id)
+            res.status(200).json({message: "success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    getDetails = async (req:Request, res:Response) => {
+        try {
+            let userId = req.session.user!.id;
+            let knexData = await this.userService.userDetails(userId);
+            console.log('pulled data')
+            console.log(knexData)
+            if (!knexData.id){
+                res.status(403).json({return:"invalid input"})
+                return
+            }else{
+                let returningMessage =
+                {
+                    email:knexData.email,
+                    password: "password",
+                    icon:knexData.icon,
+                    first_name:knexData.first_name,
+                    last_name:knexData.last_name,
+                    gender:knexData.gender,
+                    dob: format(new Date(knexData.birth_date.toLocaleDateString('en-US',{timeZone:'Asia/Hong_Kong'})), 'YYYY-MM-DD'),
+                    height:knexData.height,
+                    weight:knexData.weight
+                }
+                res.status(200).json(returningMessage)
+                return
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
     }
 
 }

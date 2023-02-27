@@ -9,9 +9,13 @@ export function makeUserRoutes() {
 	userRoutes.get('/logout', userController.logout);
     userRoutes.post('/signup', userController.signUp);
     userRoutes.put('/googleContinue',userController.googleContinue)
-    userRoutes.put('/password', userController.changePassword);
     userRoutes.put('/icon', userController.changeIcon);
     userRoutes.delete('/', userController.deleteUser);
+    userRoutes.put('/updateAccount',userController.updateAccount)
+    userRoutes.put('/updatePersonal',userController.updatePersonal)
+    userRoutes.put('/updateBody',userController.updateBody)
+    userRoutes.get('/userDetails',userController.getDetails)
+    userRoutes.put('/updateImg',userController.updateImg)
     userRoutes.get('/loginStatus',userController.loginStatus)
 
     userRoutes.get('/test',(req,res)=>{

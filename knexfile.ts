@@ -10,15 +10,17 @@ const config: { [key: string]: Knex.Config } = {
     connection: {
       database: process.env.DB_NAME,
       user: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD
+      password: process.env.DB_PASSWORD,
+      timezone: 'Asia/Hong_Kong'
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
+      
     },
     migrations: {
       tableName: 'knex_migrations'
-    }
+    },
   },
 
   staging: {

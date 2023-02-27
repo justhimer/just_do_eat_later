@@ -222,8 +222,12 @@ nav {
 
 nav .nav_ul {
     margin: 0 auto 0 auto;
-    pointer-events: auto;
+    pointer-events: none;
     text-align: center;
+}
+
+.nav_ul.shown{
+    pointer-events: auto;
 }
 
 nav li {
@@ -434,7 +438,7 @@ pulse
   }
 
 .pulse{
-    animation: pulse-scale 300ms ease-out, pulse-animation 300ms 150ms ease-out, pulse-animation 300ms 300ms ease-out;
+    animation: pulse-scale 300ms ease-out, pulse-animation 300ms 150ms ease-out;
   }
 
   

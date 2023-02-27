@@ -128,6 +128,7 @@ export async function up(knex: Knex): Promise<void> {
         table.foreign('food_id').references('foods.id');
         table.integer('location_id').unsigned();
         table.foreign('location_id').references('locations.id');
+        table.timestamps(false, true);
     });
 
     /***********************/

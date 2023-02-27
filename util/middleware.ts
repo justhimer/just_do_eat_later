@@ -13,6 +13,7 @@ export const sessionMiddleware = expressSession({
 })
 
 export const app = express();
+process.env.TZ = "Asia/Hong_Kong"
 export const server = new http.Server(app)
 export const io = new SocketIO(server)
 
