@@ -26,6 +26,7 @@ loadDetails()
 async function getDetails() {
     const res = await fetch('/users/userDetails')
     let resData = await res.json()
+    console.log('resData')
     console.log(resData)
     emailData = resData.email;
     passwordData = 'AAATK3!7';
@@ -34,6 +35,7 @@ async function getDetails() {
     lastNameData = resData.last_name;
     genderData = resData.gender;
     dobData = resData.dob;
+    console.log(dobData);
     heightData = resData.height;
     weightData = resData.weight;
     return resData
@@ -46,12 +48,10 @@ async function loadDetails() {
     refreshContent('account')
     refreshContent('personal')
     refreshContent('body')
-    console.log("done upload");
 }
 
 content.addEventListener('click', (event) => {
     if (event.target == accountBtn) {
-        console.log('account')
         accountContainer.innerHTML = `
         <form id="account_form">
                     <div>Email:</div><input id="email" name="email" type="email" value="${emailData}">
@@ -69,7 +69,6 @@ content.addEventListener('click', (event) => {
                 </form>
         `
     } else if (event.target == personalBtn) {
-        console.log('personal')
         if (genderData == "male") {
             personalContainer.innerHTML = `
             <form id="personal_form">
@@ -139,7 +138,6 @@ content.addEventListener('click', (event) => {
         }
 
     } else if (event.target == bodyBtn) {
-        console.log('body')
         bodyContainer.innerHTML = `
         <form id="body_form">
         <div>Height:</div><input id="height" name="height" type="number" value="${heightData}">
@@ -199,7 +197,6 @@ imgContainer.addEventListener('click', async (event) => {
                 body: formData
             })
             if (res.ok) {
-                console.log('success')
                 await getDetails()
                 refreshContent('img')
                 iconForm.classList.toggle('shown')
@@ -218,7 +215,6 @@ imgContainer.addEventListener('click', async (event) => {
 })
 
 async function alterHandler(section) {
-    console.log('received')
     let res,
         form,
         formData;
@@ -229,7 +225,6 @@ async function alterHandler(section) {
                 height: form.height.value,
                 weight: form.weight.value
             }
-            console.log('body request');
             res = await fetch('/users/updateBody', {
                 method: "PUT",
                 headers: {
@@ -237,7 +232,7 @@ async function alterHandler(section) {
                 },
                 body: JSON.stringify(formData)
             })
-            getDetails()
+            await getDetails()
             refreshContent('body')
             break;
         case 'personal':
@@ -248,7 +243,6 @@ async function alterHandler(section) {
                 gender: form.gender.value,
                 dob: form.dob.value.toString()
             }
-            console.log('personal request');
             res = await fetch('/users/updatePersonal', {
                 method: "PUT",
                 headers: {
@@ -256,7 +250,7 @@ async function alterHandler(section) {
                 },
                 body: JSON.stringify(formData)
             })
-            getDetails()
+            await getDetails()
             refreshContent('personal')
             break;
         case 'account':
@@ -271,7 +265,6 @@ async function alterHandler(section) {
                 confirm: form.confirm.value,
                 dob: form.dob.value
             }
-            console.log('account request');
             res = await fetch('/users/updateAccount', {
                 method: "PUT",
                 headers: {
@@ -279,7 +272,7 @@ async function alterHandler(section) {
                 },
                 body: JSON.stringify(formData)
             })
-            getDetails()
+            await getDetails()
             refreshContent('account')
             break;
     }
@@ -313,7 +306,7 @@ async function refreshContent(section) {
                 </div>
 
                 <div id="birth_date">
-                    Date of Birth: ${dobData}
+                    Date of Birth: ${new Date(dobData).toLocaleDateString('en-GB',{timeZone:'Asia/Hong_Kong'})}
                 </div>
     `
 

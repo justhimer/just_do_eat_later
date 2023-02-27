@@ -9,6 +9,9 @@ import { User } from './util/interfaces';
 import { sessionMiddleware,io,server,app, grantExpress} from './util/middleware';
 import path from "path"
 import { GrantSessionStore } from 'grant';
+import { ShopService } from './services/shopService';
+import { ShopController } from './controllers/shopController';
+import { makeShopRoutes } from './routes/shopRoutes';
 
 /* #region session */
 /* #endregion */
@@ -52,6 +55,11 @@ io.on("connection", function (socket) {
 export const userService = new UserService(knex);
 export const userController = new UserController(userService);
 app.use('/users', makeUserRoutes());
+
+export const shopService = new ShopService(knex);
+export const shopController = new ShopController(shopService);
+app.use('/shop',isLoggedIn,makeShopRoutes());
+
 /* #endregion */
 
 
