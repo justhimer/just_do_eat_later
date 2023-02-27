@@ -1,0 +1,59 @@
+#table_arrange{
+    padding: 1rem;
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem 0.5rem;
+}
+
+#account_label{
+grid-row: 1 / span 1;
+grid-column: 1/ span 2;
+}
+#account_container{
+grid-row: 1/ span 1;
+grid-column: 3 / span 3;
+}
+
+#personal_label{
+grid-row: 2 / span 1;
+grid-column: 1/ span 2;
+}
+#personal_detail_container{
+grid-row: 2 / span 1;
+grid-column: 3 / span 3;
+}
+
+#body_label{
+grid-row: 3 / span 1;
+grid-column: 1 / span 2;
+}
+#body_container{
+grid-row: 3 / span 1;
+grid-column: 3 / span 3;
+}
+#img_container{
+    width: fit-content;
+}
+#img_preview{
+    height: 7rem;
+    width: auto;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+.label{
+    position: relative;
+    padding: 1rem;
+}
+
+.label_icon{
+    position: absolute;
+    top: -0.5rem; right: -1rem;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+#icon_form{
+    display: none;
+}
+#icon_form.shown{
+    display: inline-flex;
+}

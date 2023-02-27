@@ -45,8 +45,83 @@ export class UserService {
 
     }
 
-    async updateUser() {
+
+    async userDetails(userId:number) {
         // add codes here
+        let details = await (this.knex
+            .select("*")
+            .from("users")
+            .where("id",`${userId}`)
+            .first())
+            
+            return details
+    }
+    async changeImg(reqData: any,id:number){
+        //add codes here
+        try {
+            await this.knex('users')
+            .where('id',id)
+            .update({
+                icon:reqData,
+                updated_at: new Date()    
+            })
+        } catch (error) {
+            console.log("fail: ", error)
+        }
+    }
+
+    async changeAccount(reqData: any,id:number) {
+        // add codes here
+        try {
+            if (reqData.password == "AAATK3!7"){
+                await this.knex('users')
+                .where('id',id)
+                .update({
+                    email: reqData.email,
+                    updated_at : new Date()
+                })
+            }else{
+                await this.knex('users')
+                .where('id',id)
+                .update({
+                    email: reqData.email,
+                    password: reqData.email,
+                    updated_at : new Date()
+                })
+            }
+        } catch (error) {
+            console.log("fail: ", error)
+        }
+    }
+    async changePersonal(reqData: any,id:number) {
+        // add codes here
+        try {
+            await this.knex('users')
+            .where('id',id)
+            .update({
+                first_name: reqData.first_name,
+                last_name: reqData.last_name,
+                gender: reqData.gender,
+                birth_date: reqData.dob,
+                updated_at: new Date()
+            })
+        } catch (error) {
+            console.log("fail: ", error)
+        }
+    }
+    async changeBody(reqData: any,id:number) {
+        // add codes here
+        try {
+            await this.knex('users')
+            .where('id',id)
+            .update({
+                height: reqData.height,
+                weight: reqData.weight,
+                updated_at: new Date()
+            })
+        } catch (error) {
+            console.log("fail: ", error)
+        }
     }
 
     async deleteUser() {

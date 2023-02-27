@@ -16,59 +16,55 @@
 <body>
     <h1>profile</h1>
     <div id="main">
+        <div id="img_container" class="label">
         <img id="img_preview">
-        <div id="table_arrange">
-            <div id="user_calorie_container" class="details details_calorie">
-                <h3>Calroies</h3>
-                <div id="user_calorie"></div>
+        <span class="material-symbols-outlined label_icon" id="icon_edit">
+            drive_file_rename_outline
+        </span><br>
+        <form id="icon_form" class="">
+            <input id="icon_input" name="icon" type="file" accept="image/*">
+            <button id="icon_submit" type="button">
+                Submit
+            </button>
+            <input id="icon_reset" type="reset" >
+            <button id="icon_cancel" type="button">
+                Cancel
+            </button>
+        </form>
+        </div>
+        <div id="user_calorie_container" class="details details_calorie">
+            <h3>Calroies</h3>
+            <div id="user_calorie">
             </div>
+        </div>
 
+        <div id="table_arrange">
             <div id="account_label" class="label label_account">
-                <div></div>
+                <div>Account Details</div>
+                <span class="material-symbols-outlined label_icon" id="account_edit">
+                    drive_file_rename_outline
+                </span>
             </div>
             <div id="account_container" class="details details_account">
-                <div id="email">
-
-                </div>
-
-                <div id="password">
-
-                </div>
             </div>
 
             <div id="personal_label" class="label label_personal">
-                <div></div>
+                <div>Personal Details</div>
+                <span class="material-symbols-outlined label_icon" id="personal_edit">
+                    drive_file_rename_outline
+                </span>
             </div>
             <div id="personal_detail_container" class="details details_personal">
-                <div id="first_name">
-
-                </div>
-
-                <div id="last_name">
-
-                </div>
-
-                <div id="gender">
-
-                </div>
-
-                <div id="birth_date">
-
-                </div>
             </div>
 
 
             <div id="body_label" class="label label_body">
-                <div></div>
+                <div>Body Details</div>
+                <span class="material-symbols-outlined label_icon" id="body_edit">
+                    drive_file_rename_outline
+                </span>
             </div>
             <div id="body_container" class="details details_body">
-                <div id="height">
-
-                </div>
-
-                <div id="weight">
-
-                </div>
             </div>
 
         </div>

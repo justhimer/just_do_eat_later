@@ -82,6 +82,7 @@ async function main(){
     menu.addEventListener('click', (event) => {
         if (event.target == document.querySelector('#toggle-btn')) {
             toggleMenu()
+            document.querySelector('.nav_ul').classList.toggle('shown')
         }
     })
     

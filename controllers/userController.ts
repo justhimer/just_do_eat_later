@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services/userService";
 import { checkPassword } from "../util/hash";
 import { knex } from "../util/db";
-import { formidableUserDetails } from "../util/formidable";
+import { formidableIconUpdate, formidableUserDetails } from "../util/formidable";
 import fetch from 'cross-fetch'
 import { hashPassword } from "../util/hash";
 
@@ -220,6 +220,83 @@ export class UserController {
             });
         }
         
+    }
+
+    updateImg = async (req:Request, res:Response) => {
+        try {
+            let data = (await formidableIconUpdate(req)).icon
+            console.log(data)
+            await this.userService.changeImg(data,req.session.user!.id)
+            res.status(200).json({message:'success'})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    updateAccount = async (req:Request, res:Response) => {
+        try {
+            await this.userService.changeAccount(req.body,req.session.user!.id)
+            res.status(200).json({message: "success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    updatePersonal = async (req:Request, res:Response) => {
+        try {
+            await this.userService.changePersonal(req.body,req.session.user!.id)
+            res.status(200).json({message: "success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    updateBody = async (req:Request, res:Response) => {
+        try {
+            await this.userService.changeBody(req.body,req.session.user!.id)
+            res.status(200).json({message: "success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
+    }
+
+    getDetails = async (req:Request, res:Response) => {
+        try {
+            let userId = req.session.user!.id
+            let knexData = await this.userService.userDetails(userId)
+            console.log(knexData);
+            if (!knexData.id){
+                res.status(403).json({return:"invalid input"})
+                return
+            }else{
+                let returningMessage =
+                {
+                    email:knexData.email,
+                    password: "password",
+                    icon:knexData.icon,
+                    first_name:knexData.first_name,
+                    last_name:knexData.last_name,
+                    gender:knexData.gender,
+                    dob:knexData.birth_date,
+                    height:knexData.height,
+                    weight:knexData.weight
+                }
+                res.status(200).json(returningMessage)
+                return
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR007] - Server error'
+            });
+        }
     }
 
 }
