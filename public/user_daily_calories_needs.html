@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Calorise Needs</title>
+</head>
+
+<body>
+    <a href="/">home</a><br>
+    <form id="calorise_needs">
+        <fieldset>
+            <legend>Calorise Count</legend>
+            age: <input type="number" name="age" id="age" min="1" max="999"><br>
+            gender: <br>
+            <input type="radio" id="gender_male" name="gender" value="Male"><label for="gender_male">Male</label><br>
+            <input type="radio" id="gender_female" name="gender" value="Female"><label
+                for="gender_female">Female</label> <br>
+            height: <input type="number" id="height" name="height" min="1" max="999"><br>
+            weight: <input type="number" id="weight" name="weight" min="1" max="999"><br>
+            activity Level: <br>
+            <form action="/action_page.php">
+                <label for="level">Choose a activityLevel:</label>
+                <select name="cars" id="cars">
+                    <option value="sedentary">sedentary(Not any exercise)</option>
+                    <option value="lightly-active">lightly-active(exercise 1-2times pre week)</option>
+                    <option value="moderately-active">moderately-active(exercise 3-4times pre week)</option>
+                    <option value="very-active">very-active(exercise 5-6times pre week)</option>
+                    <option value="extra-active">extra-active(exercise 7times+ pre week)</option>
+                </select>
+                <br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </fieldset>
+</body>
+
+</html>
