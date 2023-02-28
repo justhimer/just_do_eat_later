@@ -73,6 +73,7 @@ app.use('/shop',isLoggedIn,makeShopRoutes());
 app.use(express.static('mediapipe'));
 app.use(express.static("public"))
 app.use(express.static('images'))
+app.use(express.static('uploads'));
 app.use(isLoggedIn, express.static('protect'));
 /* #endregion */
 

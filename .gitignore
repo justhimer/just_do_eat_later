@@ -1,4 +1,6 @@
 mediapipe/mp_env
 node_modules
+exercise_demo
+.vscode
 .DS_Store
 .env
