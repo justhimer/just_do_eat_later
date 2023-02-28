@@ -79,9 +79,13 @@ app.use('/exercise', chooseexerciseRoutes())
 app.use(express.static('mediapipe'));
 app.use(express.static("public"))
 app.use(express.static('images'))
+<<<<<<< HEAD
 app.use(express.static('exercise_images'))
 app.use(express.static('exercise_demo'))
 app.use(express.static('food_images'))
+=======
+app.use(express.static('uploads'));
+>>>>>>> 23c975efff144e89f6f0d320a099b66c92b25206
 app.use(isLoggedIn, express.static('protect'));
 
 /* #endregion */
