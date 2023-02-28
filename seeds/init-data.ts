@@ -749,6 +749,8 @@ export async function seed(knex: Knex): Promise<void> {
         await txn.commit();
         return;
     } catch (e) {
+        console.log(e);
+        
         await txn.rollback();
         return;
     }

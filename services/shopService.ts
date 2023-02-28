@@ -15,6 +15,7 @@ export class ShopService {
         on food_types.id = foods.food_type_id 
         `)
 
+        console.log("allFood: ",allFood)
         return allFood
     }
 

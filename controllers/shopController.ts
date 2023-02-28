@@ -16,15 +16,15 @@ export class ShopController {
 
     getAllFood = async (req:Request, res:Response) => {
         try {
-            let groupBy = req.params.group_by
-            console.log('groupBy',groupBy)
-            console.log('get Data');
+            // let groupBy = req.params.group_by
+            // console.log('groupBy',groupBy)
+            // console.log('get Data');
             
             let knexData = await this.shopService.getAllFood()
-            console.log('knexData',knexData);
+            console.log('knexData: ',knexData);
             
             let knexTypes = await this.shopService.getDistinctTypes()
-            console.log('knexTypes',knexTypes);
+            // console.log('knexTypes',knexTypes);
             
 
             let resData = {};
@@ -56,11 +56,12 @@ export class ShopController {
 
                 }
             });
-            console.log(resData);
+            // console.log("resData: ",resData);
             
             res.status(200).json(resData)
             
         } catch (error) {
+            console.log(error)
             res.status(500).json({
                 message: '[USR003] - Server error'
             });
