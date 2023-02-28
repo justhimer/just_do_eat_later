@@ -23,4 +23,15 @@ export const exercises = {
       positionStatus: { nose: 1 },
     },
   ],
+  sitUp: [
+    { // 0
+      jointStatus: { leftElbow: 2, rightElbow: 2 },
+      positionStatus: { leftKnee: 0, rightKnee: 0 },
+    },
+    { // 1
+      jointStatus: { leftElbow: 2, rightElbow: 2 },
+      positionStatus: { leftKnee: 0, rightKnee: 0 },
+    },
+  ],
+  
 };
