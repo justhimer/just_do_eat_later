@@ -1,22 +1,51 @@
 import { calculateAngle } from "./do_utils.js";
-import { swingArm } from "./do_models.js";
+import { exercises } from "./do_models.js";
+
+const exName = document.URL.split("?")[1].replace("exName=", "");
 
 let selectedVtuber = false;
 
 // setup poses variables
 const visT = 0.0001; // visibilityThreshold, larger than visT means visible
+
+// 全直 : 150 ~ 180
+// 半直 : 90 ~ 150
+// 半屈 : 60 ~ 90
+// 全屈 : 0 ~ 60
 const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
-let jointStatus = {
-  // can be set to index of jointStatusDescription
-  leftShoulder: null,
-  leftElbow: null,
-  leftHip: null,
-  leftKnee: null,
-  rightShoulder: null,
-  rightElbow: null,
-  rightHip: null,
-  rightKnee: null,
+// 高 : higher than hip
+// 低 : lower than hip
+const positionStatusDescription = ["高", "低"];
+
+let status = {
+  // can be set to index of statusDescription
+  jointStatus: {
+    leftShoulder: null,
+    rightShoulder: null,
+    leftElbow: null,
+    rightElbow: null,
+    leftHip: null,
+    rightHip: null,
+    leftKnee: null,
+    rightKnee: null,
+  },
+  positionStatus: {
+    nose: null,
+    leftShoulder: null,
+    rightShoulder: null,
+    leftElbow: null,
+    rightElbow: null,
+    leftWrist: null,
+    rightWrist: null,
+    leftHip: null,
+    rightHip: null,
+    leftKnee: null,
+    rightKnee: null,
+    leftAnkle: null,
+    rightAnkle: null,
+  },
 };
+
 let milestone = 0;
 let reachHalf = false;
 let repes = 0; // repetition counter
@@ -393,12 +422,8 @@ const drawResults = (results) => {
   });
 
   // set font for text
-  canvasCtx.font = "2rem Arial";
+  canvasCtx.font = "1.2rem Arial";
   canvasCtx.fillStyle = "#ffffff";
-
-  // Flip the canvas horizontally
-  canvasCtx.scale(-1, 1);
-  canvasCtx.translate(-guideCanvas.width, 0);
 
   // get all landmarks
   const mirroredLandmarks = results.poseLandmarks.map((landmark) => {
@@ -410,64 +435,68 @@ const drawResults = (results) => {
     };
   });
 
-  // draw landmarks and connectors
-  canvasCtx.globalCompositeOperation = "source-over";
-  drawConnectors(canvasCtx, mirroredLandmarks, POSE_CONNECTIONS, {
-    color: "#FFFF00",
-    lineWidth: 4,
-  });
-  drawLandmarks(canvasCtx, mirroredLandmarks, {
-    color: "#00FF00",
-    lineWidth: 2,
-  });
-
   // get normalized coordinates
   const coors = {
-    // left
+    // nose
+    nose:
+      mirroredLandmarks[0].visibility > visT
+        ? [mirroredLandmarks[0].x, mirroredLandmarks[0].y]
+        : null,
+
+    // shoulder
     leftShoulder:
       mirroredLandmarks[11].visibility > visT
         ? [mirroredLandmarks[11].x, mirroredLandmarks[11].y]
         : null,
-    leftElbow:
-      mirroredLandmarks[13].visibility > visT
-        ? [mirroredLandmarks[13].x, mirroredLandmarks[13].y]
-        : null,
-    leftWrist:
-      mirroredLandmarks[15].visibility > visT
-        ? [mirroredLandmarks[15].x, mirroredLandmarks[15].y]
-        : null,
-    leftHip:
-      mirroredLandmarks[23].visibility > visT
-        ? [mirroredLandmarks[23].x, mirroredLandmarks[23].y]
-        : null,
-    leftKnee:
-      mirroredLandmarks[25].visibility > visT
-        ? [mirroredLandmarks[25].x, mirroredLandmarks[25].y]
-        : null,
-    leftAnkle:
-      mirroredLandmarks[27].visibility > visT
-        ? [mirroredLandmarks[27].x, mirroredLandmarks[27].y]
-        : null,
-    // right
     rightShoulder:
       mirroredLandmarks[12].visibility > visT
         ? [mirroredLandmarks[12].x, mirroredLandmarks[12].y]
+        : null,
+
+    // elbow
+    leftElbow:
+      mirroredLandmarks[13].visibility > visT
+        ? [mirroredLandmarks[13].x, mirroredLandmarks[13].y]
         : null,
     rightElbow:
       mirroredLandmarks[14].visibility > visT
         ? [mirroredLandmarks[14].x, mirroredLandmarks[14].y]
         : null,
+
+    // wrist
+    leftWrist:
+      mirroredLandmarks[15].visibility > visT
+        ? [mirroredLandmarks[15].x, mirroredLandmarks[15].y]
+        : null,
     rightWrist:
       mirroredLandmarks[16].visibility > visT
         ? [mirroredLandmarks[16].x, mirroredLandmarks[16].y]
+        : null,
+
+    // hip
+    leftHip:
+      mirroredLandmarks[23].visibility > visT
+        ? [mirroredLandmarks[23].x, mirroredLandmarks[23].y]
         : null,
     rightHip:
       mirroredLandmarks[24].visibility > visT
         ? [mirroredLandmarks[24].x, mirroredLandmarks[24].y]
         : null,
+
+    // knee
+    leftKnee:
+      mirroredLandmarks[25].visibility > visT
+        ? [mirroredLandmarks[25].x, mirroredLandmarks[25].y]
+        : null,
     rightKnee:
       mirroredLandmarks[26].visibility > visT
         ? [mirroredLandmarks[26].x, mirroredLandmarks[26].y]
+        : null,
+
+    // ankle
+    leftAnkle:
+      mirroredLandmarks[27].visibility > visT
+        ? [mirroredLandmarks[27].x, mirroredLandmarks[27].y]
         : null,
     rightAnkle:
       mirroredLandmarks[28].visibility > visT
@@ -513,30 +542,63 @@ const drawResults = (results) => {
     ),
   };
 
-  // fuzzy logic for joints
+  // set joint status
   for (let key in angles) {
     if (angles[key] === null) {
       continue;
     }
     if (angles[key] > 150) {
-      jointStatus[key] = 0; // straight
+      status.jointStatus[key] = 0; // straight
     } else if (angles[key] < 150 && angles[key] > 90) {
-      jointStatus[key] = 1; // half-stright
+      status.jointStatus[key] = 1; // half-stright
     } else if (angles[key] < 90 && angles[key] > 60) {
-      jointStatus[key] = 2; // half-bent
+      status.jointStatus[key] = 2; // half-bent
     } else if (angles[key] < 60) {
-      jointStatus[key] = 3; // full-bent
+      status.jointStatus[key] = 3; // full-bent
     }
   }
 
-  // visualize angle
+  // set position status
+  for (let key in coors) {
+    if (
+      coors[key] === null ||
+      coors.leftHip === null ||
+      coors.rightHip === null
+    ) {
+      continue;
+    }
+    if (coors[key][1] < coors.leftHip[1] || coors[key][1] < coors.rightHip[1]) {
+      status.positionStatus[key] = 0; // high
+    } else {
+      status.positionStatus[key] = 1; // low
+    }
+  }
+
+  // Flip the canvas horizontally
+  canvasCtx.scale(-1, 1);
+  canvasCtx.translate(-guideCanvas.width, 0);
+
+  // visualize joint status
   for (let key in angles) {
     if (angles[key] === null) {
       continue;
     }
     canvasCtx.fillText(
-      `${angles[key].toFixed(1)} ${jointStatusDescription[jointStatus[key]]}`,
+      //   `${angles[key].toFixed(1)} ${jointStatusDescription[status.jointStatus[key]]}`,
+      `(${jointStatusDescription[status.jointStatus[key]]})`,
       coors[key][0] * guideCanvas.width,
+      coors[key][1] * guideCanvas.height - 10
+    );
+  }
+
+  // visualize position status
+  for (let key in coors) {
+    if (coors[key] === null) {
+      continue;
+    }
+    canvasCtx.fillText(
+      `(${positionStatusDescription[status.positionStatus[key]]})`,
+      coors[key][0] * guideCanvas.width - 40,
       coors[key][1] * guideCanvas.height - 10
     );
   }
@@ -548,16 +610,21 @@ const drawResults = (results) => {
     milestone = 0; // init milstone
     reachHalf = false; // init reachHalf
   }
-  if (milestone === swingArm.length - 1) {
+  if (milestone === exercises[exName].length - 1) {
     reachHalf = true;
   }
 
   let clear = true;
-  for (let key in swingArm[milestone]) {
-    if (jointStatus[key] !== swingArm[milestone][key]) {
-      clear = false;
+  for (let statusKey in exercises[exName][milestone]) {
+    for (let key in exercises[exName][milestone][statusKey]) {
+      if (
+        status[statusKey][key] !== exercises[exName][milestone][statusKey][key]
+      ) {
+        clear = false;
+      }
     }
   }
+
   if (clear & !reachHalf) {
     milestone++;
   } else if (clear & reachHalf) {
@@ -565,20 +632,21 @@ const drawResults = (results) => {
   }
 
   // visualize counter
-  canvasCtx.font = "2rem Arial";
+  canvasCtx.font = "1.2rem Arial";
   canvasCtx.fillStyle = "#000000";
   canvasCtx.fillText(
-    `milestone: ${milestone}
-        完成次數 : ${repes}`,
+    `動作: ${exName}
+    milestone: ${milestone}
+    完成次數: ${repes}`,
     10,
     30
     // canvasElement.width * 2/5,
     // canvasElement.height / 2
   );
 
-  // Flip the canvas horizontally
-  canvasCtx.scale(-1, 1);
-  canvasCtx.translate(-guideCanvas.width, 0);
+  //   // Flip the canvas horizontally
+  //   canvasCtx.scale(-1, 1);
+  //   canvasCtx.translate(-guideCanvas.width, 0);
 };
 
 /* SETUP MEDIAPIPE HOLISTIC INSTANCE */

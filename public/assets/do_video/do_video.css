@@ -1,0 +1,46 @@
+.video-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+.preview {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
+.corner {
+    bottom: 16px;
+    right: 16px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #222;
+}
+video {
+    text-align: center;
+    width: 50%;
+    height: auto;
+    /* transform: scale(-1, 1); */
+}
+.corner video {
+    max-height: 400px;
+}
+body {
+    margin: 0;
+}
+canvas {
+    display: block;
+}
+.preview canvas {
+    /* transform: scale(-1, 1); */
+}
+.guides {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: auto;
+    width: 50%;
+    z-index: 1;
+}
