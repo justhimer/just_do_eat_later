@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@mediapipe/pose": "^0.5.1675469404",
+    "@pixiv/three-vrm": "^1.0.8",
     "@tensorflow/tfjs": "^4.2.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/browserify": "^12.0.37",
@@ -34,6 +35,7 @@
     "fecha": "^4.2.3",
     "formidable": "^2.1.1",
     "grant": "^5.4.21",
+    "kalidokit": "^1.1.5",
     "knex": "^2.4.2",
     "nodemon": "^2.0.20",
     "package-hash": "^4.0.0",
