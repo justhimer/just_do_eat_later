@@ -1,6 +1,6 @@
 mediapipe/mp_env
 node_modules
-exercise_demo
+# exercise_demo
 public/assets/do_video/videos
 .vscode
 .DS_Store
