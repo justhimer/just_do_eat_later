@@ -657,7 +657,7 @@ const onResults = (results) => {
 // Pass holistic a callback function
 holistic.onResults(onResults);
 
-videoElement.src = "./assets/do_video/push-up-2.mp4";
+videoElement.src = "./assets/do_video/videos/push-up-2.mp4";
 videoElement.onloadeddata = (evt) => {
   let video = evt.target;
 
