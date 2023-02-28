@@ -124,8 +124,8 @@ async function menuLoader() {
     const status = await loginStatus()
     console.log(status)
     menu.innerHTML = `
-    <div id="nav-bg" class="btn"></div>
-    <div id="toggle-btn" class="btn">
+    <div id="nav-bg" class="test"></div>
+    <div id="toggle-btn" class="test">
         <span></span>
         <span></span>
         <span></span>
@@ -149,7 +149,7 @@ async function menuLoader() {
                             <span class="material-symbols-outlined">logout</span>
                             <p>Logout</p>
                         </div></a>
-                        <a href="*"><div class="icon_container circle">
+                        <a href="/cart.html"><div class="icon_container circle">
                             <span class="material-symbols-outlined">shopping_cart</span>
                             <p>Cart</p>
                         </div></a>

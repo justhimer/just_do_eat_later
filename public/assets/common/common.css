@@ -73,7 +73,7 @@ NAVIGATION BACKGROUND
 BUTTON
 ====== */
 /* #region session */
-.btn {
+.test {
     position: fixed;
     height: calc(var(--btn-size)*1px);
     width: calc(var(--btn-size)*1px);

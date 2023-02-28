@@ -93,14 +93,21 @@ export class ShopService {
     }
 
     async getAll(id:number): Promise<transactionDetails[]>{
-        let allTransaction = await this.knex.raw(`
-        select shopping_cart.id as id , shopping_cart.food_details_id as food_id , foods."name"  as food_name , shopping_cart.quantity as quantity , food_details.portion as portion, foods.image as image, foods.description as description
+        let allTransaction = (await this.knex.raw(`
+        select shopping_cart.id as id , shopping_cart.food_details_id as food_id , foods."name"  as food_name , shopping_cart.quantity as quantity , food_details.portion as portion, foods.image as image, foods.description as description, food_details.calories as calories
         from shopping_cart 
         left join food_details on shopping_cart.food_details_id  = food_details.id 
         left join foods on food_details.food_id = foods.id
-        where shopping_cart.user_id = $1
-        `,[id])
+        where shopping_cart.user_id = ${id}
+        `)).rows
 
         return allTransaction
     } 
+
+    async getLocations(): Promise<any>{
+        let locations = await this.knex('locations')
+        .select(["point","address","description"])
+
+        return locations
+    }
 }
