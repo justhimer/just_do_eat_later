@@ -6,7 +6,7 @@ async function exercise1addEventListener() {
         await Swal.fire({
             title: 'Push Up',
             html:
-                `<video width="320" height="240" controls src="../exercise_demo/20230226_173824 1.mp4"></video>`,
+                `<video width="320" height="240" controls src="/20230226_173824_1.mp4"></video>`,
             showCloseButton: true,
 
             confirmButtonText: 'Just Do!',
@@ -23,7 +23,7 @@ async function exercise2addEventListener() {
         await Swal.fire({
             title: 'Plank',
             html:
-                `<video width="320" height="240" controls src="../exercise_demo/20230226_185051.mp4"></video>`,
+                `<video width="320" height="240" controls src="/20230226_185051.mp4"></video>`,
             showCloseButton: true,
             showCloseButton: true,
             confirmButtonText: 'Just Do!',

@@ -6,7 +6,7 @@ async function foodboad1addEventListener() {
         await Swal.fire({
             title: 'Meatballs-with-Spanakopita-Rice(Regular)',
             text: 'Protein:41.62g,Energy:2238.4KJ,Calories:536.3cal,Fat Total:17.47g,Saturated Fat:5.79g,Carbohydrate:48.88g,Sugar:2.74g,Sodium:256.2mg,Fiber:2.7g',
-            imageUrl: '../Upload/food_uploads/Meatballs-with-Spanakopita-Rice_1120x.webp',
+            imageUrl: '/Meatballs-with-Spanakopita-Rice_1120x.jpeg',
             imageWidth: 300,
             imageHeight: 300,
             imageAlt: 'Meatballs-with-Spanakopita-Rice',
@@ -39,7 +39,7 @@ async function foodboad2addEventListener() {
         await Swal.fire({
             title: 'BEEF-MEX-LOADED(Regular)',
             text: 'Protein:32.44g,Energy:1692.98KJ,Calories:406.75cal,Fat Total:15.04g,Saturated Fat:6.85g,Carbohydrate:35.58g,Sugar:8.15g,Sodium:210.45mg,Fiber:4.95g',
-            imageUrl: '../Upload/food_uploads/BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.webp',
+            imageUrl: '/BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.jpeg',
             imageWidth: 300,
             imageHeight: 300,
             imageAlt: 'BEEF-MEX-LOADED',
