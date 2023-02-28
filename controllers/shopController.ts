@@ -37,6 +37,7 @@ export class ShopController {
                         calories: element.calories
                     }
                 }else {
+                    resData[element.name] = {}
                     resData[element.name][element.portion] = {
                         id: element.id,
                         portion: element.portion,
@@ -56,7 +57,7 @@ export class ShopController {
 
                 }
             });
-            // console.log("resData: ",resData);
+            console.log("resData: ",resData);
             
             res.status(200).json(resData)
             

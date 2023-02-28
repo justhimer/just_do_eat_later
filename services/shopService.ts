@@ -6,16 +6,16 @@ export class ShopService {
     constructor(private knex:Knex){}
 
     async getAllFood(): Promise<any>{
-        let allFood = await this.knex.raw(`
+        let allFood = (await this.knex.raw(`
         select food_details.id as id, foods.id as food_id, foods."name" as name , food_details.portion as portion, food_details.calories as calories, foods.food_type_id as type_id, food_types."name" as "type", foods.image as image, foods.description as description, foods.ingredients as ingredients, foods.preparation as preparation, foods.allergens as allergens
         from food_details
         inner join foods
         on food_details.food_id = foods.id 
         inner join food_types
         on food_types.id = foods.food_type_id 
-        `)
+        `)).rows
 
-        console.log("allFood: ",allFood)
+        // console.log("allFood: ",allFood)
         return allFood
     }
 

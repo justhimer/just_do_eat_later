@@ -144,6 +144,8 @@ export class UserController {
                 res.status(200).json({message:"Logged in"})
             }else{res.status(400).json({message:"Already logged in"})}
         } catch (error) {
+            console.log(error);
+            
             res.status(500).json({
                 message: '[USR004] - Server error'
             });
@@ -285,7 +287,7 @@ export class UserController {
                     first_name:knexData.first_name,
                     last_name:knexData.last_name,
                     gender:knexData.gender,
-                    dob: format(new Date(knexData.birth_date.toLocaleDateString('en-US',{timeZone:'Asia/Hong_Kong'})), 'YYYY-MM-DD'),
+                    dob: knexData.birth_date? format(new Date(knexData.birth_date.toLocaleDateString('en-US',{timeZone:'Asia/Hong_Kong'})), 'YYYY-MM-DD'): "",
                     height:knexData.height,
                     weight:knexData.weight
                 }
@@ -293,6 +295,8 @@ export class UserController {
                 return
             }
         } catch (error) {
+            console.log(error);
+            
             res.status(500).json({
                 message: '[USR007] - Server error'
             });
