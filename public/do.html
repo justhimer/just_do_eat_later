@@ -1,27 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <script>
-        window.CLOSURE_NO_DEPS=1
-    </script>
+    <meta charset="utf-8" />
+    <!-- HTML Meta Tags -->
+    <title>KalidoKit - Face and Body Rig Solver</title>
+    <meta name="description" content="Track face and body rigs just your browser webcam!" />
+
+    <!--     Basic Three.js -->
+    <script src="https://unpkg.com/three@0.133.0/build/three.js"></script>
+    <!--     GLTF Loader for Three.js -->
+    <script src="https://unpkg.com/three@0.133.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!--     Orbit Controls for Three.js -->
+    <script src="https://unpkg.com/three@0.133.0/examples/js/controls/OrbitControls.js"></script>
+    <!--     VRM Loader for Three.js -->
+    <script src="https://unpkg.com/@pixiv/three-vrm@0.6.7/lib/three-vrm.js"></script>
+    <!--     Mediapipe or Tensorflow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/holistic.js"
+        crossorigin="anonymous"></script>
+
+    <!--     Mediapipe Drawing Tools -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
+    <!--     Mediapipe Camera Tools -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils_3d/control_utils_3d.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script> 
-    
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script> -->
+    <!--     Kalidokit Kinematic Solver -->
+    <script src="https://cdn.jsdelivr.net/npm/kalidokit@1.1/dist/kalidokit.umd.js"></script>
+    <link rel="stylesheet" href="assets/do/do.css" />
 </head>
 
 <body>
-    <div class="container">
-        <video class="input_video" style="display: none;"></video>
-        <canvas class="output_canvas" width="1280px" height="720px"></canvas>
-    </div>
-   
+    <div class="video-container">
+        <!-- toggle corner if show vtuber -->
+        <div class="preview">
+            <video class="input_video"></video>
+            <canvas class="guides"></canvas>
+        </div>
+    </div>  
     <script type="module" src="assets/do/do.js"></script>
 </body>
 
