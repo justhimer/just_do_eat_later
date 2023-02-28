@@ -1,0 +1,10 @@
+:root {
+    --offset-value: 30;
+    --btn-size: 60;
+
+    --orange: #FFAA33;
+}
+
+#h1 {
+    color: var(--orange);
+}
