@@ -20,7 +20,7 @@ export class ShopController {
             let knexData = await this.shopService.getAllFood()
             console.log('knexData: ',knexData);
             
-            let knexTypes = await this.shopService.getDistinctTypes()
+            // let knexTypes = await this.shopService.getDistinctTypes()
             
 
             let resData = {};

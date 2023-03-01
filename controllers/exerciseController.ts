@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ExerciseService } from "../services/exerciseService";
+import { UserService } from "../services/userService";
 import { knex } from "../util/db";
 
 
@@ -9,6 +10,7 @@ export class ExerciseController {
 
     constructor(
         private exerciseService: ExerciseService,
+        private userService: UserService
     ) { }
 
 
@@ -55,5 +57,16 @@ export class ExerciseController {
         }
     }
 
-    
+    completedExercise =async (req:Request, res:Response) => {
+        try {
+            let {exercise_id,repetitions} = req.body
+            await this.exerciseService.completedExercise(req.session.user!.id,exercise_id,repetitions)
+            await this.userService.calcCalories(req.session.user!.id)
+            res.status(200).json({message:"success"})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR003] - Server error'
+            });
+        }
+    }
 }
