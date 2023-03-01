@@ -25,6 +25,15 @@ export class ExerciseService {
         return allTypes
     }
 
+    async getExercise(exercise_id:number): Promise<any>{
+        let exercise = await this.knex()
+        .select('*')
+        .from('exercises')
+        .where('id',exercise_id)
+
+        return exercise
+    }
+
     async completedExercise(user_id:number,exercise_id:number,repetitions:number) {
         let exerciseCalorie = (await this.knex()
         .select('calories')

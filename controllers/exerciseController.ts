@@ -57,6 +57,19 @@ export class ExerciseController {
         }
     }
 
+    getExercise =async (req:Request, res:Response) => {
+        try {
+            let exercise_id = Number(req.params.exercise_id)
+            let knexData = await this.exerciseService.getExercise(exercise_id)
+
+            res.status(200).json({knexData})
+        } catch (error) {
+            res.status(500).json({
+                message: '[USR003] - Server error'
+            });
+        }
+    }
+
     completedExercise =async (req:Request, res:Response) => {
         try {
             let {exercise_id,repetitions} = req.body
@@ -69,4 +82,6 @@ export class ExerciseController {
             });
         }
     }
+
+
 }
