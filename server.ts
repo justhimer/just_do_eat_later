@@ -82,6 +82,7 @@ app.use(express.static('images'))
 app.use(express.static('exercise_images'))
 app.use(express.static('exercise_demo'))
 app.use(express.static('food_images'))
+app.use(express.static('Upload'))
 app.use(isLoggedIn, express.static('protect'));
 
 /* #endregion */
