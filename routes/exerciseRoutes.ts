@@ -7,7 +7,7 @@ export function chooseexerciseRoutes() {
 
     exerciseRoutes.get('/allExercise', exerciseController.getAllExercise)
     exerciseRoutes.get('/doing/:exercise_id',exerciseController.getExercise)
-    exerciseRoutes.post('/completeExercise',isLoggedIn,exerciseController.completedExercise)
+    exerciseRoutes.post('/completeExercise',exerciseController.completedExercise)
 
     return exerciseRoutes;
 }
