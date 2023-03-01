@@ -306,7 +306,7 @@ async function refreshContent(section) {
                 </div>
 
                 <div id="birth_date">
-                    Date of Birth: ${new Date(dobData).toLocaleDateString('en-GB',{timeZone:'Asia/Hong_Kong'})}
+                    Date of Birth: ${dobData? new Date(dobData).toLocaleDateString('en-GB',{timeZone:'Asia/Hong_Kong'}): ""}
                 </div>
     `
 
