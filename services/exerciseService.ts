@@ -41,6 +41,7 @@ export class ExerciseService {
         .where('id',exercise_id)
         .first()).calories
         let totalCalories = exerciseCalorie*repetitions
+        console.log('totalCalories: ',totalCalories)
         await this.knex()
         .insert({
             user_id:user_id,
@@ -48,6 +49,6 @@ export class ExerciseService {
             repetitions:repetitions,
             calories_burn:totalCalories
         })
-        .into('exercise_history')
+        .into('exercises_history')
     }
 }

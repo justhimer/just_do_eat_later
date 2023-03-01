@@ -73,7 +73,13 @@ export class ExerciseController {
     completedExercise =async (req:Request, res:Response) => {
         try {
             let {exercise_id,repetitions} = req.body
+            console.log('exercise_id', exercise_id)
+            console.log('repetitions', repetitions)
+            console.log('exercise complete');
+            
             await this.exerciseService.completedExercise(req.session.user!.id,exercise_id,repetitions)
+            
+            console.log('calc calories')
             await this.userService.calcCalories(req.session.user!.id)
             res.status(200).json({message:"success"})
         } catch (error) {

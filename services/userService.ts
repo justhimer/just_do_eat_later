@@ -155,12 +155,12 @@ export class UserService {
         set "calories" = 
         coalesce((select sum (exercises_history.calories_burn)
         from exercises_history
-        where user_id =$1 ) ,0) - coalesce ((
+        where user_id = ${id} ) ,0) - coalesce ((
             select sum (transactions.total_calories) 
             from transactions 
-            where user_id = $1
+            where user_id = ${id}
             ) , 0)
-        where id = $1
-        `, [id])
+        where id = ${id}
+        `)
     }
 }
