@@ -3,7 +3,20 @@ import { exercises } from "./do_models.js";
 
 const exName = document.URL.split("?")[1].replace("exName=", "");
 
+// modes
 let selectedVtuber = false;
+let developmentMode = false;
+const closeModeValue = 0.06; // larger than this value, close mode will be activated
+let closeMode = false;
+
+// set time counter
+let exited = false;
+const exitButtonRequiredTime = 50; // 3 seconds
+let exitButtonTime = 0;
+let exitButtonInterval = setInterval(() => {
+  exitButtonTime++;
+}, 100);
+clearInterval(exitButtonInterval);
 
 // setup poses variables
 const visT = 0.0001; // visibilityThreshold, larger than visT means visible
@@ -15,7 +28,9 @@ const visT = 0.0001; // visibilityThreshold, larger than visT means visible
 const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
 // 高 : higher than hip
 // 低 : lower than hip
-const positionStatusDescription = ["高", "低"];
+// 左 : left of left hip
+// 右 : right of right hip
+const positionStatusDescription = ["高左", "高", "高右", "低左", "低", "低右"];
 
 let status = {
   // can be set to index of statusDescription
@@ -47,11 +62,10 @@ let status = {
 };
 
 let milestone = 0;
-let reachHalf = false;
 let repes = 0; // repetition counter
 
 /****************************/
-/**** vtuber setup start ****/
+/**** Vtuber Setup Start ****/
 /****************************/
 
 let currentVrm;
@@ -389,16 +403,42 @@ if (selectedVtuber) {
 }
 
 /****************************/
-/***** vtuber setup end *****/
+/***** Vtuber Setup End *****/
 /****************************/
+
+/***************************/
+/**** Draw Result Start ****/
+/***************************/
 
 let videoElement = document.querySelector(".input_video"),
   guideCanvas = document.querySelector("canvas.guides");
 
 /* draw canvas */
 const drawResults = (results) => {
-  if (!results.poseLandmarks) {
+  if (!results.poseLandmarks || exited) {
     return;
+  }
+
+  // select mode
+  //   let totalZ = 0;
+  //   for (let landmark of results.poseLandmarks) {
+  //     totalZ += landmark.z;
+  //   }
+  // console.log(results.poseLandmarks[0].z);
+
+  //   if (results.poseLandmarks[0].z > distantModeValue + 0.3) {
+  //     distantMode = true;
+  //   } else if (results.poseLandmarks[0].z < distantModeValue - 0.2) {
+  //     distantMode = false;
+  //   }
+
+  const distance = Math.abs(
+    results.poseLandmarks[2].x - results.poseLandmarks[5].x
+  );
+  if (distance > closeModeValue + 0.01) {
+    closeMode = true;
+  } else if (distance < closeModeValue - 0.01) {
+    closeMode = false;
   }
 
   videoElement.width = window.innerWidth;
@@ -411,15 +451,35 @@ const drawResults = (results) => {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
 
-  // Use `Mediapipe` drawing functions
-  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-    color: "#00cff7",
-    lineWidth: 2,
-  });
-  drawLandmarks(canvasCtx, results.poseLandmarks, {
-    color: "#ff0364",
-    lineWidth: 1,
-  });
+  // draw all landmarks and connectors
+  if (developmentMode) {
+    drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+      color: "#00cff7",
+      lineWidth: 2,
+    });
+    drawLandmarks(canvasCtx, results.poseLandmarks, {
+      color: "#ff0364",
+      lineWidth: 1,
+    });
+  }
+
+  // draw finger cursor
+  if (closeMode && results.leftHandLandmarks) {
+    canvasCtx.strokeStyle = "black";
+    canvasCtx.fillStyle = "yellow";
+    canvasCtx.globalAlpha = 0.5;
+    canvasCtx.beginPath();
+    canvasCtx.arc(
+      results.leftHandLandmarks[8].x * guideCanvas.width,
+      results.leftHandLandmarks[8].y * guideCanvas.height,
+      10,
+      0,
+      Math.PI * 2
+    );
+    canvasCtx.fill();
+    canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;
+  }
 
   // set font for text
   canvasCtx.font = "1.2rem Arial";
@@ -568,9 +628,21 @@ const drawResults = (results) => {
       continue;
     }
     if (coors[key][1] < coors.leftHip[1] || coors[key][1] < coors.rightHip[1]) {
-      status.positionStatus[key] = 0; // high
+      if (coors[key][0] > coors.leftHip[0]) {
+        status.positionStatus[key] = 0; // 高左
+      } else if (coors[key][0] < coors.rightHip[0]) {
+        status.positionStatus[key] = 2; // 高右
+      } else {
+        status.positionStatus[key] = 1; // 高
+      }
     } else {
-      status.positionStatus[key] = 1; // low
+      if (coors[key][0] > coors.leftHip[0]) {
+        status.positionStatus[key] = 3; // 低左
+      } else if (coors[key][0] < coors.rightHip[0]) {
+        status.positionStatus[key] = 5; // 低右
+      } else {
+        status.positionStatus[key] = 4; // 低
+      }
     }
   }
 
@@ -579,75 +651,158 @@ const drawResults = (results) => {
   canvasCtx.translate(-guideCanvas.width, 0);
 
   // visualize joint status
-  for (let key in angles) {
-    if (angles[key] === null) {
-      continue;
+  if (developmentMode) {
+    for (let key in angles) {
+      if (angles[key] === null) {
+        continue;
+      }
+      canvasCtx.fillText(
+        //   `${angles[key].toFixed(1)} ${jointStatusDescription[status.jointStatus[key]]}`,
+        `(${jointStatusDescription[status.jointStatus[key]]})`,
+        coors[key][0] * guideCanvas.width,
+        coors[key][1] * guideCanvas.height - 10
+      );
     }
-    canvasCtx.fillText(
-      //   `${angles[key].toFixed(1)} ${jointStatusDescription[status.jointStatus[key]]}`,
-      `(${jointStatusDescription[status.jointStatus[key]]})`,
-      coors[key][0] * guideCanvas.width,
-      coors[key][1] * guideCanvas.height - 10
-    );
   }
 
   // visualize position status
-  for (let key in coors) {
-    if (coors[key] === null) {
-      continue;
+  if (developmentMode) {
+    for (let key in coors) {
+      if (coors[key] === null) {
+        continue;
+      }
+      canvasCtx.fillText(
+        `(${positionStatusDescription[status.positionStatus[key]]})`,
+        coors[key][0] * guideCanvas.width - 60,
+        coors[key][1] * guideCanvas.height - 10
+      );
     }
-    canvasCtx.fillText(
-      `(${positionStatusDescription[status.positionStatus[key]]})`,
-      coors[key][0] * guideCanvas.width - 40,
-      coors[key][1] * guideCanvas.height - 10
-    );
   }
 
   // fuzzy logic for exercise
-  if (milestone === -1) {
-    // milestone = -1 means one repetition is completed
+  if (milestone === exercises[exName].length) {
     repes++;
     milestone = 0; // init milstone
-    reachHalf = false; // init reachHalf
   }
-  if (milestone === exercises[exName].length - 1) {
-    reachHalf = true;
-  }
-
   let clear = true;
   for (let statusKey in exercises[exName][milestone]) {
-    for (let key in exercises[exName][milestone][statusKey]) {
-      if (
-        status[statusKey][key] !== exercises[exName][milestone][statusKey][key]
-      ) {
+    for (let bodyPart in exercises[exName][milestone][statusKey]) {
+      let checkEither = false;
+      for (let option of exercises[exName][milestone][statusKey][bodyPart]) {
+        if (status[statusKey][bodyPart] === option) {
+          checkEither = true;
+          break;
+        }
+      }
+      if (!checkEither) {
         clear = false;
+        break;
       }
     }
   }
-
-  if (clear & !reachHalf) {
+  if (clear) {
     milestone++;
-  } else if (clear & reachHalf) {
-    milestone--;
   }
 
   // visualize counter
-  canvasCtx.font = "1.2rem Arial";
-  canvasCtx.fillStyle = "#000000";
-  canvasCtx.fillText(
-    `動作: ${exName}
-    milestone: ${milestone}
-    完成次數: ${repes}`,
-    10,
-    30
-    // canvasElement.width * 2/5,
-    // canvasElement.height / 2
-  );
+  if (closeMode) {
+    canvasCtx.font = "1.2rem Arial";
+    canvasCtx.fillStyle = "#000000";
+    canvasCtx.fillText(
+      `${exName.toUpperCase()}
+      完成次數: ${repes}`,
+      10,
+      30
+      // canvasElement.width * 2/5,
+      // canvasElement.height / 2
+    );
+  } else {
+    canvasCtx.font = "20rem Arial";
+    canvasCtx.fillStyle = "#ffffff";
+    canvasCtx.fillText(
+      //   `${parseFloat(results.poseLandmarks[0].z).toFixed(2)}`,
+      //   `${distance.toFixed(2)}`,
+      `${repes}`,
+      guideCanvas.width / 2 - 150,
+      guideCanvas.height / 2 + 100
+    );
+  }
 
-  //   // Flip the canvas horizontally
-  //   canvasCtx.scale(-1, 1);
-  //   canvasCtx.translate(-guideCanvas.width, 0);
+  /**** Exit Corner Start ****/
+  if (closeMode) {
+    // draw finger toggle square
+    canvasCtx.strokeStyle = "black";
+    canvasCtx.fillStyle = "white";
+    canvasCtx.globalAlpha = 0.5;
+    canvasCtx.lineWidth = 2;
+    canvasCtx.rect(guideCanvas.width - 100, guideCanvas.height - 100, 100, 100);
+    canvasCtx.fill();
+    canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;
+
+    // draw exit text
+    canvasCtx.font = "1rem Arial";
+    canvasCtx.fillStyle = "black";
+    canvasCtx.fillText("EXIT", guideCanvas.width - 68, guideCanvas.height - 45);
+
+    // trigger exit
+    let fingerOnExit = false;
+    if (results.leftHandLandmarks) {
+      if (results.leftHandLandmarks[8]) {
+        const absX = results.leftHandLandmarks[8].x * guideCanvas.width;
+        const absY = results.leftHandLandmarks[8].y * guideCanvas.height;
+        if (
+          absX > 0 &&
+          absX < 100 &&
+          absY > guideCanvas.height - 100 &&
+          absY < guideCanvas.height
+        ) {
+          fingerOnExit = true;
+          if (exitButtonTime === 0) {
+            exitButtonInterval = setInterval(() => {
+              exitButtonTime++;
+            }, 100);
+          }
+        }
+      }
+    }
+
+    if (exitButtonTime >= exitButtonRequiredTime) {
+      window.location.href = "do_menu.html";
+      exited = true;
+      return;
+    }
+
+    if (!fingerOnExit && exitButtonTime > 0) {
+      clearInterval(exitButtonInterval);
+      exitButtonTime = 0;
+    }
+
+    // draw circle
+    canvasCtx.strokeStyle = "black";
+    canvasCtx.globalAlpha = 0.5;
+    canvasCtx.lineWidth = 5;
+    canvasCtx.beginPath();
+    canvasCtx.arc(
+      guideCanvas.width - 50,
+      guideCanvas.height - 50,
+      45,
+      0,
+      Math.PI * 2 * (exitButtonTime / exitButtonRequiredTime)
+    );
+    canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;
+  }
+  /**** Exit Corner End ****/
 };
+
+/***************************/
+/***** Draw Result End *****/
+/***************************/
+
+/****************************/
+/**** Run Holistic Start ****/
+/****************************/
 
 /* SETUP MEDIAPIPE HOLISTIC INSTANCE */
 const holistic = new Holistic({
@@ -677,7 +832,12 @@ const onResults = (results) => {
 // Pass holistic a callback function
 holistic.onResults(onResults);
 
+/****************************/
+/***** Run Holistic End *****/
+/****************************/
+
 // Use `Mediapipe` utils to get camera - lower resolution = higher fps
+// resolution : 1280x960, 960x720, 800x600, 640x480, 480x360
 const camera = new Camera(videoElement, {
   onFrame: async () => {
     await holistic.send({ image: videoElement });
@@ -686,10 +846,3 @@ const camera = new Camera(videoElement, {
   height: 1280,
 });
 camera.start();
-
-// // for video
-// video.requestVideoFrameCallback(async()=>{
-//     await holistic.send({ image: video });
-// });
-
-// 1280x960, 960x720, 800x600, 640x480, 480x360

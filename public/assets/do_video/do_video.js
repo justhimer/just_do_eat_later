@@ -3,6 +3,7 @@ import { exercises } from "../do/do_models.js";
 
 const exName = document.URL.split("?")[1].replace("exName=", "");
 
+// modes
 let selectedVtuber = false;
 
 // setup poses variables
@@ -15,7 +16,9 @@ const visT = 0.0001; // visibilityThreshold, larger than visT means visible
 const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
 // 高 : higher than hip
 // 低 : lower than hip
-const positionStatusDescription = ["高", "低"];
+// 左 : left of left hip
+// 右 : right of right hip
+const positionStatusDescription = ["高左", "高", "高右", "低左", "低", "低右"];
 
 let status = {
   // can be set to index of statusDescription
@@ -47,7 +50,6 @@ let status = {
 };
 
 let milestone = 0;
-let reachHalf = false;
 let repes = 0; // repetition counter
 
 /****************************/
@@ -427,9 +429,7 @@ const drawResults = (results) => {
   const coors = {
     // nose
     nose:
-      landmarks[0].visibility > visT
-        ? [landmarks[0].x, landmarks[0].y]
-        : null,
+      landmarks[0].visibility > visT ? [landmarks[0].x, landmarks[0].y] : null,
 
     // shoulder
     leftShoulder:
@@ -556,9 +556,21 @@ const drawResults = (results) => {
       continue;
     }
     if (coors[key][1] < coors.leftHip[1] || coors[key][1] < coors.rightHip[1]) {
-      status.positionStatus[key] = 0; // high
+      if (coors[key][0] > coors.leftHip[0]) {
+        status.positionStatus[key] = 0; // 高左
+      } else if (coors[key][0] < coors.rightHip[0]) {
+        status.positionStatus[key] = 2; // 高右
+      } else {
+        status.positionStatus[key] = 1; // 高
+      }
     } else {
-      status.positionStatus[key] = 1; // low
+      if (coors[key][0] > coors.leftHip[0]) {
+        status.positionStatus[key] = 3; // 低左
+      } else if (coors[key][0] < coors.rightHip[0]) {
+        status.positionStatus[key] = 5; // 低右
+      } else {
+        status.positionStatus[key] = 4; // 低
+      }
     }
   }
 
@@ -588,31 +600,28 @@ const drawResults = (results) => {
   }
 
   // fuzzy logic for exercise
-  if (milestone === -1) {
-    // milestone = -1 means one repetition is completed
+  if (milestone === exercises[exName].length) {
     repes++;
     milestone = 0; // init milstone
-    reachHalf = false; // init reachHalf
   }
-  if (milestone === exercises[exName].length - 1) {
-    reachHalf = true;
-  }
-
   let clear = true;
   for (let statusKey in exercises[exName][milestone]) {
-    for (let key in exercises[exName][milestone][statusKey]) {
-      if (
-        status[statusKey][key] !== exercises[exName][milestone][statusKey][key]
-      ) {
+    for (let bodyPart in exercises[exName][milestone][statusKey]) {
+      let checkEither = false;
+      for (let option of exercises[exName][milestone][statusKey][bodyPart]) {
+        if (status[statusKey][bodyPart] === option) {
+          checkEither = true;
+          break;
+        }
+      }
+      if (!checkEither) {
         clear = false;
+        break;
       }
     }
   }
-
-  if (clear & !reachHalf) {
+  if (clear) {
     milestone++;
-  } else if (clear & reachHalf) {
-    milestone--;
   }
 
   // visualize counter
@@ -626,6 +635,12 @@ const drawResults = (results) => {
     30
     // canvasElement.width * 2/5,
     // canvasElement.height / 2
+  );
+  canvasCtx.font = "20rem Arial";
+  canvasCtx.fillText(
+    `${repes}`,
+    guideCanvas.width / 2 - 60,
+    guideCanvas.height / 2
   );
 };
 
@@ -657,7 +672,7 @@ const onResults = (results) => {
 // Pass holistic a callback function
 holistic.onResults(onResults);
 
-videoElement.src = "./assets/do_video/videos/sit-up-1.mp4";
+videoElement.src = "./assets/do_video/videos/squat-1.mp4";
 videoElement.onloadeddata = (evt) => {
   let video = evt.target;
 
