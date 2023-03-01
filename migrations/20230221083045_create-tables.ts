@@ -68,6 +68,10 @@ export async function up(knex: Knex): Promise<void> {
         table.string('name');
         table.integer('intensity_id').unsigned();
         table.foreign('intensity_id').references('intensities.id')
+        table.integer('calories');
+        table.text('details');
+        table.text('sample_video');
+        table.jsonb('ai')
         table.timestamps(false, true);
     });
 

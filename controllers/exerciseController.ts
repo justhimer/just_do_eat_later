@@ -55,42 +55,5 @@ export class ExerciseController {
         }
     }
 
-    addExercise = async (req: Request, res: Response) => {
-        try {
-            let exercise_id = req.body.exercise_id;
-            await this.exerciseService.addItem(req.session.user!.id)
-            res.status(200).json({ message: "Success!" })
-            return
-        } catch (error) {
-            res.status(500).json({
-                message: '[USR004] Server Error'
-            });
-        }
-    }
-
-    removeExercise = async (req: Request, res: Response) => {
-        try {
-            let exercise_id = req.body.exercise_id;
-            await this.exerciseService.deleteItem(req.session.user!.id)
-            res.status(200).json({ message: "Success!" })
-            return
-        } catch (error) {
-            res.status(500).json({
-                message: '[USR005] - Server error'
-            });
-        }
-    }
-
-
-    countCalorise = async (req: Request, res: Response) => {
-        try {
-            let exercise_history_id = req.body.exercise_history_id
-            let knexData = await this.exerciseService.countCalorise(req.session.user!.id)
-            res.status(200).json(knexData)
-        } catch (error) {
-            res.status(500).json({
-                message: '[USR006] - Server error'
-            })
-        }
-    }
+    
 }

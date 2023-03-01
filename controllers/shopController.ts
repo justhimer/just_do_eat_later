@@ -172,6 +172,7 @@ export class ShopController {
         try {
             //transactionService
             //txn
+            await this.userService.calcCalories(req.session.user!.id)
         } catch (error) {
             res.status(500).json({
                 message: '[USR003] - Server error'

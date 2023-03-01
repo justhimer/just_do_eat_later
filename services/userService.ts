@@ -146,18 +146,20 @@ export class UserService {
             .where("id", id)
             .first()
 
-        return knexData.calorie
+        return knexData
     }
 
     async calcCalories(id: number) {
-        let knexData = await this.knex.raw(`
+        await this.knex.raw(`
         update users 
         set "calories" = 
-            (
+        coalesce((select sum (exercises_history.calories_burn)
+        from exercises_history
+        where user_id =$1 ) ,0) - coalesce ((
             select sum (transactions.total_calories) 
             from transactions 
             where user_id = $1
-            )
+            ) , 0)
         where id = $1
         `, [id])
     }
