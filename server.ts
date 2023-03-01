@@ -65,7 +65,7 @@ export const transactionService = new TransactionService(knex)
 
 export const shopService = new ShopService(knex);
 export const shopController = new ShopController(shopService, userService, transactionService);
-app.use('/shop', makeShopRoutes());
+app.use('/shop',isLoggedIn, makeShopRoutes());
 
 
 export const exerciseService = new ExerciseService(knex);

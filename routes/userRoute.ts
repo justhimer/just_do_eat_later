@@ -20,12 +20,5 @@ export function makeUserRoutes() {
     userRoutes.get('/loginStatus',userController.loginStatus)
     userRoutes.get('/calories',isLoggedIn,userController.getCalories)
 
-    userRoutes.get('/test',(req,res)=>{
-        console.log(req.session.user? "there is a user logged in: ": "there is no user");
-        console.log(req.session.user)
-        res.status(200)
-        return
-    })
-
 	return userRoutes;
 }

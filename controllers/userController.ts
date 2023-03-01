@@ -306,7 +306,11 @@ export class UserController {
 
     getCalories =async (req: Request, res:Response) => {
         try {
+            console.log("calc calories");
+            
             await this.userService.calcCalories(req.session.user!.id)
+
+            console.log('get calories')
             let knexData = await this.userService.getCalroies(req.session.user!.id)
             console.log(knexData)
             res.status(200).json(knexData)
