@@ -44,36 +44,36 @@ export const exercises = {
     {
       // 0 - push up
       jointStatus: { leftElbow: [0], rightElbow: [0] },
-      positionStatus: { nose: [0] },
+      positionStatus: { nose: [0, 1] },
     },
     {
       // 1 - laid down
       jointStatus: { leftElbow: [2, 3], rightElbow: [2, 3] },
-      positionStatus: { nose: [1] },
+      positionStatus: { nose: [2, 3] },
     },
   ],
   sitUp: [
     {
       // 0 - laid down
       jointStatus: { leftHip: [0], rightHip: [0] },
-      positionStatus: { leftKnee: [0, 1, 2], rightKnee: [0, 1, 2] },
+      positionStatus: { leftKnee: [0, 1], rightKnee: [0, 1] },
     },
     {
       // 1 - sit up
       jointStatus: { leftHip: [2], rightHip: [2] },
-      positionStatus: { leftKnee: [0, 1, 2], rightKnee: [0, 1, 2] },
+      positionStatus: { leftKnee: [0, 1], rightKnee: [0, 1] },
     },
   ],
   legRaise: [
     {
       // 0 - laid down
       jointStatus: { leftHip: [0], rightHip: [0] },
-      positionStatus: { leftAnkle: [3, 4, 5], rightAnkle: [3, 4, 5] },
+      positionStatus: { leftAnkle: [2,3], rightAnkle: [2,3] },
     },
     {
       // 1 - legs raised
       jointStatus: { leftHip: [1], rightHip: [1] },
-      positionStatus: { leftAnkle: [0, 1, 2], rightAnkle: [0, 1, 2] },
+      positionStatus: { leftAnkle: [0, 1], rightAnkle: [0, 1] },
     },
   ],
   squat: [
@@ -98,18 +98,19 @@ export const exercises = {
         leftElbow: [2, 3],
         rightElbow: [2, 3],
       },
-      positionStatus: { leftKnee: [0, 1, 2], rightKnee: [0, 1, 2] },
+      positionStatus: { leftKnee: [0, 1], rightKnee: [0, 1] },
     },
   ],
   sideJump: [
     {
-      // 0 - stand up
+      // 0 - stand up at right
       jointStatus: {
         leftHip: [0],
         rightHip: [0],
         leftKnee: [0],
         rightKnee: [0],
       },
+      positionStatus: { leftKnee: [1, 3], rightKnee: [1, 3] },
     },
     {
       // 1 - jump to left
@@ -117,15 +118,25 @@ export const exercises = {
         leftHip: [2, 3],
         leftKnee: [2, 3],
       },
-      positionStatus: { leftKnee: [0] },
+      positionStatus: { leftKnee: [0, 2], rightKnee: [1, 3] },
     },
+    // {
+    //   // 2 - jump to left
+    //   jointStatus: {
+    //     rightHip: [1, 2, 3],
+    //     rightKnee: [1, 2, 3],
+    //   },
+    //   positionStatus: { leftKnee: [3, 4, 5] },
+    // },
     {
-      // 2 - jump to left
+      // 2 - stand up at left
       jointStatus: {
-        rightHip: [2, 3],
-        rightKnee: [2, 3],
+        leftHip: [0],
+        rightHip: [0],
+        leftKnee: [0],
+        rightKnee: [0],
       },
-      positionStatus: { leftKnee: [3, 4, 5] },
+      positionStatus: { leftKnee: [0, 2], rightKnee: [0, 2] },
     },
     {
       // 3 - jump to right
@@ -133,24 +144,25 @@ export const exercises = {
         rightHip: [2, 3],
         rightKnee: [2, 3],
       },
-      positionStatus: { rightKnee: [2] },
+      positionStatus: { leftKnee: [0, 2], rightKnee: [1, 3] },
     },
+    // {
+    //   // 4- jump to right
+    //   jointStatus: {
+    //     leftHip: [1, 2, 3],
+    //     leftKnee: [1, 2, 3],
+    //   },
+    //   positionStatus: { rightKnee: [3, 4, 5] },
+    // },
     {
-      // 4 - jump to right
-      jointStatus: {
-        leftHip: [2, 3],
-        leftKnee: [2, 3],
-      },
-      positionStatus: { rightKnee: [3, 4, 5] },
-    },
-    {
-      // 5 - stand up
+      // 4 - stand up at right
       jointStatus: {
         leftHip: [0],
         rightHip: [0],
         leftKnee: [0],
         rightKnee: [0],
       },
+      positionStatus: { leftKnee: [1, 3], rightKnee: [1, 3] },
     },
   ],
 };

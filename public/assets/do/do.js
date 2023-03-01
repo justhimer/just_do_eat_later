@@ -28,9 +28,9 @@ const visT = 0.0001; // visibilityThreshold, larger than visT means visible
 const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
 // 高 : higher than hip
 // 低 : lower than hip
-// 左 : left of left hip
-// 右 : right of right hip
-const positionStatusDescription = ["高左", "高", "高右", "低左", "低", "低右"];
+// 左 : left of half screen
+// 右 : right of half screen
+const positionStatusDescription = ["高左", "高右", "低左", "低右"];
 
 let status = {
   // can be set to index of statusDescription
@@ -628,20 +628,16 @@ const drawResults = (results) => {
       continue;
     }
     if (coors[key][1] < coors.leftHip[1] || coors[key][1] < coors.rightHip[1]) {
-      if (coors[key][0] > coors.leftHip[0]) {
+      if (coors[key][0] < 0.5) {
         status.positionStatus[key] = 0; // 高左
-      } else if (coors[key][0] < coors.rightHip[0]) {
-        status.positionStatus[key] = 2; // 高右
-      } else {
-        status.positionStatus[key] = 1; // 高
+      } else if (coors[key][0] >= 0.5) {
+        status.positionStatus[key] = 1; // 高右
       }
     } else {
-      if (coors[key][0] > coors.leftHip[0]) {
-        status.positionStatus[key] = 3; // 低左
-      } else if (coors[key][0] < coors.rightHip[0]) {
-        status.positionStatus[key] = 5; // 低右
-      } else {
-        status.positionStatus[key] = 4; // 低
+      if (coors[key][0] < 0.5) {
+        status.positionStatus[key] = 2; // 低左
+      } else if (coors[key][0] >= 0.5) {
+        status.positionStatus[key] = 3; // 低右
       }
     }
   }
@@ -710,6 +706,7 @@ const drawResults = (results) => {
     canvasCtx.fillStyle = "#000000";
     canvasCtx.fillText(
       `${exName.toUpperCase()}
+      milestone: ${milestone}
       完成次數: ${repes}`,
       10,
       30
