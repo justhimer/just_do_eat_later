@@ -6,8 +6,8 @@ export function chooseexerciseRoutes() {
     const exerciseRoutes = express.Router();
 
     exerciseRoutes.get('/allExercise', exerciseController.getAllExercise)
-    exerciseRoutes.get('/doing/:exercise_id',exerciseController.getExercise)
-    exerciseRoutes.post('/completeExercise',exerciseController.completedExercise)
+    exerciseRoutes.get('/doing/:exercise_id',isLoggedIn,exerciseController.getExercise)
+    exerciseRoutes.post('/completeExercise',isLoggedIn,exerciseController.completedExercise)
 
     return exerciseRoutes;
 }

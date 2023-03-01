@@ -4,7 +4,7 @@ import {format} from "fecha"
 
 export function formidableUserDetails(req: express.Request){
     const form = formidable({
-        uploadDir : "images/users",
+        uploadDir : "uploads/user_upload",
         keepExtensions: true,
         maxFiles: 1,
         maxFileSize: 200*1024**2,
@@ -34,7 +34,7 @@ export function formidableUserDetails(req: express.Request){
 
 export function formidableIconUpdate(req: express.Request){
     const form = formidable({
-        uploadDir : "images/users",
+        uploadDir : "uploads/user_upload",
         keepExtensions: true,
         maxFiles: 1,
         maxFileSize: 200*1024**2,

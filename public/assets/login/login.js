@@ -16,7 +16,7 @@ function login(){
             email:form.email.value,
             password:form.password.value
         }
-        let res = fetch('/users/login',{
+        let res = await fetch('/users/login',{
             method:"POST",
             headers:{
                 "Content-Type":"application/json",

@@ -1,0 +1,37 @@
+.order_container{
+    margin: 2rem 1rem;
+    padding: 1rem;
+    border: 2px solid black;
+    height: 10rem;
+    display: flex;
+}
+
+.order_no{
+    width: 3rem;
+    display: flex;
+    align-items: center;
+}
+
+.order_details{
+    margin: 0 1rem;
+    width:inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+}
+.order_content{
+    max-height: auto;
+    display: flex;
+    overflow: scroll;
+    -ms-overflow-style: none;
+}
+.order_content::-webkit-scrollbar{
+    width: 0 !important
+}
+
+.collected_status{
+    width: 10rem;
+    display: flex;
+    align-items: center;
+}

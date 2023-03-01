@@ -15,7 +15,6 @@ export class ShopService {
         on food_types.id = foods.food_type_id 
         `)).rows
 
-        // console.log("allFood: ",allFood)
         return allFood
     }
 
@@ -110,7 +109,7 @@ export class ShopService {
 
     async getLocations(): Promise<any>{
         let locations = await this.knex('locations')
-        .select(["point","address","description"])
+        .select(["id","title","point","address","description"])
 
         return locations
     }
@@ -127,8 +126,6 @@ export class ShopService {
                 })
                 .into('transactions')
                 .returning('id'))[0].id
-
-            console.log('transaction_id: ', transaction_id);
             
             let shopping_list = await txn
                 .select(["food_detail_id","quantity"])
@@ -139,7 +136,7 @@ export class ShopService {
                 element['transaction_id'] = transaction_id
                 element['quantity'] = element['quantity']
                 element['food_detail_id'] = element['food_detail_id']
-                console.log(element)
+
             })
 
             await txn
@@ -158,5 +155,41 @@ export class ShopService {
             await txn.rollback();
             return {result: false}
         }
+    }
+
+    async getAllOrders(user_id:number) :Promise<any>{
+        let orders = (await this.knex.raw(`
+        select transactions.id as id, transactions.user_id as user_id, transactions.total_calories as calories, transactions.status as status, locations.title as title, locations.address as address 
+        from transactions
+        inner join locations
+        on transactions.location_id = locations.id
+        where user_id = ${user_id}
+        order by transactions.created_at DESC
+        `)).rows
+
+        let callArr:any = []
+        orders.forEach((elem:any)=>{
+            callArr.push(elem.id)
+        })
+
+        console.log(orders)
+        let food = (await this.knex.raw(`
+        select transaction_details.id as id, transaction_details.transaction_id as trans_id, food_details.portion as portion, foods."name" as "name", transaction_details.quantity 
+        from transaction_details
+        inner join food_details
+        on transaction_details.food_detail_id = food_details.id 
+        inner join foods
+        on food_details.food_id = foods.id
+        where transaction_id in (${callArr.join(",")})
+        `)).rows
+
+        console.log(orders)
+        return {orders,food}
+    }
+
+    async collectedOrder (order_id:number){
+        await this.knex('transactions')
+        .update({status:"complete"})
+        .where("id",order_id)
     }
 }
