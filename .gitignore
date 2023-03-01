@@ -6,3 +6,4 @@ public/assets/do_video/videos
 .DS_Store
 .env
 exercise_demo
+yarn-error.log

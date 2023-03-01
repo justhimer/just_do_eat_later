@@ -3,7 +3,7 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
 
   document.getElementById('loading').style.display = 'block';
 
-  setTimeout(calculateCalories, 2000);
+  setTimeout(calculateCalories, 500);
 
   e.preventDefault();
 });
@@ -59,7 +59,7 @@ function errorMessage(error) {
 
   card.insertBefore(errorDiv, heading);
 
-  setTimeout(clearError, 2000);
+  setTimeout(clearError, 500);
 }
 
 function clearError() {
