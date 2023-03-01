@@ -2,7 +2,7 @@ const menu = document.querySelector("#hamburger")
 const loginStatus = getStatus
 
 
-async function main(){
+async function main() {
     //init important variables
     /* #region session */
     let elem,
@@ -85,17 +85,18 @@ async function main(){
             document.querySelector('.nav_ul').classList.toggle('shown')
         }
     })
-    
+
     document.querySelectorAll(".icon_container").forEach(element => {
-        element.addEventListener("mouseover",async (event)=>{
-            if (!event.target.classList.contains('pulse'))
-            {await event.target.classList.add('pulse')
-            setTimeout(async()=>{
-                await event.target.classList.remove('pulse')
-            },749)}
+        element.addEventListener("mouseover", async (event) => {
+            if (!event.target.classList.contains('pulse')) {
+                await event.target.classList.add('pulse')
+                setTimeout(async () => {
+                    await event.target.classList.remove('pulse')
+                }, 749)
+            }
         })
     });
-        
+
     /* #endregion */
 
 
@@ -137,8 +138,8 @@ async function menuLoader() {
                 <nav class="nav_container">
                     <ul class="nav_ul">
                         <li><a class="nav link" href="/">Home</a></li>
-                        <li><a class="nav link" href="#0">Just Do</a></li>
-                        <li><a class="nav link" href="#0">Eat Later</a></li>
+                        <li><a class="nav link" href="/exercise.html">Just Do</a></li>
+                        <li><a class="nav link" href="/food-celection.html">Eat Later</a></li>
                     </ul>
                     <div class="other_container">
                         <a href="/profile.html"><div class="icon_container circle">
@@ -163,8 +164,8 @@ async function menuLoader() {
                 <nav class="nav_container">
                     <ul class="nav_ul">
                         <li><a class="nav link" href="/">Home</a></li>
-                        <li><a class="nav link" href="#0">Just Do</a></li>
-                        <li><a class="nav link" href="#0">Eat Later</a></li>
+                        <li><a class="nav link" href="/exercise.html">Just Do</a></li>
+                        <li><a class="nav link" href="/food-celection.html">Eat Later</a></li>
                     </ul>
                     <div class="other_container">
                         <a href="/login.html"><div class="icon_container circle">
