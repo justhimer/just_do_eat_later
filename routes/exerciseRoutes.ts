@@ -1,13 +1,13 @@
 import express, { Express } from "express";
 import { exerciseController } from "../server";
+import { isLoggedIn } from "../util/guard";
 
 export function chooseexerciseRoutes() {
     const exerciseRoutes = express.Router();
 
     exerciseRoutes.get('/allExercise', exerciseController.getAllExercise)
-    exerciseRoutes.post('/addExercise', exerciseController.addExercise)
-    exerciseRoutes.post('/removeExercise', exerciseController.removeExercise)
-    exerciseRoutes.get('/countCalorise', exerciseController.countCalorise)
+    exerciseRoutes.get('/doing/:exercise_id',exerciseController.getExercise)
+    exerciseRoutes.post('/completeExercise',exerciseController.completedExercise)
 
     return exerciseRoutes;
 }

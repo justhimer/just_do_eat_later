@@ -65,11 +65,11 @@ export const transactionService = new TransactionService(knex)
 
 export const shopService = new ShopService(knex);
 export const shopController = new ShopController(shopService, userService, transactionService);
-app.use('/shop', isLoggedIn, makeShopRoutes());
+app.use('/shop',isLoggedIn, makeShopRoutes());
 
 
 export const exerciseService = new ExerciseService(knex);
-export const exerciseController = new ExerciseController(exerciseService);
+export const exerciseController = new ExerciseController(exerciseService,userService);
 app.use('/exercise', chooseexerciseRoutes())
 /* #endregion */
 

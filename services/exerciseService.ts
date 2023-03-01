@@ -25,32 +25,30 @@ export class ExerciseService {
         return allTypes
     }
 
-    async addItem(id: number): Promise<any> {
-        await this.knex()
-            .where({
-                user_id: id,
-                exercise: id,
-                intensity_id: id,
-            })
+    async getExercise(exercise_id:number): Promise<any>{
+        let exercise = await this.knex()
+        .select('*')
+        .from('exercises')
+        .where('id',exercise_id)
 
+        return exercise
     }
 
-    async deleteItem(id: number): Promise<any> {
+    async completedExercise(user_id:number,exercise_id:number,repetitions:number) {
+        let exerciseCalorie = (await this.knex()
+        .select('calories')
+        .from('exercises')
+        .where('id',exercise_id)
+        .first()).calories
+        let totalCalories = exerciseCalorie*repetitions
+        console.log('totalCalories: ',totalCalories)
         await this.knex()
-            .where({
-                user_id: id,
-                exercise: id,
-                intensity_id: id,
-            })
-            .del()
-    }
-
-    async countCalorise(id: number): Promise<any> {
-        await this.knex()
-            .select('exercise')
-            .where({
-                exercise_id: id,
-
-            })
+        .insert({
+            user_id:user_id,
+            exercise_id:exercise_id,
+            repetitions:repetitions,
+            calories_burn:totalCalories
+        })
+        .into('exercises_history')
     }
 }

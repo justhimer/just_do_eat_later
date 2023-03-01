@@ -1,3 +1,6 @@
+
+
+
 const exercise1 = document.querySelector('#exercisename_1')
 
 async function exercise1addEventListener() {

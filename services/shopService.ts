@@ -32,7 +32,7 @@ export class ShopService {
         await this.knex
         .insert({
             user_id: id,
-            food_details_id: food_id,
+            food_detail_id: food_id,
             quantity: quantity
         })
         .into('shopping_cart')
@@ -42,7 +42,7 @@ export class ShopService {
         await this.knex('shopping_cart')
         .where({
             user_id: id,
-            food_details_id: food_id
+            food_detail_id: food_id
         })
         .increment("quantity",quantity)
     }
@@ -51,7 +51,7 @@ export class ShopService {
         await this.knex('shopping_cart')
         .where({
             user_id: id,
-            food_details_id: food_id
+            food_detail_id: food_id
         })
         .decrement("quantity",quantity)
     }
@@ -60,7 +60,7 @@ export class ShopService {
         await this.knex('shopping_cart')
         .where({
             user_id: id,
-            food_details_id: food_id
+            food_detail_id: food_id
         })
         .del()
     }
@@ -72,13 +72,17 @@ export class ShopService {
     }
 
     async getItemCount(id:number,food_id:number): Promise<any>{
-        let itemCount = await this.knex('shopping_cart')
+        let itemCount = 0
+        let knexPull = await this.knex('shopping_cart')
         .select('quantity')
         .where({
             "user_id":id,
-            "food_details_id":food_id
+            "food_detail_id":food_id
         })
         .first()
+        if (knexPull != undefined){
+            itemCount = knexPull.quantity
+        }
 
         return itemCount
     }
@@ -94,9 +98,9 @@ export class ShopService {
 
     async getAll(id:number): Promise<transactionDetails[]>{
         let allTransaction = (await this.knex.raw(`
-        select shopping_cart.id as id , shopping_cart.food_details_id as food_id , foods."name"  as food_name , shopping_cart.quantity as quantity , food_details.portion as portion, foods.image as image, foods.description as description, food_details.calories as calories
+        select shopping_cart.id as id , shopping_cart.food_detail_id as food_id , foods."name"  as food_name , shopping_cart.quantity as quantity , food_details.portion as portion, foods.image as image, foods.description as description, food_details.calories as calories
         from shopping_cart 
-        left join food_details on shopping_cart.food_details_id  = food_details.id 
+        left join food_details on shopping_cart.food_detail_id  = food_details.id 
         left join foods on food_details.food_id = foods.id
         where shopping_cart.user_id = ${id}
         `)).rows
@@ -109,5 +113,50 @@ export class ShopService {
         .select(["point","address","description"])
 
         return locations
+    }
+
+    async submitBasket(user_id:number,location:number,total_calories:number) :Promise<any>{
+        const txn = await this.knex.transaction();
+        try {
+            let transaction_id = (await txn
+                .insert({
+                    user_id:user_id,
+                    total_calories:total_calories,
+                    location_id:location, 
+                    status: "pending"
+                })
+                .into('transactions')
+                .returning('id'))[0].id
+
+            console.log('transaction_id: ', transaction_id);
+            
+            let shopping_list = await txn
+                .select(["food_detail_id","quantity"])
+                .from('shopping_cart')
+                .where('user_id',user_id)
+
+            shopping_list.forEach((element)=>{
+                element['transaction_id'] = transaction_id
+                element['quantity'] = element['quantity']
+                element['food_detail_id'] = element['food_detail_id']
+                console.log(element)
+            })
+
+            await txn
+                .insert(shopping_list)
+                .into('transaction_details')
+
+            await txn
+                .from('shopping_cart')
+                .where('user_id',user_id)
+                .delete()
+
+            await txn.commit()
+            return {result: true, transaction_id:transaction_id}
+        } catch (error) {
+            console.log(error)
+            await txn.rollback();
+            return {result: false}
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-
+import { hashPassword } from "../util/hash";
 
 
 
@@ -12,7 +12,7 @@ export async function seed(knex: Knex): Promise<void> {
             first_name: "Messi",
             last_name: "Lionel Andrés",
             email: "messi@gamil.com",
-            password: "immessi",
+            password: await hashPassword("123"),
             icon: "messi.webp",
             calories: 3000,
             gender: "M",
@@ -24,7 +24,7 @@ export async function seed(knex: Knex): Promise<void> {
             first_name: "Ronaldo",
             last_name: "Cristiano",
             email: "ronaldo@gamil.com",
-            password: "imcronaldo",
+            password: await hashPassword("123"),
             icon: "clong.jpeg",
             calories: 3000,
             gender: "M",
@@ -36,7 +36,7 @@ export async function seed(knex: Knex): Promise<void> {
             first_name: "Neymar",
             last_name: "da Silva",
             email: "neymar@gamil.com",
-            password: "imneymar",
+            password: await hashPassword("123"),
             icon: "neymaer.jpeg",
             calories: 3000,
             gender: "M",

@@ -65,6 +65,7 @@ export class UserController {
             
             
         } catch (error) {
+            console.log(error)
             res.status(500).json({
                 message: '[USR003] - Server error'
             });
@@ -303,4 +304,21 @@ export class UserController {
         }
     }
 
+    getCalories =async (req: Request, res:Response) => {
+        try {
+            console.log("calc calories");
+            
+            await this.userService.calcCalories(req.session.user!.id)
+
+            console.log('get calories')
+            let knexData = await this.userService.getCalroies(req.session.user!.id)
+            console.log(knexData)
+            res.status(200).json(knexData)
+        } catch (error) {
+            console.log(error);
+            
+            res.status(500).json({
+                message: '[USR007] - Server error'
+        })
+    }}
 }
