@@ -9,7 +9,7 @@ export function makeUserRoutes() {
 	userRoutes.post('/login', userController.login);
 	userRoutes.get('/logout', userController.logout);
     userRoutes.post('/signup', userController.signUp);
-    userRoutes.put('/googleContinue',userController.googleContinue)
+    userRoutes.put('/googleContinue', isLoggedIn ,userController.googleContinue)
     userRoutes.put('/icon', isLoggedIn,userController.changeIcon);
     userRoutes.delete('/', isLoggedIn,userController.deleteUser);
     userRoutes.put('/updateAccount',isLoggedIn,userController.updateAccount)
