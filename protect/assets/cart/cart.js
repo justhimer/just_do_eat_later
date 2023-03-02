@@ -1,39 +1,65 @@
 const reviewContainer = document.querySelector('#review_container')
 
 let locationData
-let marker=[];
+let marker = [];
 
-async function main(){
-await loadDetails()
-initMap()
+async function main() {
+  await loadDetails()
+  initMap()
 
 }
 main()
 
 
-async function getBasket(){
-    const res = await fetch('/shop/orderPreview')
+///////////////////////////// 
+const getFoodData = document.querySelector('#foodname_1')
 
-    let resData = await res.json()
-    return resData
+function addToCart(food_name) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  let existingfood = cart.find(item => item.id === food.id);
+
+  if (existingfood) {
+
+    existingfood.quantity += 1;
+  } else {
+
+    cart.push({
+      id: food.id,
+      name: food_name.name,
+      calories: food.calories,
+      quantity: 1,
+    });
+  }
+
+
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-async function loadDetails(){
-let data = await getBasket()
-let userOrders =  data.data
-locationData =  data.location
-let foodCost = 0
 
-userOrders.forEach((element)=>{
-reviewContainer.innerHTML += `
+async function getBasket() {
+  const res = await fetch('/shop/orderPreview')
+
+  let resData = await res.json()
+  return resData
+}
+
+async function loadDetails() {
+  let data = await getBasket()
+  let userOrders = data.data
+  locationData = data.location
+  let foodCost = 0
+
+  userOrders.forEach((element) => {
+    reviewContainer.innerHTML += `
 <div class="row">
                     <div class="col-3">${element.quantity}</div>
                     <div class="col-6"><img src="/food_uploads/${element.image}"> ${element.food_name}</div>
                     <div class="col-3">${element.calories}</div>
                   </div>
 `
-foodCost += element.calories*element.quantity
-})
+    foodCost += element.calories * element.quantity
+  })
 }
 
 
@@ -65,7 +91,7 @@ function initMap() {
     position: { lat: locationData[0].point.x, lng: locationData[2].point.y },
   })
 
-  loc1.addEventListener('click',console.log("1"))
+  loc1.addEventListener('click', console.log("1"))
 }
 
 // function toggleBounce(unit) {
@@ -75,4 +101,3 @@ function initMap() {
 //     marker[unit].setAnimation(google.maps.Animation.BOUNCE);
 
 //   }
-  
