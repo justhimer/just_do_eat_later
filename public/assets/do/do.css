@@ -44,6 +44,7 @@ video {
 }
 body {
     margin: 0;
+    background-color: #3b3836;
 }
 canvas {
     display: block;

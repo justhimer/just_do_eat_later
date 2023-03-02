@@ -11,7 +11,7 @@ let closeMode = false;
 
 // set time counter
 let exited = false;
-const exitButtonRequiredTime = 70;
+const exitButtonRequiredTime = 80;
 let exitButtonTime = 0;
 let exitButtonInterval = setInterval(() => {
   exitButtonTime++;
@@ -419,19 +419,8 @@ const drawResults = (results) => {
     return;
   }
 
-  // select mode
-  //   let totalZ = 0;
-  //   for (let landmark of results.poseLandmarks) {
-  //     totalZ += landmark.z;
-  //   }
-  // console.log(results.poseLandmarks[0].z);
-
-  //   if (results.poseLandmarks[0].z > distantModeValue + 0.3) {
-  //     distantMode = true;
-  //   } else if (results.poseLandmarks[0].z < distantModeValue - 0.2) {
-  //     distantMode = false;
-  //   }
-
+  // activate close mode or not
+  // check distance between eyes
   const distance = Math.abs(
     results.poseLandmarks[2].x - results.poseLandmarks[5].x
   );
@@ -464,14 +453,14 @@ const drawResults = (results) => {
   }
 
   // draw finger cursor
-  if (closeMode && results.leftHandLandmarks) {
+  if (closeMode && results.rightHandLandmarks) {
     canvasCtx.strokeStyle = "black";
     canvasCtx.fillStyle = "yellow";
     canvasCtx.globalAlpha = 0.5;
     canvasCtx.beginPath();
     canvasCtx.arc(
-      results.leftHandLandmarks[8].x * guideCanvas.width,
-      results.leftHandLandmarks[8].y * guideCanvas.height,
+      results.rightHandLandmarks[8].x * guideCanvas.width,
+      results.rightHandLandmarks[8].y * guideCanvas.height,
       10,
       0,
       Math.PI * 2
@@ -705,9 +694,9 @@ const drawResults = (results) => {
     canvasCtx.font = "2.3rem Arial";
     canvasCtx.fillStyle = "#000000";
     canvasCtx.fillText(
-      `${exName.toUpperCase().split('_').join(' ')}
+      `${exName.toUpperCase().split("_").join(" ")}
       完成次數: ${repes}`,
-      guideCanvas.width * 1/4,
+      (guideCanvas.width * 1) / 4,
       40
       // canvasElement.width * 2/5,
       // canvasElement.height / 2
@@ -724,14 +713,24 @@ const drawResults = (results) => {
     );
   }
 
-  /**** Exit Corner Start ****/
+  /**** UI Start ****/
   if (closeMode) {
-    // draw finger toggle square
+    // draw exit square
     canvasCtx.strokeStyle = "black";
     canvasCtx.fillStyle = "white";
     canvasCtx.globalAlpha = 0.5;
     canvasCtx.lineWidth = 2;
-    canvasCtx.rect(guideCanvas.width - 100, guideCanvas.height - 100, 100, 100);
+    canvasCtx.rect(0, guideCanvas.height - 100, 100, 100);
+    canvasCtx.fill();
+    canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;
+
+    // draw menu square
+    canvasCtx.strokeStyle = "black";
+    canvasCtx.fillStyle = "white";
+    canvasCtx.globalAlpha = 0.5;
+    canvasCtx.lineWidth = 2;
+    canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
     canvasCtx.fill();
     canvasCtx.stroke();
     canvasCtx.globalAlpha = 1.0;
@@ -739,17 +738,22 @@ const drawResults = (results) => {
     // draw exit text
     canvasCtx.font = "1rem Arial";
     canvasCtx.fillStyle = "black";
-    canvasCtx.fillText("EXIT", guideCanvas.width - 68, guideCanvas.height - 45);
+    canvasCtx.fillText("EXIT", 32, guideCanvas.height - 45);
+
+    // draw menu text
+    canvasCtx.font = "1rem Arial";
+    canvasCtx.fillStyle = "black";
+    canvasCtx.fillText("MENU", guideCanvas.width - 68, 55);
 
     // trigger exit
     let fingerOnExit = false;
-    if (results.leftHandLandmarks) {
-      if (results.leftHandLandmarks[8]) {
-        const absX = results.leftHandLandmarks[8].x * guideCanvas.width;
-        const absY = results.leftHandLandmarks[8].y * guideCanvas.height;
+    if (results.rightHandLandmarks) {
+      if (results.rightHandLandmarks[8]) {
+        const absX = results.rightHandLandmarks[8].x * guideCanvas.width;
+        const absY = results.rightHandLandmarks[8].y * guideCanvas.height;
         if (
-          absX > 0 &&
-          absX < 100 &&
+          absX > guideCanvas.width - 100 &&
+          absX < guideCanvas.width &&
           absY > guideCanvas.height - 100 &&
           absY < guideCanvas.height
         ) {
@@ -780,7 +784,7 @@ const drawResults = (results) => {
     canvasCtx.lineWidth = 5;
     canvasCtx.beginPath();
     canvasCtx.arc(
-      guideCanvas.width - 50,
+      50,
       guideCanvas.height - 50,
       45,
       0,
@@ -789,7 +793,7 @@ const drawResults = (results) => {
     canvasCtx.stroke();
     canvasCtx.globalAlpha = 1.0;
   }
-  /**** Exit Corner End ****/
+  /**** UI End ****/
 };
 
 /***************************/
