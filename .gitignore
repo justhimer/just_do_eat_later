@@ -2,6 +2,7 @@ mediapipe/mp_env
 node_modules
 exercise_demo
 public/assets/exercises/videos
+project_template
 .vscode
 .DS_Store
 .env
