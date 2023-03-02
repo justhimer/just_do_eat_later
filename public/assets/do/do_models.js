@@ -1,5 +1,5 @@
 // const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
-// const positionStatusDescription = ["高", "中", "低"];
+// const positionStatusDescription = ["高左", "高右", "低左", "低右"];
 
 export const exercises = {
   swingArm: [
@@ -101,6 +101,40 @@ export const exercises = {
       positionStatus: { leftKnee: [0, 1], rightKnee: [0, 1] },
     },
   ],
+  lunges: [
+    {
+      // 0 - stand up
+      jointStatus: {
+        leftHip: [0],
+        rightHip: [0],
+        leftKnee: [0],
+        rightKnee: [0],
+      },
+    },
+    {
+      // 1 - lunges - left leg
+      jointStatus: {
+        leftKnee: [2, 3],
+        rightKnee: [1, 2, 3],
+      },
+    },
+    {
+      // 2 - stand up
+      jointStatus: {
+        leftHip: [0],
+        rightHip: [0],
+        leftKnee: [0],
+        rightKnee: [0],
+      },
+    },
+    {
+      // 3 - lunges - right leg
+      jointStatus: {
+        rightKnee: [2, 3],
+        leftKnee: [1, 2, 3],
+      },
+    },
+  ],
   sideJump: [
     {
       // 0 - stand up at right
@@ -120,14 +154,6 @@ export const exercises = {
       },
       positionStatus: { leftKnee: [0, 2], rightKnee: [1, 3] },
     },
-    // {
-    //   // 2 - jump to left
-    //   jointStatus: {
-    //     rightHip: [1, 2, 3],
-    //     rightKnee: [1, 2, 3],
-    //   },
-    //   positionStatus: { leftKnee: [3, 4, 5] },
-    // },
     {
       // 2 - stand up at left
       jointStatus: {
@@ -146,14 +172,6 @@ export const exercises = {
       },
       positionStatus: { leftKnee: [0, 2], rightKnee: [1, 3] },
     },
-    // {
-    //   // 4- jump to right
-    //   jointStatus: {
-    //     leftHip: [1, 2, 3],
-    //     leftKnee: [1, 2, 3],
-    //   },
-    //   positionStatus: { rightKnee: [3, 4, 5] },
-    // },
     {
       // 4 - stand up at right
       jointStatus: {

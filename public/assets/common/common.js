@@ -1,7 +1,6 @@
 const menu = document.querySelector("#hamburger")
 const loginStatus = getStatus
 
-
 async function main() {
     //init important variables
     /* #region session */
