@@ -23,37 +23,48 @@ export class ShopController {
             // let knexTypes = await this.shopService.getDistinctTypes()
             
 
-            let resData = {};
-            
+            let resData:any = [];
+            let foodObject = {}
             knexData.forEach((element: any) => {
-                if (resData.hasOwnProperty(element.name)){
-                    resData[element.name][element.portion] = {
-                        id: element.id,
-                        portion: element.portion,
-                        calories: element.calories
+                let allergensString = ()=>{
+                    let array = []
+                    for (let keys in element.allergens)
+                    array.push(element.allergens[keys])
+                    return array.join(",")
+                }
+                if (foodObject.hasOwnProperty(element.food_id)){
+                    foodObject[element.food_id]["portion"][element.portion] = {
+                        name: element.portion,
+                        calories: element.calories,
+                        food_id: element.id
                     }
                 }else {
-                    resData[element.name] = {}
-                    resData[element.name][element.portion] = {
-                        id: element.id,
-                        portion: element.portion,
-                        calories: element.calories
+                    foodObject[element.food_id] = {}
+                    foodObject[element.food_id]["name"] = `${element.name}`
+                    foodObject[element.food_id]["meta"] = {
+                        allergens: allergensString(),
+                        description: element.description,
+                        image: element.image,
+                        ingredients: element.ingredients.ingredients,
+                        name: element.name,
+                        preparation: element.preparation,
+                        type: element.type,
+                        type_id: element.type_id
                     }
-                    resData[element.name]['common'] = {
-                        food_id:element.food_id,
-                        name:element.name,
-                        type_id:element.type_id,
-                        type:element.type,
-                        image:element.image,
-                        description:element.description,
-                        ingredients:element.ingredients,
-                        preparation:element.preparation,
-                        allergens:element.allergens
+                    foodObject[element.food_id]["portion"] = {
                     }
-
+                    foodObject[element.food_id]["portion"][element.portion] = {
+                        name: element.portion,
+                        calories: element.calories,
+                        food_id: element.id
+                    }
                 }
             });
-            console.log("resData: ",resData);
+            for (let keys in foodObject){
+                resData.push(foodObject[keys])
+            }
+
+            console.log("resData: ",{resData});
             
             res.status(200).json(resData)
             

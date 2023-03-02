@@ -17,6 +17,7 @@ async function getDetails (){
 async function loadOrders(){
     let resData = await getDetails()
     if (resData.orders.length > 0){
+        orderContainer.innerHTML = ``
         resData.orders.forEach(element => {
             let foods = []
             resData.food.forEach((elem)=>{
@@ -25,7 +26,7 @@ async function loadOrders(){
                 }
             })
             if (element.status == "complete"){
-                orderContainer.innerHTML = `
+                orderContainer.innerHTML += `
                 <div class="order_container">
                 <div class="order_no">
                 Order No: ${element.id}
@@ -37,16 +38,16 @@ async function loadOrders(){
                 </div>
                 <div class="order_content">
                 ${foods.join('<br>')}
-                ${foods.join('<br>')}
                 </div>
                 </div>
                 <div class="collected_status">
-                pending
+                <h3>Collection Status:</h3><br>
+                Complete
                 </div>
                 </div>
                 `
             }else if (element.status == "pending"){
-                orderContainer.innerHTML = `
+                orderContainer.innerHTML += `
                 <div class="order_container">
                 <div class="order_no">
                 Order No: ${element.id}
@@ -58,11 +59,11 @@ async function loadOrders(){
                 </div>
                 <div class="order_content">
                 ${foods.join('<br>')}
-                ${foods.join('<br>')}
                 </div>
                 </div>
                 <div class="collected_status">
-                    <button id="${element.id}" class="confirmation_btn">Collected!</button>
+                    <h3>Collection Status:</h3><br>
+                    <button id="${element.id}" class="confirmation_btn">Picked Up!</button>
                     </div>
                 </div>
                 `
