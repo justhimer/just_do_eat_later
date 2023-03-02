@@ -14,41 +14,17 @@ export class ExerciseController {
     ) { }
 
 
-    getAllExercise = async (req: Request, res: Response) => {
+    getAllExercises = async (req: Request, res: Response) => {
         try {
-            let exercisetype = req.params.exercisetype
-            console.log('exercisetype:', exercisetype)
 
-            let knexData = await this.exerciseService.getAllExercise()
-            console.log('knexData', knexData);
+            // get data from service
+            const exercises = await this.exerciseService.getAllExercises();
 
-            let knexTypes = await this.exerciseService.getDistinctTypes()
-            console.log('knexTypes', knexTypes);
-
-            let resData = {};
-
-            knexData.forEach((element: any) => {
-                if (resData.hasOwnProperty(element.name)) {
-                    resData[element.name][element.intensity] = {
-                        id: element.id,
-                        intensity: element.intensity
-                    }
-                } else {
-                    resData[element.name][element.intensity] = {
-                        id: element.id,
-                        intensity: element.intensity
-                    }
-                    resData[element.name]['common'] = {
-                        exercise_id: element.exercise_id,
-                        name: element.name,
-                        repetitions: element.repetitions,
-                        calroies_burn: element.calroies_burn
-                    }
-                }
+            // send data to client
+            res.status(200).json({
+                data: exercises,
+                message: "Get exercises success",
             });
-            console.log(resData);
-
-            res.status(200).json(resData)
 
         } catch (error) {
             res.status(500).json({
@@ -57,12 +33,14 @@ export class ExerciseController {
         }
     }
 
-    getExercise =async (req:Request, res:Response) => {
+    getOneExercise =async (req:Request, res:Response) => {
         try {
             let exercise_id = Number(req.params.exercise_id)
-            let knexData = await this.exerciseService.getExercise(exercise_id)
-
-            res.status(200).json({knexData})
+            let exercise = await this.exerciseService.getExercise(exercise_id)
+            res.status(200).json({
+                data: exercise,
+                message: "Get exercise success",
+            });
         } catch (error) {
             res.status(500).json({
                 message: '[USR003] - Server error'

@@ -2,7 +2,7 @@
 // const positionStatusDescription = ["高左", "高右", "低左", "低右"];
 
 export const exercises = {
-  swingArm: [
+  jacks: [
     {
       // 0 - arms lowered
       jointStatus: {
@@ -40,7 +40,7 @@ export const exercises = {
       },
     },
   ],
-  pushUp: [
+  push_up: [
     {
       // 0 - push up
       jointStatus: { leftElbow: [0], rightElbow: [0] },
@@ -52,7 +52,7 @@ export const exercises = {
       positionStatus: { nose: [2, 3] },
     },
   ],
-  sitUp: [
+  sit_up: [
     {
       // 0 - laid down
       jointStatus: { leftHip: [0], rightHip: [0] },
@@ -64,7 +64,7 @@ export const exercises = {
       positionStatus: { leftKnee: [0, 1], rightKnee: [0, 1] },
     },
   ],
-  legRaise: [
+  leg_raises: [
     {
       // 0 - laid down
       jointStatus: { leftHip: [0], rightHip: [0] },
@@ -76,7 +76,7 @@ export const exercises = {
       positionStatus: { leftAnkle: [0, 1], rightAnkle: [0, 1] },
     },
   ],
-  squat: [
+  squats: [
     {
       // 0 - stand up
       jointStatus: {
@@ -135,7 +135,7 @@ export const exercises = {
       },
     },
   ],
-  sideJump: [
+  side_jump: [
     {
       // 0 - stand up at right
       jointStatus: {

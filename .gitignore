@@ -3,6 +3,7 @@ node_modules
 exercise_demo
 public/assets/exercises/videos
 project_template
+uploads/ex_uploads/videos
 .vscode
 .DS_Store
 .env

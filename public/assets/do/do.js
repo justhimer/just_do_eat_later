@@ -6,12 +6,12 @@ const exName = document.URL.split("?")[1].replace("exName=", "");
 // modes
 let selectedVtuber = false;
 let developmentMode = false;
-const closeModeValue = 0.06; // larger than this value, close mode will be activated
+const closeModeValue = 0.08; // larger than this value, close mode will be activated
 let closeMode = false;
 
 // set time counter
 let exited = false;
-const exitButtonRequiredTime = 50; // 3 seconds
+const exitButtonRequiredTime = 70;
 let exitButtonTime = 0;
 let exitButtonInterval = setInterval(() => {
   exitButtonTime++;
@@ -702,13 +702,13 @@ const drawResults = (results) => {
 
   // visualize counter
   if (closeMode) {
-    canvasCtx.font = "1.2rem Arial";
+    canvasCtx.font = "2.3rem Arial";
     canvasCtx.fillStyle = "#000000";
     canvasCtx.fillText(
-      `${exName.toUpperCase()}
+      `${exName.toUpperCase().split('_').join(' ')}
       完成次數: ${repes}`,
-      10,
-      30
+      guideCanvas.width * 1/4,
+      40
       // canvasElement.width * 2/5,
       // canvasElement.height / 2
     );
@@ -764,7 +764,7 @@ const drawResults = (results) => {
     }
 
     if (exitButtonTime >= exitButtonRequiredTime) {
-      window.location.href = "do_menu.html";
+      window.location.href = "exercise.html";
       exited = true;
       return;
     }

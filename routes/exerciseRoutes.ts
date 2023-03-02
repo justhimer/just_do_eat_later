@@ -5,8 +5,8 @@ import { isLoggedIn } from "../util/guard";
 export function chooseexerciseRoutes() {
     const exerciseRoutes = express.Router();
 
-    exerciseRoutes.get('/allExercise', exerciseController.getAllExercise)
-    exerciseRoutes.get('/doing/:exercise_id',isLoggedIn,exerciseController.getExercise)
+    exerciseRoutes.get('/all', exerciseController.getAllExercises)
+    exerciseRoutes.get('/one/:exercise_id',exerciseController.getOneExercise)
     exerciseRoutes.post('/completeExercise',isLoggedIn,exerciseController.completedExercise)
 
     return exerciseRoutes;
