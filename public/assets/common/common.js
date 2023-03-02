@@ -1,6 +1,5 @@
 const menu = document.querySelector("#hamburger")
 const loginStatus = getStatus
-let clickedHambueger = false;
 
 async function main() {
     //init important variables
@@ -80,7 +79,6 @@ async function main() {
     /* #region session */
     window.addEventListener("resize", resizeHandler, false);
     menu.addEventListener('click', (event) => {
-        clickedHambueger = !clickedHambueger;
         if (event.target == document.querySelector('#toggle-btn')) {
             toggleMenu()
             document.querySelector('.nav_ul').classList.toggle('shown')

@@ -1,11 +1,10 @@
 
 
+
 const exercise1 = document.querySelector('#exercisename_1 img')
 
 async function exercise1addEventListener() {
     exercise1.addEventListener('click', async (event) => {
-        console.log('clickedNav = ', clickedHambueger);
-        if (clickedHambueger) {return}
         event.preventDefault()
         await Swal.fire({
             title: 'Push Up',
@@ -23,8 +22,6 @@ const exercise2 = document.querySelector('#exercisename_2 img')
 
 async function exercise2addEventListener() {
     exercise2.addEventListener('click', async (event) => {
-        console.log('clickedNav = ', clickedHambueger);
-        if (clickedHambueger) {return}
         event.preventDefault()
         await Swal.fire({
             title: 'Plank',
