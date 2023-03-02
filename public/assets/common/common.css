@@ -63,7 +63,7 @@ NAVIGATION BACKGROUND
     transition: transform .3s;
     transform: translate(var(--translate-x), var(--translate-y)) scale(var(--scale));
     will-change: transform;
-    pointer-events: none;
+    /* pointer-events: none; */
 }
 /* #endregion */
 
