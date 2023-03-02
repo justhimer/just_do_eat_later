@@ -21,7 +21,7 @@ export const io = new SocketIO(server)
 dotenv.config()
 export const grantExpress = grant.express({
     defaults: {
-        origin: "http://localhost:8080",
+        origin: process.env.GRANT_ORIGIN,
         transport: "session",
         state: "true"
     },
