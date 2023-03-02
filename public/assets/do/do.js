@@ -706,7 +706,6 @@ const drawResults = (results) => {
     canvasCtx.fillStyle = "#000000";
     canvasCtx.fillText(
       `${exName.toUpperCase()}
-      milestone: ${milestone}
       完成次數: ${repes}`,
       10,
       30
@@ -834,12 +833,12 @@ holistic.onResults(onResults);
 /****************************/
 
 // Use `Mediapipe` utils to get camera - lower resolution = higher fps
-// resolution : 1280x960, 960x720, 800x600, 640x480, 480x360
+// resolution : 1280x960, 1024x768, 960x720, 800x600, 640x480, 480x360
 const camera = new Camera(videoElement, {
   onFrame: async () => {
     await holistic.send({ image: videoElement });
   },
-  width: 960,
-  height: 1280,
+  width: 768,
+  height: 1024,
 });
 camera.start();
