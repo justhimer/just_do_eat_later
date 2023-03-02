@@ -9,14 +9,23 @@ let developmentMode = false;
 const closeModeValue = 0.08; // larger than this value, close mode will be activated
 let closeMode = false;
 
-// set time counter
-let exited = false;
+// set exit timer
+let isExit = false;
 const exitButtonRequiredTime = 80;
 let exitButtonTime = 0;
 let exitButtonInterval = setInterval(() => {
   exitButtonTime++;
 }, 100);
 clearInterval(exitButtonInterval);
+
+// set menu timer
+let isMenu = false;
+const menuButtonRequiredTime = 80;
+let menuButtonTime = 0;
+let menuButtonInterval = setInterval(() => {
+  menuButtonTime++;
+}, 100);
+clearInterval(menuButtonInterval);
 
 // setup poses variables
 const visT = 0.0001; // visibilityThreshold, larger than visT means visible
@@ -415,7 +424,7 @@ let videoElement = document.querySelector(".input_video"),
 
 /* draw canvas */
 const drawResults = (results) => {
-  if (!results.poseLandmarks || exited) {
+  if (!results.poseLandmarks || isExit) {
     return;
   }
 
@@ -696,7 +705,7 @@ const drawResults = (results) => {
     canvasCtx.fillText(
       `${exName.toUpperCase().split("_").join(" ")}
       完成次數: ${repes}`,
-      (guideCanvas.width * 1) / 4,
+      10,
       40
       // canvasElement.width * 2/5,
       // canvasElement.height / 2
@@ -715,22 +724,15 @@ const drawResults = (results) => {
 
   /**** UI Start ****/
   if (closeMode) {
-    // draw exit square
-    canvasCtx.strokeStyle = "black";
-    canvasCtx.fillStyle = "white";
-    canvasCtx.globalAlpha = 0.5;
-    canvasCtx.lineWidth = 2;
+    // set exit square
     canvasCtx.rect(0, guideCanvas.height - 100, 100, 100);
-    canvasCtx.fill();
-    canvasCtx.stroke();
-    canvasCtx.globalAlpha = 1.0;
-
-    // draw menu square
+    // set menu square
+    canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
+    // draw squares
     canvasCtx.strokeStyle = "black";
     canvasCtx.fillStyle = "white";
     canvasCtx.globalAlpha = 0.5;
     canvasCtx.lineWidth = 2;
-    canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
     canvasCtx.fill();
     canvasCtx.stroke();
     canvasCtx.globalAlpha = 1.0;
@@ -743,14 +745,17 @@ const drawResults = (results) => {
     // draw menu text
     canvasCtx.font = "1rem Arial";
     canvasCtx.fillStyle = "black";
-    canvasCtx.fillText("MENU", guideCanvas.width - 68, 55);
+    canvasCtx.fillText("MENU", guideCanvas.width - 72, 55);
 
-    // trigger exit
+    // trigger button
     let fingerOnExit = false;
+    let fingerOnMenu = false;
     if (results.rightHandLandmarks) {
       if (results.rightHandLandmarks[8]) {
         const absX = results.rightHandLandmarks[8].x * guideCanvas.width;
         const absY = results.rightHandLandmarks[8].y * guideCanvas.height;
+
+        // pressing exit
         if (
           absX > guideCanvas.width - 100 &&
           absX < guideCanvas.width &&
@@ -764,21 +769,45 @@ const drawResults = (results) => {
             }, 100);
           }
         }
+
+        // pressing menu
+        if (absX > 0 && absX < 100 && absY > 0 && absY < 100) {
+          fingerOnMenu = true;
+          if (menuButtonTime === 0) {
+            menuButtonInterval = setInterval(() => {
+              menuButtonTime++;
+            }, 100);
+          }
+        }
       }
     }
 
+    // trigger exit
     if (exitButtonTime >= exitButtonRequiredTime) {
       window.location.href = "exercise.html";
-      exited = true;
+      isExit = true;
       return;
     }
 
+    // trigger menu
+    if (menuButtonTime >= menuButtonRequiredTime) {
+      console.log("open menu");
+      isMenu = true;
+    }
+
+    // reset timer for exit
     if (!fingerOnExit && exitButtonTime > 0) {
       clearInterval(exitButtonInterval);
       exitButtonTime = 0;
     }
 
-    // draw circle
+    // reset timer for menu
+    if (!fingerOnMenu && menuButtonTime > 0) {
+      clearInterval(menuButtonInterval);
+      menuButtonTime = 0;
+    }
+
+    // draw circle for exit
     canvasCtx.strokeStyle = "black";
     canvasCtx.globalAlpha = 0.5;
     canvasCtx.lineWidth = 5;
@@ -792,7 +821,60 @@ const drawResults = (results) => {
     );
     canvasCtx.stroke();
     canvasCtx.globalAlpha = 1.0;
+
+    // draw circle for menu
+    canvasCtx.strokeStyle = "black";
+    canvasCtx.globalAlpha = 0.5;
+    canvasCtx.lineWidth = 5;
+    canvasCtx.beginPath();
+    canvasCtx.arc(
+      guideCanvas.width - 50,
+      50,
+      45,
+      0,
+      Math.PI * 2 * (menuButtonTime / menuButtonRequiredTime)
+    );
+    canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;
   }
+
+  // if (isMenu) {
+  //   // set square 1
+  //   canvasCtx.rect(guideCanvas.width - 250, guideCanvas.height / 2, 100, 100);
+  //   // set square 2
+  //   canvasCtx.rect(guideCanvas.width - 150, guideCanvas.height / 2, 100, 100);
+  //   // set square 3
+  //   canvasCtx.rect(
+  //     guideCanvas.width - 250,
+  //     guideCanvas.height / 2 + 100,
+  //     100,
+  //     100
+  //   );
+  //   // set square 4
+  //   canvasCtx.rect(
+  //     guideCanvas.width - 150,
+  //     guideCanvas.height / 2 + 100,
+  //     100,
+  //     100
+  //   );
+  //   // draw squares
+  //   canvasCtx.strokeStyle = "black";
+  //   canvasCtx.fillStyle = "white";
+  //   canvasCtx.globalAlpha = 0.5;
+  //   canvasCtx.lineWidth = 2;
+  //   canvasCtx.fill();
+  //   canvasCtx.stroke();
+  //   canvasCtx.globalAlpha = 1.0;
+
+  //   // draw exit menu text
+  //   canvasCtx.font = "0.9rem Arial";
+  //   canvasCtx.fillStyle = "black";
+  //   canvasCtx.fillText(
+  //     "Exit Menu",
+  //     guideCanvas.width - 150 + 17,
+  //     guideCanvas.height / 2 + 100 + 55
+  //   );
+  // }
   /**** UI End ****/
 };
 

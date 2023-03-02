@@ -59,9 +59,8 @@ function activateClickOnExs() {
     const video = ex.sample_video;
     await Swal.fire({
       title: `${exName}`,
-      html: `<video width="468" height="320" controls src="/ex_uploads/videos/${video}"></video>`,
+      html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
       showCloseButton: true,
-      confirmButtonColor: '#3b3836',
       confirmButtonText: "Just Do!",
     }).then((result)=> {
         if (result.isConfirmed) {
@@ -99,7 +98,7 @@ function init() {
     for (let i = 0; i < exercises.length; i++) {
       const ex = exercises[i];
       const exID = ex.id;
-      const cardNum = (i % 2) + 1;
+      const cardNum = (i % 3) + 1;
       const exName = ex.name.toUpperCase();
       const lv = ex.level.charAt(0).toUpperCase() + ex.level.slice(1);
 
