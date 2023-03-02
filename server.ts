@@ -65,7 +65,7 @@ export const transactionService = new TransactionService(knex)
 
 export const shopService = new ShopService(knex);
 export const shopController = new ShopController(shopService, userService, transactionService);
-app.use('/shop',isLoggedIn, makeShopRoutes());
+app.use('/shop', makeShopRoutes());
 
 
 export const exerciseService = new ExerciseService(knex);
@@ -82,7 +82,7 @@ app.use(express.static('images'))
 app.use(express.static('exercise_images'))
 app.use(express.static('exercise_demo'))
 app.use(express.static('food_images'))
-app.use(express.static('Upload'))
+app.use(express.static('uploads'))
 app.use(isLoggedIn, express.static('protect'));
 
 /* #endregion */

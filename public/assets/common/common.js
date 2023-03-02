@@ -113,7 +113,6 @@ main()
 async function getStatus() {
     const res = await fetch('/users/loginStatus')
     if (res.ok) {
-        console.log("logged in")
         return true
     } else {
         return false
@@ -122,7 +121,6 @@ async function getStatus() {
 
 async function menuLoader() {
     const status = await loginStatus()
-    console.log(status)
     menu.innerHTML = `
     <div id="nav-bg" class="test"></div>
     <div id="toggle-btn" class="test">
@@ -152,6 +150,10 @@ async function menuLoader() {
                         <a href="/cart.html"><div class="icon_container circle">
                             <span class="material-symbols-outlined">shopping_cart</span>
                             <p>Cart</p>
+                        </div></a>
+                        <a href="/order.html"><div class="icon_container circle">
+                        <span class="material-symbols-outlined">room_service</span>
+                            <p>Orders</p>
                         </div></a>
                     </div>
                 </nav>

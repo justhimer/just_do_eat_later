@@ -95,6 +95,7 @@ export async function up(knex: Knex): Promise<void> {
         table.text('address');
         table.point('point');
         table.text('description');
+        table.text('title')
         table.timestamps(false, true);
     });
 

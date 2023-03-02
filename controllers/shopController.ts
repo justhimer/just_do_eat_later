@@ -210,5 +210,31 @@ export class ShopController {
             });
         }
     }
-        
+    
+    allOrders = async (req:Request, res:Response) => {
+        try {
+            let knexData = await this.shopService.getAllOrders(req.session.user!.id)
+            console.log("knexData: ",knexData)
+            res.status(200).json({knexData})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                message: '[USR003] - Server error'
+            });
+        }
+    }
+
+    collctedOrder = async (req:Request, res:Response) => {
+        try {
+            let order = Number(req.params.id)
+            await this.shopService.collectedOrder(order)
+            res.status(200).json({message:"success"})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                message: '[USR003] - Server error'
+            });
+        }
+    }
+
 }

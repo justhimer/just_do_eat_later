@@ -30,7 +30,7 @@ async function getDetails() {
     console.log(resData)
     emailData = resData.email;
     passwordData = 'AAATK3!7';
-    imgData = `/users/${resData.icon}`;
+    imgData = `/user_upload/${resData.icon}`;
     firstNameData = resData.first_name;
     lastNameData = resData.last_name;
     genderData = resData.gender;
