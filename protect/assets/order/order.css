@@ -35,3 +35,9 @@
     display: flex;
     align-items: center;
 }
+.collected_status{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align:start;
+}
