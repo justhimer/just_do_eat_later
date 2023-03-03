@@ -22,7 +22,12 @@ function activateTilt() {
 }
 
 function pleaseLogin() {
-  Swal.fire("Please Log In :)");
+  Swal.fire({
+    title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">Please Log In</h3>`,
+    confirmButtonText: `<div style="color: #3b3836; font-family: sans-serif; font-weight: bold;">OK</div>`,
+    confirmButtonColor: "#ffaa33",
+    background: "#3b3836",
+  });
 }
 
 function activateClickOnExs() {
@@ -39,12 +44,13 @@ function activateClickOnExs() {
     const exID = ex.id;
     const video = ex.sample_video;
     const isLoggedIn = await getStatus();
-    const userID = await 
     await Swal.fire({
-      title: `${exName}`,
+      title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${exName}</h3>`,
       html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
       showCloseButton: true,
-      confirmButtonText: "Just Do!",
+      confirmButtonText: `<div style="color: #3b3836; font-family: sans-serif; font-weight: bold;">Just Do!</div>`,
+      confirmButtonColor: "#ffaa33",
+      background: "#3b3836",
     }).then((result) => {
       if (result.isConfirmed) {
         if (isLoggedIn) {

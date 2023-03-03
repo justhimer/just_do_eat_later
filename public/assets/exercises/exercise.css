@@ -2,16 +2,18 @@ h1 {
     font-size: calc(4vmin + 1em);
     text-align: center;
     margin: auto;
-    color: #ffaa33;
+    color: #3b3836;
+    /* color: #ffaa33; */
+    font-family: 'Encode Sans Condensed', sans-serif;
 }
 
 .content {
-    background-color: #3b3836;
+    padding: 1rem 0;
 }
 
 body {
-    color: #ffaa33;
-    background-color: #3b3836;
+    color: #3b3836;
+    background-color: #cfc1ac;
 }
 
 /*********************/
@@ -25,7 +27,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3b3836;
+    background-color: #cfc1ac;
     background-size: cover;
 }
 
@@ -118,14 +120,8 @@ body {
   }
   
   /*card2*/
-  /* .card-image.card2 {
-    background: url("./images/squat.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  } */
   .card-text.card2 .date {
-    color: rgb(228, 166, 8);
+    color: rgb(178, 130, 8);
   }
   .card-stats.card2 .border {
     border-left: 1px solid  rgb(178, 130, 8);
@@ -136,12 +132,6 @@ body {
   }
 
   /*card3*/
-  /* .card-image.card3 {
-    background: url("./images/lunges.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  } */
   .card-text.card3 .date {
     color: rgb(0, 189, 63);
   }
@@ -152,6 +142,7 @@ body {
   .card-stats.card3 {
     background: rgb(0, 189, 63);
   }
+
   .js-tilt-glare {
     border-radius: 18px;
   }
@@ -300,3 +291,4 @@ body {
   /****************/
   /* loading ends */
   /****************/
+  
