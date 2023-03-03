@@ -4,12 +4,25 @@ async function getExDetails(id) {
   return result.data;
 }
 
+async function getStatus() {
+  const res = await fetch("/users/loginStatus");
+  if (res.ok) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function activateTilt() {
   VanillaTilt.init(document.querySelectorAll(".card"), {
     glare: true,
     reverse: true,
     "max-glare": 0.5,
   });
+}
+
+function pleaseLogin() {
+  Swal.fire("Please Log In :)");
 }
 
 function activateClickOnExs() {
@@ -23,8 +36,10 @@ function activateClickOnExs() {
     const id = event.currentTarget.id.split("-")[1];
     const ex = await getExDetails(id);
     const exName = ex.name.toUpperCase();
-    const query = ex.name.split(" ").join("_");
+    const exID = ex.id;
     const video = ex.sample_video;
+    const isLoggedIn = await getStatus();
+    const userID = await 
     await Swal.fire({
       title: `${exName}`,
       html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
@@ -32,7 +47,11 @@ function activateClickOnExs() {
       confirmButtonText: "Just Do!",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = `do.html?exName=${query}`;
+        if (isLoggedIn) {
+          window.location.href = `do.html?ex_id=${exID}`;
+        } else {
+          pleaseLogin();
+        }
       }
     });
   }

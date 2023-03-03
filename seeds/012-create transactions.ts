@@ -2,7 +2,7 @@ import { Knex } from "knex";
 
 export async function seed(knex: Knex): Promise<void> {
     // Deletes All existing ebtries
-    await knex("transactions").del();
+
 
     let user_id = await knex.select('id').from('users').first();
     let location_id = await knex.select('id').from('locations').first();
@@ -18,7 +18,7 @@ export async function seed(knex: Knex): Promise<void> {
         },
         {
             total_calories: 400,
-            status: "picked up",
+            status: "complete",
         }
     ])
 }

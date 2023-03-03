@@ -2,7 +2,7 @@ import { Knex } from "knex";
 
 export async function seed(knex: Knex): Promise<void> {
     // Deletes All existing ebtries
-    await knex("exercises").del();
+
 
     let intensity_id = await knex.select('id').from('intensities');
     console.log({ intensity_id });
