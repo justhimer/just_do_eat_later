@@ -1,8 +1,10 @@
 mediapipe/mp_env
 node_modules
 exercise_demo
-public/assets/exercises/videos
+# public/assets/exercises/videos
+cards_template
 project_template
+uploads/ex_uploads/videos
 .vscode
 .DS_Store
 .env

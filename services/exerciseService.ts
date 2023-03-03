@@ -5,33 +5,38 @@ export class ExerciseService {
 
     constructor(private knex: Knex) { }
 
-    async getAllExercise(): Promise<any> {
-        let allExercise = await this.knex.raw(`
-        select exercise.id as id, exercises."name" as name, intenstiy_id as id, exercise_history.id as id, exercise_history.repetitions as repetitions, exercise_history.calorise_burn as calorise_burn
-        from exercise
-        inner join exercise_history
-        on exercise_history.exercise_id = id
-        `)
-
-        return allExercise
+    async getAllExercises(): Promise<any> {
+        let allExercises = await this.knex.raw(`
+        select
+        ex.id,
+        ex.name,
+        int.level,
+        ex.calories,
+        ex.details,
+        ex.thumbnail,
+        ex.sample_video
+        from exercises as ex
+        join intensities as int on ex.intensity_id = int.id;`);
+        return allExercises.rows;
     }
 
-    async getDistinctTypes(): Promise<any> {
-        let allTypes = await this.knex
-            .distinct()
-            .from('exercise')
-            .pluck('name')
+    // async getDistinctTypes(): Promise<any> {
+    //     let allTypes = await this.knex
+    //         .distinct()
+    //         .from('exercise')
+    //         .pluck('name')
 
-        return allTypes
-    }
+    //     return allTypes
+    // }
 
     async getExercise(exercise_id:number): Promise<any>{
         let exercise = await this.knex()
         .select('*')
         .from('exercises')
         .where('id',exercise_id)
-
-        return exercise
+        .first();
+    
+        return exercise;
     }
 
     async completedExercise(user_id:number,exercise_id:number,repetitions:number) {

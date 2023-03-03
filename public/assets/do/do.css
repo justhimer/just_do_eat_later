@@ -40,10 +40,14 @@ video {
     transform: scale(-1, 1);
 }
 .corner video {
+    height: auto;
+    width: auto;
     max-height: 400px;
+    max-width: 600px;
 }
 body {
     margin: 0;
+    background-color: #3b3836;
 }
 canvas {
     display: block;
