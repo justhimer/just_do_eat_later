@@ -40,20 +40,45 @@ export class ExerciseService {
     }
 
     async completedExercise(user_id:number,exercise_id:number,repetitions:number) {
+        const txn = await this.knex.transaction()
         let exerciseCalorie = (await this.knex()
         .select('calories')
         .from('exercises')
         .where('id',exercise_id)
         .first()).calories
         let totalCalories = exerciseCalorie*repetitions
-        console.log('totalCalories: ',totalCalories)
-        await this.knex()
-        .insert({
-            user_id:user_id,
-            exercise_id:exercise_id,
-            repetitions:repetitions,
-            calories_burn:totalCalories
-        })
-        .into('exercises_history')
+
+        try {
+            let ex_his_id = await txn
+            .insert({
+                user_id:user_id,
+                exercise_id:exercise_id,
+                repetitions:repetitions,
+                calories_burn:totalCalories
+            })
+            .into('exercises_history')
+            .returning('id')
+
+            console.log(ex_his_id[0]['id'])
+
+            await txn
+            .insert({
+                user_id:user_id,
+                method:"plus",
+                calories:totalCalories,
+                description:"calorie from exercise",
+                exercises_history_id:ex_his_id[0]['id'],
+                promotion:false
+            })
+            .into('calorie_change')
+
+            await txn.commit()
+            return
+        } catch (error) {
+            console.log('exerciseService.completedExercise error: ',error)
+            await txn.rollback();
+            return;
+        }
+       
     }
 }

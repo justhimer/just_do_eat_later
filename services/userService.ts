@@ -153,12 +153,12 @@ export class UserService {
         await this.knex.raw(`
         update users 
         set "calories" = 
-        coalesce((select sum (exercises_history.calories_burn)
-        from exercises_history
-        where user_id = ${id} ) ,0) - coalesce ((
-            select sum (transactions.total_calories) 
-            from transactions 
-            where user_id = ${id}
+        coalesce((select sum (calorie_change.calories)
+        from calorie_change
+        where (user_id = ${id}) and ("method" = 'plus')) ,0) - coalesce ((
+            select sum (calorie_change.calories) 
+            from calorie_change 
+            where (user_id = ${id}) and ("method" = 'minus')
             ) , 0)
         where id = ${id}
         `)
