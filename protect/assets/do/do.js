@@ -1296,10 +1296,6 @@ async function init() {
     height: 1024,
   });
   camera.start();
-
-  // function loading() {
-
-  // }
 }
 
 init();
