@@ -31,9 +31,9 @@
 // }
 
 async function getExDetails(id) {
-    const res = await fetch(`/exercise/one/${id}`);
-    const result = await res.json();
-    return result.data;
+  const res = await fetch(`/exercise/one/${id}`);
+  const result = await res.json();
+  return result.data;
 }
 
 function activateTilt() {
@@ -52,20 +52,20 @@ function activateClickOnExs() {
   }
 
   async function showVideo(event) {
-    const id = event.currentTarget.id.split('-')[1];
+    const id = event.currentTarget.id.split("-")[1];
     const ex = await getExDetails(id);
     const exName = ex.name.toUpperCase();
-    const query = ex.name.split(' ').join('_');
+    const query = ex.name.split(" ").join("_");
     const video = ex.sample_video;
     await Swal.fire({
       title: `${exName}`,
       html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
       showCloseButton: true,
       confirmButtonText: "Just Do!",
-    }).then((result)=> {
-        if (result.isConfirmed) {
-            window.location.href = `do.html?exName=${query}`;
-        }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `do.html?exName=${query}`;
+      }
     });
   }
 }
@@ -98,9 +98,16 @@ function init() {
     for (let i = 0; i < exercises.length; i++) {
       const ex = exercises[i];
       const exID = ex.id;
-      const cardNum = (i % 3) + 1;
+      let cardNum;
       const exName = ex.name.toUpperCase();
       const lv = ex.level.charAt(0).toUpperCase() + ex.level.slice(1);
+      if (lv === "High") {
+        cardNum = 1;
+      } else if (lv === "Mid") {
+        cardNum = 2;
+      } else {
+        cardNum = 3;
+      }
 
       // prepare html
       let htmlString = `

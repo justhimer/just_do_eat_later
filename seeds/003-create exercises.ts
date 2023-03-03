@@ -13,7 +13,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "push up",
             intensity_id: intensity_id[1].id,
-            calories: 9,
+            calories: 0.3,
             details: "Push-ups are a classic bodyweight exercise that build upper body strength and muscle endurance. They require no equipment, can be modified, and are highly effective.",
             thumbnail: "push_up.jpg",
             sample_video: "push_up_1.mp4"
