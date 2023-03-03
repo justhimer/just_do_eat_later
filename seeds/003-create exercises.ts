@@ -13,7 +13,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "push up",
             intensity_id: intensity_id[1].id,
-            calories: 0.38,
+            calories: 0.4,
             details: "Push-ups are a classic bodyweight exercise that build upper body strength and muscle endurance. They require no equipment, can be modified, and are highly effective.",
             thumbnail: "push_up.jpg",
             sample_video: "push_up_1.mp4"
@@ -21,7 +21,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "sit up",
             intensity_id: intensity_id[1].id,
-            calories: 0.25,
+            calories: 0.3,
             details: "Sit-ups are a bodyweight exercise that strengthen the abdominal muscles, improve core stability, and flexibility.",
             thumbnail: "sit_up.jpeg",
             sample_video: "sit_up_1.mp4"
@@ -45,7 +45,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "side jump",
             intensity_id: intensity_id[2].id,
-            calories: 0.35,
+            calories: 0.4,
             details: "Side-to-side jumps are a high-intensity plyometric exercise that improve lower body strength, power, and agility. They involve lateral jumping and can be modified.",
             thumbnail: "side_jump.jpeg",
             sample_video: "side_jump.mp4"
