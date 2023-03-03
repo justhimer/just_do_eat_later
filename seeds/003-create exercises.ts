@@ -12,7 +12,7 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("exercises").insert([
         {
             name: "push up",
-            intensity_id: intensity_id[1].id,
+            intensity_id: intensity_id[2].id,
             calories: 0.4,
             details: "Push-ups are a classic bodyweight exercise that build upper body strength and muscle endurance. They require no equipment, can be modified, and are highly effective.",
             thumbnail: "push_up.jpg",
@@ -28,7 +28,7 @@ export async function seed(knex: Knex): Promise<void> {
         },
         {
             name: "leg raises",
-            intensity_id: intensity_id[2].id,
+            intensity_id: intensity_id[1].id,
             calories: 0.3,
             details: "Leg raises are a bodyweight exercise that strengthen the lower abdominal muscles, improve core stability, hip flexibility, and posture.",
             thumbnail: "leg_raises.jpeg",
@@ -52,7 +52,7 @@ export async function seed(knex: Knex): Promise<void> {
         },
         {
             name: "squats",
-            intensity_id: intensity_id[0].id,
+            intensity_id: intensity_id[2].id,
             calories: 0.4,
             details: "Squats are a versatile compound exercise that work multiple muscle groups, including the legs, glutes, and core. They build lower body strength, improve balance, and increase mobility.",
             thumbnail: "squat.jpg",
