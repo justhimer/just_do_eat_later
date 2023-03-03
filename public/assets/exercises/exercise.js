@@ -36,9 +36,10 @@ function activateClickOnExs() {
     const id = event.currentTarget.id.split("-")[1];
     const ex = await getExDetails(id);
     const exName = ex.name.toUpperCase();
-    const query = ex.name.split(" ").join("_");
+    const exID = ex.id;
     const video = ex.sample_video;
     const isLoggedIn = await getStatus();
+    const userID = await 
     await Swal.fire({
       title: `${exName}`,
       html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
@@ -47,7 +48,7 @@ function activateClickOnExs() {
     }).then((result) => {
       if (result.isConfirmed) {
         if (isLoggedIn) {
-          window.location.href = `do.html?exName=${query}`;
+          window.location.href = `do.html?ex_id=${exID}`;
         } else {
           pleaseLogin();
         }
