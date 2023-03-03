@@ -433,7 +433,7 @@ async function init() {
     guideCanvas = document.querySelector("canvas.guides");
 
   /* draw canvas */
-  const drawResults = (results) => {
+  const drawResults = async (results) => {
     if (!results.poseLandmarks || isExit) {
       return;
     }
@@ -855,6 +855,16 @@ async function init() {
       if (exitButtonTime >= exitButtonRequiredTime) {
         window.location.href = "exercise.html";
         isExit = true;
+        await fetch(`/exercise/completeExercise`, {
+          method: 'post',
+          body: JSON.stringify({ 
+            exercise_id: exID,
+            repetitions: repes,
+          }),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+        });
         return;
       }
 

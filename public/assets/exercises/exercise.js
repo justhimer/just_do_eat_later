@@ -113,7 +113,7 @@ function init() {
             </div>
             <div class="card-stats card${cardNum}">
                 <div class="stat right-border">
-                <div class="value">${ex.calories}<sup>kJ</sup></div>
+                <div class="value">${ex.calories}<sup></sup></div>
                 <div class="type">Calories</div>
                 </div>
                 <div class="stat left-border">
