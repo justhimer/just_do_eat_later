@@ -13,7 +13,6 @@ export async function seed(knex: Knex): Promise<void> {
             method:"plus",
             calories:3000,
             description:"vip",
-            transaction_id: null,
             promotion:false
         },
         {

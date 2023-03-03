@@ -33,7 +33,8 @@ export class UserService {
                 gender: gender,
                 height: height,
                 weight: weight,
-                icon: icon
+                icon: icon,
+                subscribed:true
             })
             .returning(["id", "email", "first_name", "last_name", "password", "icon"]);
 
