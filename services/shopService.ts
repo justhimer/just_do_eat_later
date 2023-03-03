@@ -148,6 +148,17 @@ export class ShopService {
                 .where('user_id',user_id)
                 .delete()
 
+            await txn
+            .insert({
+                user_id:user_id,
+                method:"minus",
+                calories:total_calories,
+                description:"calorie for purchase",
+                transaction_id:transaction_id,
+                promotion:false
+            })
+            .into('calorie_change')
+
             await txn.commit()
             return {result: true, transaction_id:transaction_id}
         } catch (error) {

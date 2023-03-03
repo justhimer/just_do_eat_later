@@ -2,7 +2,7 @@ import { Knex } from "knex";
 
 export async function seed(knex: Knex): Promise<void> {
     // Deletes All existing ebtries
-    await knex("goals").del();
+
 
     let user_id = await knex.select('id').from('users').first();
     let targets_id = await knex.select('id').from('targets').first();
