@@ -30,15 +30,13 @@
 </head>
 
 <body>
-    <div class="video-container">
+    <div class="video-container" style="background-color: #3b3836;">
         <!-- toggle corner if show vtuber -->
-        <div class="preview">
+        <div id="main" class="preview">
             <video class="input_video"></video>
             <canvas class="guides"></canvas>
         </div>
-        <!-- <div class="preview corner">
-            <video width="468" height="320" src="ex_uploads/videos/push_up_1.mp4" autoplay loop></video>
-        </div> -->
+        <div id="tutorial" class="preview corner"></div>
     </div>  
     <script type="module" src="assets/do/do.js"></script>
 </body>
