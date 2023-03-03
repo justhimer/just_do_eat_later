@@ -37,7 +37,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "lunges",
             intensity_id: intensity_id[1].id,
-            calories: 0.6,
+            calories: 0.3,
             details: "Lunges are a simple and effective exercise that target multiple muscle groups, build lower body strength, improve balance, and increase flexibility.",
             thumbnail: "lunges.png",
             sample_video: "lunges_1.mp4"
