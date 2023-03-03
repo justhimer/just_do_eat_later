@@ -1,39 +1,16 @@
-// const exercise1 = document.querySelector('#exercisename_1 img')
-
-// async function exercise1addEventListener() {
-//     exercise1.addEventListener('click', async (event) => {
-//         event.preventDefault()
-//         await Swal.fire({
-//             title: 'Push Up',
-//             html:
-//                 `<video width="320" height="240" controls src="./assets/exercises/videos/push-up-1.mp4"></video>`,
-//             showCloseButton: true,
-
-//             confirmButtonText: 'Just Do!',
-//         })
-//     })
-// }
-
-// const exercise2 = document.querySelector('#exercisename_2 img')
-
-// async function exercise2addEventListener() {
-//     exercise2.addEventListener('click', async (event) => {
-//         event.preventDefault()
-//         await Swal.fire({
-//             title: 'Plank',
-//             html:
-//                 `<video width="320" height="240" controls src="./assets/exercises/videos/plank.mp4"></video>`,
-//             showCloseButton: true,
-//             showCloseButton: true,
-//             confirmButtonText: 'Just Do!',
-//         })
-//     })
-// }
-
 async function getExDetails(id) {
-    const res = await fetch(`/exercise/one/${id}`);
-    const result = await res.json();
-    return result.data;
+  const res = await fetch(`/exercise/one/${id}`);
+  const result = await res.json();
+  return result.data;
+}
+
+async function getStatus() {
+  const res = await fetch("/users/loginStatus");
+  if (res.ok) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function activateTilt() {
@@ -44,6 +21,10 @@ function activateTilt() {
   });
 }
 
+function pleaseLogin() {
+  Swal.fire("Please Log In :)");
+}
+
 function activateClickOnExs() {
   const exElems = document.querySelectorAll(".card");
 
@@ -52,20 +33,25 @@ function activateClickOnExs() {
   }
 
   async function showVideo(event) {
-    const id = event.currentTarget.id.split('-')[1];
+    const id = event.currentTarget.id.split("-")[1];
     const ex = await getExDetails(id);
     const exName = ex.name.toUpperCase();
-    const query = ex.name.split(' ').join('_');
+    const query = ex.name.split(" ").join("_");
     const video = ex.sample_video;
+    const isLoggedIn = await getStatus();
     await Swal.fire({
       title: `${exName}`,
       html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
       showCloseButton: true,
       confirmButtonText: "Just Do!",
-    }).then((result)=> {
-        if (result.isConfirmed) {
-            window.location.href = `do.html?exName=${query}`;
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (isLoggedIn) {
+          window.location.href = `do.html?exName=${query}`;
+        } else {
+          pleaseLogin();
         }
+      }
     });
   }
 }
@@ -98,9 +84,16 @@ function init() {
     for (let i = 0; i < exercises.length; i++) {
       const ex = exercises[i];
       const exID = ex.id;
-      const cardNum = (i % 3) + 1;
+      let cardNum;
       const exName = ex.name.toUpperCase();
       const lv = ex.level.charAt(0).toUpperCase() + ex.level.slice(1);
+      if (lv === "High") {
+        cardNum = 1;
+      } else if (lv === "Mid") {
+        cardNum = 2;
+      } else {
+        cardNum = 3;
+      }
 
       // prepare html
       let htmlString = `

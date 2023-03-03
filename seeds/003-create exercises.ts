@@ -12,8 +12,8 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("exercises").insert([
         {
             name: "push up",
-            intensity_id: intensity_id[1].id,
-            calories: 9,
+            intensity_id: intensity_id[2].id,
+            calories: 0.4,
             details: "Push-ups are a classic bodyweight exercise that build upper body strength and muscle endurance. They require no equipment, can be modified, and are highly effective.",
             thumbnail: "push_up.jpg",
             sample_video: "push_up_1.mp4"
@@ -21,48 +21,48 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "sit up",
             intensity_id: intensity_id[1].id,
-            calories: 6,
+            calories: 0.3,
             details: "Sit-ups are a bodyweight exercise that strengthen the abdominal muscles, improve core stability, and flexibility.",
             thumbnail: "sit_up.jpeg",
             sample_video: "sit_up_1.mp4"
         },
         {
             name: "leg raises",
-            intensity_id: intensity_id[0].id,
-            calories: 3,
-            details:"Leg raises are a bodyweight exercise that strengthen the lower abdominal muscles, improve core stability, hip flexibility, and posture.",
+            intensity_id: intensity_id[1].id,
+            calories: 0.3,
+            details: "Leg raises are a bodyweight exercise that strengthen the lower abdominal muscles, improve core stability, hip flexibility, and posture.",
             thumbnail: "leg_raises.jpeg",
             sample_video: "leg_raises_1.mp4"
         },
         {
             name: "lunges",
             intensity_id: intensity_id[1].id,
-            calories: 6,
-            details:"Lunges are a simple and effective exercise that target multiple muscle groups, build lower body strength, improve balance, and increase flexibility.",
+            calories: 0.3,
+            details: "Lunges are a simple and effective exercise that target multiple muscle groups, build lower body strength, improve balance, and increase flexibility.",
             thumbnail: "lunges.png",
             sample_video: "lunges_1.mp4"
         },
         {
             name: "side jump",
             intensity_id: intensity_id[2].id,
-            calories: 20,
-            details:"Side-to-side jumps are a high-intensity plyometric exercise that improve lower body strength, power, and agility. They involve lateral jumping and can be modified.",
+            calories: 0.4,
+            details: "Side-to-side jumps are a high-intensity plyometric exercise that improve lower body strength, power, and agility. They involve lateral jumping and can be modified.",
             thumbnail: "side_jump.jpeg",
             sample_video: "side_jump.mp4"
         },
         {
             name: "squats",
-            intensity_id: intensity_id[0].id,
-            calories: 3,
-            details:"Squats are a versatile compound exercise that work multiple muscle groups, including the legs, glutes, and core. They build lower body strength, improve balance, and increase mobility.",
+            intensity_id: intensity_id[2].id,
+            calories: 0.4,
+            details: "Squats are a versatile compound exercise that work multiple muscle groups, including the legs, glutes, and core. They build lower body strength, improve balance, and increase mobility.",
             thumbnail: "squat.jpg",
             sample_video: "squat_1.mp4"
         },
         {
             name: "jacks",
             intensity_id: intensity_id[0].id,
-            calories: 1,
-            details:"Jacks, or jumping jacks, are a bodyweight exercise that increase heart rate, improve cardiovascular fitness, and work multiple muscle groups.",
+            calories: 0.2,
+            details: "Jacks, or jumping jacks, are a bodyweight exercise that increase heart rate, improve cardiovascular fitness, and work multiple muscle groups.",
             thumbnail: "jacks.webp",
             sample_video: "jacks.mp4"
         }
