@@ -63,7 +63,7 @@ async function init() {
 
   // set menu timer
   let isMenu = false;
-  const menuButtonRequiredTime = 80;
+  const menuButtonRequiredTime = 60;
   let menuButtonTime = 0;
   let menuButtonInterval = setInterval(() => {
     menuButtonTime++;
@@ -101,6 +101,10 @@ async function init() {
     clearAllButtonTime++;
   }, 100);
   clearInterval(clearAllButtonInterval);
+
+  // set menu animation effect variables
+  const size = 100;
+  let sizeXY = 0;
 
   // setup poses variables
   const visT = 0.0001; // visibilityThreshold, larger than visT means visible
@@ -813,34 +817,40 @@ async function init() {
       // set menu square
       canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
 
-      if (isMenu) {
+      if (isMenu || (sizeXY > 0)) {
+        if (isMenu && sizeXY < size) {
+          sizeXY += 20;
+        }
+        if (!isMenu && sizeXY > 0) {
+          sizeXY -= 20;
+        }
         // set square 1 (skeleton)
         canvasCtx.rect(
           guideCanvas.width - 250,
-          guideCanvas.height / 2,
-          100,
-          100
+          150,
+          sizeXY,
+          sizeXY
         );
         // set square 2 (tutorial)
         canvasCtx.rect(
           guideCanvas.width - 150,
-          guideCanvas.height / 2,
-          100,
-          100
+          150,
+          sizeXY,
+          sizeXY
         );
         // set square 3 (vtuber)
         canvasCtx.rect(
           guideCanvas.width - 250,
-          guideCanvas.height / 2 + 100,
-          100,
-          100
+          250,
+          sizeXY,
+          sizeXY
         );
         // set square 4 (clear all)
         canvasCtx.rect(
           guideCanvas.width - 150,
-          guideCanvas.height / 2 + 100,
-          100,
-          100
+          250,
+          sizeXY,
+          sizeXY
         );
       }
 
@@ -877,7 +887,7 @@ async function init() {
         canvasCtx.fillText(
           "Skeleton",
           guideCanvas.width - 250 + 20,
-          guideCanvas.height / 2 + 55
+          150 + 55
         );
 
         // draw tutorial text
@@ -886,7 +896,7 @@ async function init() {
         canvasCtx.fillText(
           "Tutorial",
           guideCanvas.width - 150 + 27,
-          guideCanvas.height / 2 + 55
+          150 + 55
         );
 
         // draw vtuber text
@@ -895,7 +905,7 @@ async function init() {
         canvasCtx.fillText(
           "Vtuber",
           guideCanvas.width - 250 + 28,
-          guideCanvas.height / 2 + 100 + 55
+          250 + 55
         );
 
         // draw clear all text
@@ -904,7 +914,7 @@ async function init() {
         canvasCtx.fillText(
           "Clear All",
           guideCanvas.width - 150 + 22,
-          guideCanvas.height / 2 + 100 + 55
+          250 + 55
         );
       }
 
@@ -950,8 +960,8 @@ async function init() {
             if (
               absX > 150 &&
               absX < 250 &&
-              absY > guideCanvas.height / 2 &&
-              absY < guideCanvas.height / 2 + 100
+              absY > 150 &&
+              absY < 250
             ) {
               fingerOnSkeleton = true;
               if (skeletonButtonTime === 0) {
@@ -967,8 +977,8 @@ async function init() {
             if (
               absX > 50 &&
               absX < 150 &&
-              absY > guideCanvas.height / 2 &&
-              absY < guideCanvas.height / 2 + 100
+              absY > 150 &&
+              absY < 250
             ) {
               fingerOnTutorial = true;
               if (tutorialButtonTime === 0) {
@@ -984,8 +994,8 @@ async function init() {
             if (
               absX > 150 &&
               absX < 250 &&
-              absY > guideCanvas.height / 2 + 100 &&
-              absY < guideCanvas.height / 2 + 200
+              absY > 250 &&
+              absY < 350
             ) {
               fingerOnVtuber = true;
               if (vtuberButtonTime === 0) {
@@ -1001,8 +1011,8 @@ async function init() {
             if (
               absX > 50 &&
               absX < 150 &&
-              absY > guideCanvas.height / 2 + 100 &&
-              absY < guideCanvas.height / 2 + 200
+              absY > 250 &&
+              absY < 350
             ) {
               fingerOnClearAll = true;
               if (clearAllButtonTime === 0) {
@@ -1047,6 +1057,8 @@ async function init() {
           isMenu = false;
           clearInterval(menuButtonInterval);
           menuButtonTime = 0;
+          sizeX = 0;
+          sizeY = 0;
         }
       }
 
@@ -1178,7 +1190,7 @@ async function init() {
         canvasCtx.beginPath();
         canvasCtx.arc(
           guideCanvas.width - 250 + 50,
-          guideCanvas.height / 2 + 50,
+          150 + 50,
           45,
           0,
           Math.PI * 2 * (skeletonButtonTime / skeletonButtonRequiredTime)
@@ -1195,7 +1207,7 @@ async function init() {
         canvasCtx.beginPath();
         canvasCtx.arc(
           guideCanvas.width - 150 + 50,
-          guideCanvas.height / 2 + 50,
+          150 + 50,
           45,
           0,
           Math.PI * 2 * (tutorialButtonTime / tutorialButtonRequiredTime)
@@ -1212,7 +1224,7 @@ async function init() {
         canvasCtx.beginPath();
         canvasCtx.arc(
           guideCanvas.width - 250 + 50,
-          guideCanvas.height / 2 + 100 + 50,
+          250 + 50,
           45,
           0,
           Math.PI * 2 * (vtuberButtonTime / vtuberButtonRequiredTime)
@@ -1229,7 +1241,7 @@ async function init() {
         canvasCtx.beginPath();
         canvasCtx.arc(
           guideCanvas.width - 150 + 50,
-          guideCanvas.height / 2 + 100 + 50,
+          250 + 50,
           45,
           0,
           Math.PI * 2 * (clearAllButtonTime / clearAllButtonRequiredTime)
