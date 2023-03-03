@@ -1,7 +1,3 @@
-const foodboad1 = document.querySelector('#foodname_1')
-const foodboad2 = document.querySelector('#foodname_2')
-
-
 // async function foodboad1addEventListener() {
 //     foodboad1.addEventListener('click', async (event) => {
 //         event.preventDefault()
@@ -37,7 +33,7 @@ const foodboad2 = document.querySelector('#foodname_2')
 async function main() {
     let res = await fetch('shop/allFood')
     let data = await res.json()
-    console.log(data)
+    // console.log(data)
 }
 main()
 
@@ -124,12 +120,7 @@ let dummyFood = {
 // }
 
 
-function init() {
-    // foodboad1addEventListener()
-    // foodboad2addEventListener()
-}
 
-init()
 
 ////////////////////////////////
 
@@ -158,10 +149,10 @@ function activateClickOnFood() {
         event.preventDefault()
         const id = event.currentTarget.id.split("-")[1];
         const food = await getFoodDetails(id);
-        const fooodName = food.name.toUpperCase();
+        const foodName = food.name.toUpperCase();
         const query = food.name.split(" ").join("_");
         await Swal.fire({
-            title: `${fooodName}`,
+            title: `${foodName}`,
             text: 'Protein:41.62g,Energy:2238.4KJ,Calories:536.3cal,Fat Total:17.47g,Saturated Fat:5.79g,Carbohydrate:48.88g,Sugar:2.74g,Sodium:256.2mg,Fiber:2.7g',
             imageUrl: '/Meatballs-with-Spanakopita-Rice_1120x.jpeg',
             imageWidth: 300,
@@ -189,3 +180,59 @@ function activateClickOnFood() {
 
     }
 }
+
+function init() {
+    // query selectors
+    const foodlist = document.querySelector("#food-list");
+
+    async function loadFood() {
+        const res = await fetch("/food/addFood");
+        const result = await res.json();
+        const foods = result.data;
+
+        // refresh exercise-list
+        await showfoodPreview(foods);
+
+        activateTilt();
+        activateClickOnFood();
+
+        async function showfoodPreview(foods) {
+            // clear the list 
+            foodlist.innerHTML = "";
+
+            if (foods.length === 0) {
+                foodlist.innerHTML = `<div class="not-found"> - No Results - </div>`;
+            }
+
+            // prepare html
+            let htmlString = `
+                <div class="card" id="food-${food_id}">
+                    <div class="card-image card${cardNum}" 
+                    style="
+                        background: url('/food_uploads/${foods}');
+                        background-size: cover;
+                        background-position: center;
+                        background-repeat: no-repeat;">
+                    </div>
+                <div class="card-text card${cardNum}">
+                    <h2>${foodName}</h2>
+                </div>
+                <div class="card-stats card${cardNum}">
+                        <div class="stat right-border">
+                        <div class="value">${food.calories}<sup>kJ</sup></div>
+                        <div class="type">Calories</div>
+                        </div>
+                        <div class="stat left-border">
+                        <div class="type">per</div>
+                        <div class="value">serving</div>
+                        </div>
+                    </div>
+                </div>
+      `;
+            exsList.innerHTML += htmlString;
+
+        }
+        loadFood();
+    }
+}
+init();
