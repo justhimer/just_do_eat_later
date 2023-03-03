@@ -1,4 +1,6 @@
 const foodboad1 = document.querySelector('#foodname_1')
+const foodboad2 = document.querySelector('#foodname_2')
+
 
 async function foodboad1addEventListener() {
     foodboad1.addEventListener('click', async (event) => {

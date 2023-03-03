@@ -22,20 +22,47 @@
     <header class="content">
         <h1 id=" h1" class="nav">Eat Later!</h1>
     </header>
-    <div class="foodboad">
-        <div id="foodname_1">
-            <p>Meatballs-with-Spanakopita-Rice</p>
-            <picture>
-                <img src="/Meatballs-with-Spanakopita-Rice_1120x.jpeg" alt="MEATBALLS" style="width:300px;">
-            </picture>
-        </div>
-        <div id="foodname_2">
-            <p>BEEF-MEX-LOADED</p>
-            <picture>
-                <img src="/BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.jpeg" alt="BEEF-MEX-LOADED" style="width: 300px;">
-            </picture>
 
+
+    <div class="cards-container">
+        <div class="card">
+            <div class="card-image"></div>
+            <div id="foodname_1">
+                <div class="card-text">
+                    <h2>Meatballs-with-Spanakopita-Rice</h2>
+                </div>
+            </div>
+            <div class="card-stats">
+                <div class="stat right-border">
+                    <div class="value">536<sup>kJ</sup></div>
+                    <div class="type">Calories</div>
+                </div>
+                <div class="stat left-border">
+                    <div class="type">per</div>
+                    <div class="value">serving</div>
+                </div>
+            </div>
         </div>
+        <div class="card">
+            <div class="card-image card2"></div>
+            <div id="foodname_2">
+                <div class="card-text card2">
+                    <h2>BEEF-MEX-LOADED</h2>
+                </div>
+            </div>
+            <div class="card-stats card2">
+                <div class="stat right-border">
+                    <div class="value">406<sup>kJ</sup></div>
+                    <div class="type">Calories</div>
+                </div>
+                <div class="stat left-border">
+                    <div class="type">per</div>
+                    <div class="value">serving</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     </div>
     <div id="hamburger"></div>
     <script src="/assets/common/common.js"></script>
@@ -44,6 +71,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/assets/food-celection/food.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+    <!-- tilt cards -->
+    <script src="./assets/exercises/vanilla-tilt.min.js"></script>
 
 </body>
 
