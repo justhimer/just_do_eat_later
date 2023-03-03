@@ -16,6 +16,8 @@ import { TransactionService } from './services/transactionService';
 import { ExerciseController } from './controllers/exerciseController';
 import { ExerciseService } from './services/exerciseService';
 import { chooseexerciseRoutes } from './routes/exerciseRoutes';
+import * as schedule from 'node-schedule';
+import { testScheduleJob, testTime } from './util/scheduler';
 /* #region session */
 /* #endregion */
 
@@ -94,6 +96,7 @@ app.use((req, res) => {
 })
 /* #endregion */
 
+// const job = new schedule.scheduleJob(testTime,testScheduleJob())
 
 /* #region start server */
 server.listen(PORT, () => {
