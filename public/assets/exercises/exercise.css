@@ -7,13 +7,28 @@ h1 {
     font-family: 'Encode Sans Condensed', sans-serif;
 }
 
-.content {
+/* .content {
     padding: 1rem 0;
-}
+} */
 
 body {
     color: #3b3836;
     background-color: #cfc1ac;
+}
+
+.corner-box {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  height: 3rem;
+  width: 8rem;
+  background-color: #615c59;
+  color: #cfc1ac;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Righteous', sans-serif;
+  padding: 0.8rem;
+  font-weight: bold;
 }
 
 /*********************/
@@ -23,7 +38,7 @@ body {
 .container {
     width: 100vw;
     height: auto;
-    padding: 5rem 10rem;
+    padding: 3rem 10rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,6 +71,7 @@ body {
     transform-style: preserve-3d;
     perspective: 1000px;
     animation: popin .3s;
+    font-family: 'Encode Sans Condensed', sans-serif;
   }
   .card-image {
     grid-area: image;
@@ -121,14 +137,14 @@ body {
   
   /*card2*/
   .card-text.card2 .date {
-    color: rgb(178, 130, 8);
+    color: rgb(215, 157, 11);
   }
   .card-stats.card2 .border {
-    border-left: 1px solid  rgb(178, 130, 8);
-    border-right: 1px solid rgb(178, 130, 8);
+    border-left: 1px solid  rgb(215, 157, 11);
+    border-right: 1px solid rgb(215, 157, 11);
   }
   .card-stats.card2 {
-    background:  rgb(228, 166, 8);
+    background:  rgb(235, 171, 8);
   }
 
   /*card3*/

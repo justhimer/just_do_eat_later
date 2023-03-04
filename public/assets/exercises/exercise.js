@@ -1,3 +1,6 @@
+// import { Notify } from '../../../node_modules/notiflix/build/notiflix-notify-aio';
+// import { Loading } from 'notiflix/build/notiflix-loading-aio';
+
 async function getExDetails(id) {
   const res = await fetch(`/exercise/one/${id}`);
   const result = await res.json();
@@ -66,6 +69,8 @@ function activateClickOnExs() {
 function init() {
   // query selectors
   const exsList = document.querySelector("#exs-list");
+  const cornerElem = document.querySelector(".corner-box");
+  cornerElem.addEventListener("click", showCalories);
 
   async function loadExs() {
     const res = await fetch("/exercise/all");
@@ -75,8 +80,39 @@ function init() {
     // refresh exercise-list
     await showExsPreview(exercises);
 
+    Notiflix.Loading.remove();
     activateTilt();
     activateClickOnExs();
+  }
+
+  async function showCalories() {
+    const isLoggedIn = await getStatus();
+    if (isLoggedIn) {
+      const res = await fetch("/users/calories");
+      const result = await res.json();
+      const calories = result.calories;
+      Notiflix.Notify.info(`Remaining ${calories} calories`, {
+        width: "18rem",
+        fontSize: '1rem',
+        clickToClose: true,
+        info: {
+          background: "#615c59",
+          textColor: "#cfc1ac",
+          notiflixIconColor: "#cfc1ac",
+        },
+      });
+    } else {
+      Notiflix.Notify.warning("Please Login", {
+        width: "15rem",
+        fontSize: '1rem',
+        clickToClose: true,
+        warning: {
+          background: "#615c59",
+          textColor: "#cfc1ac",
+          notiflixIconColor: "#cfc1ac",
+        },
+      });
+    }
   }
 
   async function showExsPreview(exercises) {
@@ -135,4 +171,7 @@ function init() {
   loadExs();
 }
 
+Notiflix.Loading.circle({
+  svgColor: "black",
+});
 init();
