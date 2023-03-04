@@ -5,18 +5,35 @@ export class ExerciseService {
 
     constructor(private knex: Knex) { }
 
-    async getAllExercises(): Promise<any> {
-        let allExercises = await this.knex.raw(`
-        select
-        ex.id,
-        ex.name,
-        int.level,
-        ex.calories,
-        ex.details,
-        ex.thumbnail,
-        ex.sample_video
-        from exercises as ex
-        join intensities as int on ex.intensity_id = int.id;`);
+    async getAllExercises(queriesLength: number, queries: any): Promise<any> {
+
+        let sqlParameters = [];
+        let sqlString = `
+            select
+            ex.id,
+            ex.name,
+            int.level,
+            ex.calories,
+            ex.details,
+            ex.thumbnail,
+            ex.sample_video
+            from exercises as ex
+            join intensities as int on ex.intensity_id = int.id 
+        `;
+
+        if (queriesLength > 0) {
+            sqlString += "where ";
+            for (let key in queries) {
+                if (queries[key]) {
+                    if (sqlParameters.length > 0) { sqlString += "and " }
+                    sqlParameters.push(queries[key]);
+                    sqlString += `${key} = ?`;
+                }
+            }
+        }   
+
+        const allExercises = await this.knex.raw(sqlString, sqlParameters);
+
         return allExercises.rows;
     }
 

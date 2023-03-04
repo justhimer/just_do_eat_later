@@ -72,8 +72,54 @@ function init() {
   const cornerElem = document.querySelector(".corner-box");
   cornerElem.addEventListener("click", showCalories);
 
-  async function loadExs() {
-    const res = await fetch("/exercise/all");
+  function activateClickOnRadios() {
+    const radioElems = document.querySelectorAll(".radio");
+    for (let radioElem of radioElems) {
+      radioElem.addEventListener("click", refreshCards);
+    }
+    async function refreshCards(event) {
+      const radioID = event.currentTarget.id.replace("radio", "");
+      if (radioID === "1") {
+        await loadExs();
+        return;
+      }
+      let intLv;
+      if (radioID === "2") {
+        intLv = "high";
+      } else if (radioID === "3") {
+        intLv = "mid";
+      } else {
+        intLv = "low";
+      }
+      await loadExs({ level: intLv });
+    }
+  }
+
+  // requirements in objact type, can be undefined
+  async function loadExs(extraRequirements) {
+    // loading screen
+    Notiflix.Loading.circle({
+      svgColor: "black",
+    });
+
+    // prepare fetch string
+    let fetchString = "/exercise/all";
+    let queryAdded = 0;
+    for (let key in extraRequirements) {
+      if (extraRequirements[key]) {
+        if (queryAdded === 0) {
+          fetchString += "?";
+        }
+        if (queryAdded > 0) {
+          fetchString += "&";
+        }
+        fetchString += `${key}=${extraRequirements[key]}`;
+        queryAdded++;
+      }
+    }
+
+    // fetching
+    const res = await fetch(fetchString);
     const result = await res.json();
     const exercises = result.data;
 
@@ -93,7 +139,7 @@ function init() {
       const calories = result.calories;
       Notiflix.Notify.info(`Remaining ${calories} calories`, {
         width: "18rem",
-        fontSize: '1rem',
+        fontSize: "1rem",
         clickToClose: true,
         info: {
           background: "#615c59",
@@ -104,7 +150,7 @@ function init() {
     } else {
       Notiflix.Notify.warning("Please Login", {
         width: "15rem",
-        fontSize: '1rem',
+        fontSize: "1rem",
         clickToClose: true,
         warning: {
           background: "#615c59",
@@ -169,9 +215,6 @@ function init() {
     }
   }
   loadExs();
+  activateClickOnRadios();
 }
-
-Notiflix.Loading.circle({
-  svgColor: "black",
-});
 init();
