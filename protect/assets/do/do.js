@@ -54,7 +54,7 @@ async function init() {
 
   // set exit timer
   let isExit = false;
-  const exitButtonRequiredTime = 80;
+  const exitButtonRequiredTime = 60;
   let exitButtonTime = 0;
   let exitButtonInterval = setInterval(() => {
     exitButtonTime++;
@@ -787,16 +787,23 @@ async function init() {
 
     // visualize counter
     if (closeMode) {
-      canvasCtx.font = "2.2rem Arial";
+      canvasCtx.font = "2.5rem Arial";
       canvasCtx.fillStyle = "#000000";
       canvasCtx.fillText(
-        `${exName.toUpperCase().split("_").join(" ")}
-        Repes: ${repes}
-        Burnt: ${caloriesBurnt.toFixed(1)}`,
+        `${exName.toUpperCase().split("_").join(" ")}`,
         10,
         40
-        // canvasElement.width * 2/5,
-        // canvasElement.height / 2
+      );
+      canvasCtx.font = "2rem Arial";
+      canvasCtx.fillText(
+        `Calories: ${caloriesBurnt.toFixed(1)}`,
+        10,
+        80
+      );
+      canvasCtx.fillText(
+        `Repes: ${repes}`,
+        10,
+        120
       );
     } else {
       canvasCtx.font = "20rem Arial";
