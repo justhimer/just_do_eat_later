@@ -1,86 +1,165 @@
 import { calculateAngle } from "./do_utils.js";
 import { exercises } from "./do_models.js";
 
-const exName = document.URL.split("?")[1].replace("exName=", "");
+function toggleTutorialVideo(videoFileName) {
+  const tutorialElem = document.querySelector("#tutorial");
+  if (!tutorialElem.innerHTML) {
+    tutorialElem.innerHTML = `<video width="468" height="320" src="ex_uploads/videos/${videoFileName}" autoplay loop></video>`;
+  } else {
+    tutorialElem.innerHTML = "";
+  }
+}
 
-// modes
-let selectedVtuber = false;
-let developmentMode = false;
-const closeModeValue = 0.08; // larger than this value, close mode will be activated
-let closeMode = false;
+function deactivateTutorialVideo() {
+  const tutorialElem = document.querySelector("#tutorial");
+  tutorialElem.innerHTML = "";
+}
 
-// set exit timer
-let isExit = false;
-const exitButtonRequiredTime = 80;
-let exitButtonTime = 0;
-let exitButtonInterval = setInterval(() => {
-  exitButtonTime++;
-}, 100);
-clearInterval(exitButtonInterval);
+function toggleVtuber() {
+  const mainElem = document.querySelector("#main");
+  const videoContainerElem = document.querySelector('.video-container');
+  mainElem.classList.toggle("corner");
+  if (mainElem.classList.contains('corner')) {
+    videoContainerElem.style.backgroundColor = "";
+  } else {
+    videoContainerElem.style.backgroundColor = "#3b3836";
+  }
+}
 
-// set menu timer
-let isMenu = false;
-const menuButtonRequiredTime = 80;
-let menuButtonTime = 0;
-let menuButtonInterval = setInterval(() => {
-  menuButtonTime++;
-}, 100);
-clearInterval(menuButtonInterval);
+function deactivateVtuber() {
+  const mainElem = document.querySelector("#main");
+  const videoContainerElem = document.querySelector('.video-container');
+  mainElem.className = "preview";
+  videoContainerElem.style.backgroundColor = "#3b3836";
+}
 
-// setup poses variables
-const visT = 0.0001; // visibilityThreshold, larger than visT means visible
+async function init() {
+  // get data
+  const exID = parseInt(document.URL.split("?")[1].replace("ex_id=", ""));
+  const res = await fetch(`/exercise/one/${exID}`);
+  const result = await res.json();
+  const ex = result.data;
+  const exName = ex.name.split(" ").join("_");
+  const videoFileName = ex.sample_video;
+  const caloriesPerRepes = parseFloat(ex.calories);
+  let caloriesBurnt = 0;
 
-// 全直 : 150 ~ 180
-// 半直 : 90 ~ 150
-// 半屈 : 60 ~ 90
-// 全屈 : 0 ~ 60
-const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
-// 高 : higher than hip
-// 低 : lower than hip
-// 左 : left of half screen
-// 右 : right of half screen
-const positionStatusDescription = ["高左", "高右", "低左", "低右"];
+  // modes
+  let developmentMode = false;
+  let vtuberMode = false;
+  let animated = false;
+  let skeletonMode = false;
+  const closeModeValue = 0.08; // larger than this value, close mode will be activated
+  let closeMode = false;
 
-let status = {
-  // can be set to index of statusDescription
-  jointStatus: {
-    leftShoulder: null,
-    rightShoulder: null,
-    leftElbow: null,
-    rightElbow: null,
-    leftHip: null,
-    rightHip: null,
-    leftKnee: null,
-    rightKnee: null,
-  },
-  positionStatus: {
-    nose: null,
-    leftShoulder: null,
-    rightShoulder: null,
-    leftElbow: null,
-    rightElbow: null,
-    leftWrist: null,
-    rightWrist: null,
-    leftHip: null,
-    rightHip: null,
-    leftKnee: null,
-    rightKnee: null,
-    leftAnkle: null,
-    rightAnkle: null,
-  },
-};
+  // set exit timer
+  let isExit = false;
+  const exitButtonRequiredTime = 80;
+  let exitButtonTime = 0;
+  let exitButtonInterval = setInterval(() => {
+    exitButtonTime++;
+  }, 100);
+  clearInterval(exitButtonInterval);
 
-let milestone = 0;
-let repes = 0; // repetition counter
+  // set menu timer
+  let isMenu = false;
+  const menuButtonRequiredTime = 60;
+  let menuButtonTime = 0;
+  let menuButtonInterval = setInterval(() => {
+    menuButtonTime++;
+  }, 100);
+  clearInterval(menuButtonInterval);
 
-/****************************/
-/**** Vtuber Setup Start ****/
-/****************************/
+  // set skeleton mode timer
+  const skeletonButtonRequiredTime = 60;
+  let skeletonButtonTime = 0;
+  let skeletonButtonInterval = setInterval(() => {
+    skeletonButtonTime++;
+  }, 100);
+  clearInterval(skeletonButtonInterval);
 
-let currentVrm;
-let animateVRM;
+  // set tutorial mode timer
+  const tutorialButtonRequiredTime = 60;
+  let tutorialButtonTime = 0;
+  let tutorialButtonInterval = setInterval(() => {
+    tutorialButtonTime++;
+  }, 100);
+  clearInterval(tutorialButtonInterval);
 
-if (selectedVtuber) {
+  // set vtuber mode timer
+  const vtuberButtonRequiredTime = 60;
+  let vtuberButtonTime = 0;
+  let vtuberButtonInterval = setInterval(() => {
+    vtuberButtonTime++;
+  }, 100);
+  clearInterval(vtuberButtonInterval);
+
+  // set clear-all timer
+  const clearAllButtonRequiredTime = 60;
+  let clearAllButtonTime = 0;
+  let clearAllButtonInterval = setInterval(() => {
+    clearAllButtonTime++;
+  }, 100);
+  clearInterval(clearAllButtonInterval);
+
+  // set menu animation effect variables
+  const size = 100;
+  let sizeXY = 0;
+
+  // setup poses variables
+  const visT = 0.0001; // visibilityThreshold, larger than visT means visible
+
+  // 全直 : 150 ~ 180
+  // 半直 : 90 ~ 150
+  // 半屈 : 60 ~ 90
+  // 全屈 : 0 ~ 60
+  const jointStatusDescription = ["全直", "半直", "半屈", "全屈"];
+  // 高 : higher than hip
+  // 低 : lower than hip
+  // 左 : left of half screen
+  // 右 : right of half screen
+  const positionStatusDescription = ["高左", "高右", "低左", "低右"];
+
+  let status = {
+    // can be set to index of statusDescription
+    jointStatus: {
+      leftShoulder: null,
+      rightShoulder: null,
+      leftElbow: null,
+      rightElbow: null,
+      leftHip: null,
+      rightHip: null,
+      leftKnee: null,
+      rightKnee: null,
+    },
+    positionStatus: {
+      nose: null,
+      leftShoulder: null,
+      rightShoulder: null,
+      leftElbow: null,
+      rightElbow: null,
+      leftWrist: null,
+      rightWrist: null,
+      leftHip: null,
+      rightHip: null,
+      leftKnee: null,
+      rightKnee: null,
+      leftAnkle: null,
+      rightAnkle: null,
+    },
+  };
+
+  let milestone = 0;
+  let repes = 0; // repetition counter
+
+  /****************************/
+  /**** Vtuber Setup Start ****/
+  /****************************/
+
+  /* #region vtuber */
+  let currentVrm;
+  let animateVRM;
+
   //Import Helper Functions from Kalidokit
   const remap = Kalidokit.Utils.remap;
   const clamp = Kalidokit.Utils.clamp;
@@ -130,7 +209,6 @@ if (selectedVtuber) {
     }
     renderer.render(scene, orbitCamera);
   }
-  animate();
 
   /* VRM CHARACTER SETUP */
 
@@ -409,522 +487,827 @@ if (selectedVtuber) {
       rigRotation("RightLittleDistal", riggedRightHand.RightLittleDistal);
     }
   };
-}
 
-/****************************/
-/***** Vtuber Setup End *****/
-/****************************/
+  /* #endregion vtuber */
 
-/***************************/
-/**** Draw Result Start ****/
-/***************************/
+  /****************************/
+  /***** Vtuber Setup End *****/
+  /****************************/
 
-let videoElement = document.querySelector(".input_video"),
-  guideCanvas = document.querySelector("canvas.guides");
+  /***************************/
+  /**** Draw Result Start ****/
+  /***************************/
 
-/* draw canvas */
-const drawResults = (results) => {
-  if (!results.poseLandmarks || isExit) {
-    return;
-  }
+  let videoElement = document.querySelector(".input_video"),
+    guideCanvas = document.querySelector("canvas.guides");
 
-  // activate close mode or not
-  // check distance between eyes
-  const distance = Math.abs(
-    results.poseLandmarks[2].x - results.poseLandmarks[5].x
-  );
-  if (distance > closeModeValue + 0.01) {
-    closeMode = true;
-  } else if (distance < closeModeValue - 0.01) {
-    closeMode = false;
-  }
+  /* draw canvas */
+  const drawResults = async (results) => {
+    if (!results.poseLandmarks || isExit) {
+      return;
+    }
 
-  videoElement.width = window.innerWidth;
-  videoElement.height = window.innerHeight;
-
-  guideCanvas.width = videoElement.videoWidth;
-  guideCanvas.height = videoElement.videoHeight;
-  let canvasCtx = guideCanvas.getContext("2d");
-
-  canvasCtx.save();
-  canvasCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
-
-  // draw all landmarks and connectors
-  if (developmentMode) {
-    drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-      color: "#00cff7",
-      lineWidth: 2,
-    });
-    drawLandmarks(canvasCtx, results.poseLandmarks, {
-      color: "#ff0364",
-      lineWidth: 1,
-    });
-  }
-
-  // draw finger cursor
-  if (closeMode && results.rightHandLandmarks) {
-    canvasCtx.strokeStyle = "black";
-    canvasCtx.fillStyle = "yellow";
-    canvasCtx.globalAlpha = 0.5;
-    canvasCtx.beginPath();
-    canvasCtx.arc(
-      results.rightHandLandmarks[8].x * guideCanvas.width,
-      results.rightHandLandmarks[8].y * guideCanvas.height,
-      10,
-      0,
-      Math.PI * 2
+    // activate close mode or not
+    // check distance between eyes
+    const distance = Math.abs(
+      results.poseLandmarks[2].x - results.poseLandmarks[5].x
     );
-    canvasCtx.fill();
-    canvasCtx.stroke();
-    canvasCtx.globalAlpha = 1.0;
-  }
+    if (distance > closeModeValue + 0.01) {
+      closeMode = true;
+    } else if (distance < closeModeValue - 0.01) {
+      closeMode = false;
+    }
 
-  // set font for text
-  canvasCtx.font = "1.2rem Arial";
-  canvasCtx.fillStyle = "#ffffff";
+    videoElement.width = window.innerWidth;
+    videoElement.height = window.innerHeight;
 
-  // get all landmarks
-  const mirroredLandmarks = results.poseLandmarks.map((landmark) => {
-    return {
-      x: 1 - landmark.x,
-      y: landmark.y,
-      z: landmark.z,
-      visibility: landmark.visibility,
+    guideCanvas.width = videoElement.videoWidth;
+    guideCanvas.height = videoElement.videoHeight;
+    let canvasCtx = guideCanvas.getContext("2d");
+
+    canvasCtx.save();
+    canvasCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+
+    // draw all landmarks and connectors
+    if (skeletonMode) {
+      drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+        color: "#00cff7",
+        lineWidth: 2,
+      });
+      drawLandmarks(canvasCtx, results.poseLandmarks, {
+        color: "#ff0364",
+        lineWidth: 1,
+      });
+    }
+
+    // draw finger cursor
+    if (closeMode && results.rightHandLandmarks) {
+      canvasCtx.strokeStyle = "black";
+      canvasCtx.fillStyle = "yellow";
+      canvasCtx.globalAlpha = 0.5;
+      canvasCtx.beginPath();
+      canvasCtx.arc(
+        results.rightHandLandmarks[8].x * guideCanvas.width,
+        results.rightHandLandmarks[8].y * guideCanvas.height,
+        10,
+        0,
+        Math.PI * 2
+      );
+      canvasCtx.fill();
+      canvasCtx.stroke();
+      canvasCtx.globalAlpha = 1.0;
+    }
+
+    // set font for text
+    canvasCtx.font = "1.2rem Arial";
+    canvasCtx.fillStyle = "#ffffff";
+
+    // get all landmarks
+    const mirroredLandmarks = results.poseLandmarks.map((landmark) => {
+      return {
+        x: 1 - landmark.x,
+        y: landmark.y,
+        z: landmark.z,
+        visibility: landmark.visibility,
+      };
+    });
+
+    // get normalized coordinates
+    const coors = {
+      // nose
+      nose:
+        mirroredLandmarks[0].visibility > visT
+          ? [mirroredLandmarks[0].x, mirroredLandmarks[0].y]
+          : null,
+
+      // shoulder
+      leftShoulder:
+        mirroredLandmarks[11].visibility > visT
+          ? [mirroredLandmarks[11].x, mirroredLandmarks[11].y]
+          : null,
+      rightShoulder:
+        mirroredLandmarks[12].visibility > visT
+          ? [mirroredLandmarks[12].x, mirroredLandmarks[12].y]
+          : null,
+
+      // elbow
+      leftElbow:
+        mirroredLandmarks[13].visibility > visT
+          ? [mirroredLandmarks[13].x, mirroredLandmarks[13].y]
+          : null,
+      rightElbow:
+        mirroredLandmarks[14].visibility > visT
+          ? [mirroredLandmarks[14].x, mirroredLandmarks[14].y]
+          : null,
+
+      // wrist
+      leftWrist:
+        mirroredLandmarks[15].visibility > visT
+          ? [mirroredLandmarks[15].x, mirroredLandmarks[15].y]
+          : null,
+      rightWrist:
+        mirroredLandmarks[16].visibility > visT
+          ? [mirroredLandmarks[16].x, mirroredLandmarks[16].y]
+          : null,
+
+      // hip
+      leftHip:
+        mirroredLandmarks[23].visibility > visT
+          ? [mirroredLandmarks[23].x, mirroredLandmarks[23].y]
+          : null,
+      rightHip:
+        mirroredLandmarks[24].visibility > visT
+          ? [mirroredLandmarks[24].x, mirroredLandmarks[24].y]
+          : null,
+
+      // knee
+      leftKnee:
+        mirroredLandmarks[25].visibility > visT
+          ? [mirroredLandmarks[25].x, mirroredLandmarks[25].y]
+          : null,
+      rightKnee:
+        mirroredLandmarks[26].visibility > visT
+          ? [mirroredLandmarks[26].x, mirroredLandmarks[26].y]
+          : null,
+
+      // ankle
+      leftAnkle:
+        mirroredLandmarks[27].visibility > visT
+          ? [mirroredLandmarks[27].x, mirroredLandmarks[27].y]
+          : null,
+      rightAnkle:
+        mirroredLandmarks[28].visibility > visT
+          ? [mirroredLandmarks[28].x, mirroredLandmarks[28].y]
+          : null,
     };
-  });
 
-  // get normalized coordinates
-  const coors = {
-    // nose
-    nose:
-      mirroredLandmarks[0].visibility > visT
-        ? [mirroredLandmarks[0].x, mirroredLandmarks[0].y]
-        : null,
+    // calculate angles
+    const angles = {
+      // left
+      leftShoulder: calculateAngle(
+        coors.leftHip,
+        coors.leftShoulder,
+        coors.leftElbow
+      ),
+      leftElbow: calculateAngle(
+        coors.leftShoulder,
+        coors.leftElbow,
+        coors.leftWrist
+      ),
+      leftHip: calculateAngle(
+        coors.leftShoulder,
+        coors.leftHip,
+        coors.leftKnee
+      ),
+      leftKnee: calculateAngle(coors.leftHip, coors.leftKnee, coors.leftAnkle),
+      // right
+      rightShoulder: calculateAngle(
+        coors.rightHip,
+        coors.rightShoulder,
+        coors.rightElbow
+      ),
+      rightElbow: calculateAngle(
+        coors.rightShoulder,
+        coors.rightElbow,
+        coors.rightWrist
+      ),
+      rightHip: calculateAngle(
+        coors.rightShoulder,
+        coors.rightHip,
+        coors.rightKnee
+      ),
+      rightKnee: calculateAngle(
+        coors.rightHip,
+        coors.rightKnee,
+        coors.rightAnkle
+      ),
+    };
 
-    // shoulder
-    leftShoulder:
-      mirroredLandmarks[11].visibility > visT
-        ? [mirroredLandmarks[11].x, mirroredLandmarks[11].y]
-        : null,
-    rightShoulder:
-      mirroredLandmarks[12].visibility > visT
-        ? [mirroredLandmarks[12].x, mirroredLandmarks[12].y]
-        : null,
-
-    // elbow
-    leftElbow:
-      mirroredLandmarks[13].visibility > visT
-        ? [mirroredLandmarks[13].x, mirroredLandmarks[13].y]
-        : null,
-    rightElbow:
-      mirroredLandmarks[14].visibility > visT
-        ? [mirroredLandmarks[14].x, mirroredLandmarks[14].y]
-        : null,
-
-    // wrist
-    leftWrist:
-      mirroredLandmarks[15].visibility > visT
-        ? [mirroredLandmarks[15].x, mirroredLandmarks[15].y]
-        : null,
-    rightWrist:
-      mirroredLandmarks[16].visibility > visT
-        ? [mirroredLandmarks[16].x, mirroredLandmarks[16].y]
-        : null,
-
-    // hip
-    leftHip:
-      mirroredLandmarks[23].visibility > visT
-        ? [mirroredLandmarks[23].x, mirroredLandmarks[23].y]
-        : null,
-    rightHip:
-      mirroredLandmarks[24].visibility > visT
-        ? [mirroredLandmarks[24].x, mirroredLandmarks[24].y]
-        : null,
-
-    // knee
-    leftKnee:
-      mirroredLandmarks[25].visibility > visT
-        ? [mirroredLandmarks[25].x, mirroredLandmarks[25].y]
-        : null,
-    rightKnee:
-      mirroredLandmarks[26].visibility > visT
-        ? [mirroredLandmarks[26].x, mirroredLandmarks[26].y]
-        : null,
-
-    // ankle
-    leftAnkle:
-      mirroredLandmarks[27].visibility > visT
-        ? [mirroredLandmarks[27].x, mirroredLandmarks[27].y]
-        : null,
-    rightAnkle:
-      mirroredLandmarks[28].visibility > visT
-        ? [mirroredLandmarks[28].x, mirroredLandmarks[28].y]
-        : null,
-  };
-
-  // calculate angles
-  const angles = {
-    // left
-    leftShoulder: calculateAngle(
-      coors.leftHip,
-      coors.leftShoulder,
-      coors.leftElbow
-    ),
-    leftElbow: calculateAngle(
-      coors.leftShoulder,
-      coors.leftElbow,
-      coors.leftWrist
-    ),
-    leftHip: calculateAngle(coors.leftShoulder, coors.leftHip, coors.leftKnee),
-    leftKnee: calculateAngle(coors.leftHip, coors.leftKnee, coors.leftAnkle),
-    // right
-    rightShoulder: calculateAngle(
-      coors.rightHip,
-      coors.rightShoulder,
-      coors.rightElbow
-    ),
-    rightElbow: calculateAngle(
-      coors.rightShoulder,
-      coors.rightElbow,
-      coors.rightWrist
-    ),
-    rightHip: calculateAngle(
-      coors.rightShoulder,
-      coors.rightHip,
-      coors.rightKnee
-    ),
-    rightKnee: calculateAngle(
-      coors.rightHip,
-      coors.rightKnee,
-      coors.rightAnkle
-    ),
-  };
-
-  // set joint status
-  for (let key in angles) {
-    if (angles[key] === null) {
-      continue;
-    }
-    if (angles[key] > 150) {
-      status.jointStatus[key] = 0; // straight
-    } else if (angles[key] < 150 && angles[key] > 90) {
-      status.jointStatus[key] = 1; // half-stright
-    } else if (angles[key] < 90 && angles[key] > 60) {
-      status.jointStatus[key] = 2; // half-bent
-    } else if (angles[key] < 60) {
-      status.jointStatus[key] = 3; // full-bent
-    }
-  }
-
-  // set position status
-  for (let key in coors) {
-    if (
-      coors[key] === null ||
-      coors.leftHip === null ||
-      coors.rightHip === null
-    ) {
-      continue;
-    }
-    if (coors[key][1] < coors.leftHip[1] || coors[key][1] < coors.rightHip[1]) {
-      if (coors[key][0] < 0.5) {
-        status.positionStatus[key] = 0; // 高左
-      } else if (coors[key][0] >= 0.5) {
-        status.positionStatus[key] = 1; // 高右
-      }
-    } else {
-      if (coors[key][0] < 0.5) {
-        status.positionStatus[key] = 2; // 低左
-      } else if (coors[key][0] >= 0.5) {
-        status.positionStatus[key] = 3; // 低右
-      }
-    }
-  }
-
-  // Flip the canvas horizontally
-  canvasCtx.scale(-1, 1);
-  canvasCtx.translate(-guideCanvas.width, 0);
-
-  // visualize joint status
-  if (developmentMode) {
+    // set joint status
     for (let key in angles) {
       if (angles[key] === null) {
         continue;
       }
-      canvasCtx.fillText(
-        //   `${angles[key].toFixed(1)} ${jointStatusDescription[status.jointStatus[key]]}`,
-        `(${jointStatusDescription[status.jointStatus[key]]})`,
-        coors[key][0] * guideCanvas.width,
-        coors[key][1] * guideCanvas.height - 10
-      );
+      if (angles[key] > 150) {
+        status.jointStatus[key] = 0; // straight
+      } else if (angles[key] < 150 && angles[key] > 90) {
+        status.jointStatus[key] = 1; // half-stright
+      } else if (angles[key] < 90 && angles[key] > 60) {
+        status.jointStatus[key] = 2; // half-bent
+      } else if (angles[key] < 60) {
+        status.jointStatus[key] = 3; // full-bent
+      }
     }
-  }
 
-  // visualize position status
-  if (developmentMode) {
+    // set position status
     for (let key in coors) {
-      if (coors[key] === null) {
+      if (
+        coors[key] === null ||
+        coors.leftHip === null ||
+        coors.rightHip === null
+      ) {
         continue;
       }
-      canvasCtx.fillText(
-        `(${positionStatusDescription[status.positionStatus[key]]})`,
-        coors[key][0] * guideCanvas.width - 60,
-        coors[key][1] * guideCanvas.height - 10
-      );
+      if (
+        coors[key][1] < coors.leftHip[1] ||
+        coors[key][1] < coors.rightHip[1]
+      ) {
+        if (coors[key][0] < 0.5) {
+          status.positionStatus[key] = 0; // 高左
+        } else if (coors[key][0] >= 0.5) {
+          status.positionStatus[key] = 1; // 高右
+        }
+      } else {
+        if (coors[key][0] < 0.5) {
+          status.positionStatus[key] = 2; // 低左
+        } else if (coors[key][0] >= 0.5) {
+          status.positionStatus[key] = 3; // 低右
+        }
+      }
     }
-  }
 
-  // fuzzy logic for exercise
-  if (milestone === exercises[exName].length) {
-    repes++;
-    milestone = 0; // init milstone
-  }
-  let clear = true;
-  for (let statusKey in exercises[exName][milestone]) {
-    for (let bodyPart in exercises[exName][milestone][statusKey]) {
-      let checkEither = false;
-      for (let option of exercises[exName][milestone][statusKey][bodyPart]) {
-        if (status[statusKey][bodyPart] === option) {
-          checkEither = true;
+    // Flip the canvas horizontally
+    canvasCtx.scale(-1, 1);
+    canvasCtx.translate(-guideCanvas.width, 0);
+
+    // visualize joint status
+    if (developmentMode) {
+      for (let key in angles) {
+        if (angles[key] === null) {
+          continue;
+        }
+        canvasCtx.fillText(
+          //   `${angles[key].toFixed(1)} ${jointStatusDescription[status.jointStatus[key]]}`,
+          `(${jointStatusDescription[status.jointStatus[key]]})`,
+          coors[key][0] * guideCanvas.width,
+          coors[key][1] * guideCanvas.height - 10
+        );
+      }
+    }
+
+    // visualize position status
+    if (developmentMode) {
+      for (let key in coors) {
+        if (coors[key] === null) {
+          continue;
+        }
+        canvasCtx.fillText(
+          `(${positionStatusDescription[status.positionStatus[key]]})`,
+          coors[key][0] * guideCanvas.width - 60,
+          coors[key][1] * guideCanvas.height - 10
+        );
+      }
+    }
+
+    // fuzzy logic for exercise
+    if (milestone === exercises[exName].length) {
+      repes++;
+      caloriesBurnt += caloriesPerRepes;
+      milestone = 0; // init milstone
+    }
+    let clear = true;
+    for (let statusKey in exercises[exName][milestone]) {
+      for (let bodyPart in exercises[exName][milestone][statusKey]) {
+        let checkEither = false;
+        for (let option of exercises[exName][milestone][statusKey][bodyPart]) {
+          if (status[statusKey][bodyPart] === option) {
+            checkEither = true;
+            break;
+          }
+        }
+        if (!checkEither) {
+          clear = false;
           break;
         }
       }
-      if (!checkEither) {
-        clear = false;
-        break;
-      }
     }
-  }
-  if (clear) {
-    milestone++;
-  }
+    if (clear) {
+      milestone++;
+    }
 
-  // visualize counter
-  if (closeMode) {
-    canvasCtx.font = "2.3rem Arial";
-    canvasCtx.fillStyle = "#000000";
-    canvasCtx.fillText(
-      `${exName.toUpperCase().split("_").join(" ")}
-      完成次數: ${repes}`,
-      10,
-      40
-      // canvasElement.width * 2/5,
-      // canvasElement.height / 2
-    );
-  } else {
-    canvasCtx.font = "20rem Arial";
-    canvasCtx.fillStyle = "#ffffff";
-    canvasCtx.fillText(
-      //   `${parseFloat(results.poseLandmarks[0].z).toFixed(2)}`,
-      //   `${distance.toFixed(2)}`,
-      `${repes}`,
-      guideCanvas.width / 2 - 150,
-      guideCanvas.height / 2 + 100
-    );
-  }
+    // visualize counter
+    if (closeMode) {
+      canvasCtx.font = "2.2rem Arial";
+      canvasCtx.fillStyle = "#000000";
+      canvasCtx.fillText(
+        `${exName.toUpperCase().split("_").join(" ")}
+        Repes: ${repes}
+        Burnt: ${caloriesBurnt.toFixed(1)}`,
+        10,
+        40
+        // canvasElement.width * 2/5,
+        // canvasElement.height / 2
+      );
+    } else {
+      canvasCtx.font = "20rem Arial";
+      canvasCtx.fillStyle = "#ffffff";
+      canvasCtx.fillText(
+        //   `${parseFloat(results.poseLandmarks[0].z).toFixed(2)}`,
+        //   `${distance.toFixed(2)}`,
+        `${repes}`,
+        guideCanvas.width / 2 - 150,
+        guideCanvas.height / 2 + 100
+      );
+    }
 
-  /**** UI Start ****/
-  if (closeMode) {
-    // set exit square
-    canvasCtx.rect(0, guideCanvas.height - 100, 100, 100);
-    // set menu square
-    canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
-    // draw squares
-    canvasCtx.strokeStyle = "black";
-    canvasCtx.fillStyle = "white";
-    canvasCtx.globalAlpha = 0.5;
-    canvasCtx.lineWidth = 2;
-    canvasCtx.fill();
-    canvasCtx.stroke();
-    canvasCtx.globalAlpha = 1.0;
+    /**** UI Start ****/
+    if (closeMode) {
+      // set exit square
+      canvasCtx.rect(0, guideCanvas.height - 100, 100, 100);
+      // set menu square
+      canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
 
-    // draw exit text
-    canvasCtx.font = "1rem Arial";
-    canvasCtx.fillStyle = "black";
-    canvasCtx.fillText("EXIT", 32, guideCanvas.height - 45);
+      if (isMenu || (sizeXY > 0)) {
+        if (isMenu && sizeXY < size) {
+          sizeXY += 20;
+        }
+        if (!isMenu && sizeXY > 0) {
+          sizeXY -= 20;
+        }
+        // set square 1 (skeleton)
+        canvasCtx.rect(
+          guideCanvas.width - 250,
+          150,
+          sizeXY,
+          sizeXY
+        );
+        // set square 2 (tutorial)
+        canvasCtx.rect(
+          guideCanvas.width - 150,
+          150,
+          sizeXY,
+          sizeXY
+        );
+        // set square 3 (vtuber)
+        canvasCtx.rect(
+          guideCanvas.width - 250,
+          250,
+          sizeXY,
+          sizeXY
+        );
+        // set square 4 (clear all)
+        canvasCtx.rect(
+          guideCanvas.width - 150,
+          250,
+          sizeXY,
+          sizeXY
+        );
+      }
 
-    // draw menu text
-    canvasCtx.font = "1rem Arial";
-    canvasCtx.fillStyle = "black";
-    canvasCtx.fillText("MENU", guideCanvas.width - 72, 55);
+      // draw squares
+      canvasCtx.strokeStyle = "black";
+      canvasCtx.fillStyle = "white";
+      canvasCtx.globalAlpha = 0.5;
+      canvasCtx.lineWidth = 2;
+      canvasCtx.fill();
+      canvasCtx.stroke();
+      canvasCtx.globalAlpha = 1.0;
 
-    // trigger button
-    let fingerOnExit = false;
-    let fingerOnMenu = false;
-    if (results.rightHandLandmarks) {
-      if (results.rightHandLandmarks[8]) {
-        const absX = results.rightHandLandmarks[8].x * guideCanvas.width;
-        const absY = results.rightHandLandmarks[8].y * guideCanvas.height;
+      // draw exit text
+      canvasCtx.font = "1rem Arial";
+      canvasCtx.fillStyle = "black";
+      canvasCtx.fillText("EXIT", 32, guideCanvas.height - 45);
 
-        // pressing exit
-        if (
-          absX > guideCanvas.width - 100 &&
-          absX < guideCanvas.width &&
-          absY > guideCanvas.height - 100 &&
-          absY < guideCanvas.height
-        ) {
-          fingerOnExit = true;
-          if (exitButtonTime === 0) {
-            exitButtonInterval = setInterval(() => {
-              exitButtonTime++;
-            }, 100);
+      if (!isMenu) {
+        // draw menu text
+        canvasCtx.font = "1rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText("MENU", guideCanvas.width - 72, 55);
+      } else {
+        // draw close text
+        canvasCtx.font = "1rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText("CLOSE", guideCanvas.width - 78, 55);
+      }
+
+      if (isMenu) {
+        // draw skeleton text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Skeleton",
+          guideCanvas.width - 250 + 20,
+          150 + 55
+        );
+
+        // draw tutorial text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Tutorial",
+          guideCanvas.width - 150 + 27,
+          150 + 55
+        );
+
+        // draw vtuber text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Vtuber",
+          guideCanvas.width - 250 + 28,
+          250 + 55
+        );
+
+        // draw clear all text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Clear All",
+          guideCanvas.width - 150 + 22,
+          250 + 55
+        );
+      }
+
+      // trigger button
+      let fingerOnExit = false;
+      let fingerOnMenu = false;
+      let fingerOnSkeleton = false;
+      let fingerOnTutorial = false;
+      let fingerOnVtuber = false;
+      let fingerOnClearAll = false;
+      if (results.rightHandLandmarks) {
+        if (results.rightHandLandmarks[8]) {
+          const absX = results.rightHandLandmarks[8].x * guideCanvas.width;
+          const absY = results.rightHandLandmarks[8].y * guideCanvas.height;
+
+          // pressing exit
+          if (
+            absX > guideCanvas.width - 100 &&
+            absX < guideCanvas.width &&
+            absY > guideCanvas.height - 100 &&
+            absY < guideCanvas.height
+          ) {
+            fingerOnExit = true;
+            if (exitButtonTime === 0) {
+              exitButtonInterval = setInterval(() => {
+                exitButtonTime++;
+              }, 100);
+            }
+          }
+
+          // pressing menu
+          if (absX > 0 && absX < 100 && absY > 0 && absY < 100) {
+            fingerOnMenu = true;
+            if (menuButtonTime === 0) {
+              menuButtonInterval = setInterval(() => {
+                menuButtonTime++;
+              }, 100);
+            }
+          }
+
+          // pressing skeleton button
+          if (isMenu) {
+            if (
+              absX > 150 &&
+              absX < 250 &&
+              absY > 150 &&
+              absY < 250
+            ) {
+              fingerOnSkeleton = true;
+              if (skeletonButtonTime === 0) {
+                skeletonButtonInterval = setInterval(() => {
+                  skeletonButtonTime++;
+                }, 100);
+              }
+            }
+          }
+
+          // pressing tutorial button
+          if (isMenu) {
+            if (
+              absX > 50 &&
+              absX < 150 &&
+              absY > 150 &&
+              absY < 250
+            ) {
+              fingerOnTutorial = true;
+              if (tutorialButtonTime === 0) {
+                tutorialButtonInterval = setInterval(() => {
+                  tutorialButtonTime++;
+                }, 100);
+              }
+            }
+          }
+
+          // pressing vtuber button
+          if (isMenu) {
+            if (
+              absX > 150 &&
+              absX < 250 &&
+              absY > 250 &&
+              absY < 350
+            ) {
+              fingerOnVtuber = true;
+              if (vtuberButtonTime === 0) {
+                vtuberButtonInterval = setInterval(() => {
+                  vtuberButtonTime++;
+                }, 100);
+              }
+            }
+          }
+
+          // pressing clear all button
+          if (isMenu) {
+            if (
+              absX > 50 &&
+              absX < 150 &&
+              absY > 250 &&
+              absY < 350
+            ) {
+              fingerOnClearAll = true;
+              if (clearAllButtonTime === 0) {
+                clearAllButtonInterval = setInterval(() => {
+                  clearAllButtonTime++;
+                }, 100);
+              }
+            }
           }
         }
+      }
 
-        // pressing menu
-        if (absX > 0 && absX < 100 && absY > 0 && absY < 100) {
-          fingerOnMenu = true;
-          if (menuButtonTime === 0) {
-            menuButtonInterval = setInterval(() => {
-              menuButtonTime++;
-            }, 100);
-          }
+      // trigger exit
+      if (exitButtonTime >= exitButtonRequiredTime) {
+        window.location.href = "exercise.html";
+        isExit = true;
+        await fetch(`/exercise/completeExercise`, {
+          method: "post",
+          body: JSON.stringify({
+            exercise_id: exID,
+            repetitions: repes,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        return;
+      }
+
+      // trigger menu
+      if (!isMenu) {
+        if (menuButtonTime >= menuButtonRequiredTime) {
+          isMenu = true;
+          clearInterval(menuButtonInterval);
+          menuButtonTime = 0;
         }
+      }
+
+      // trigger closing menu
+      if (isMenu) {
+        if (menuButtonTime >= menuButtonRequiredTime) {
+          isMenu = false;
+          clearInterval(menuButtonInterval);
+          menuButtonTime = 0;
+          sizeX = 0;
+          sizeY = 0;
+        }
+      }
+
+      // trigger skeleton mode
+      if (isMenu) {
+        if (skeletonButtonTime >= skeletonButtonRequiredTime) {
+          // deactivate vtuber mode first
+          deactivateVtuber();
+          vtuberMode = false;
+
+          skeletonMode = !skeletonMode;
+          clearInterval(skeletonButtonInterval);
+          skeletonButtonTime = 0;
+        }
+      }
+
+      // trigger tutorial mode
+      if (isMenu) {
+        if (tutorialButtonTime >= tutorialButtonRequiredTime) {
+          // deactivate vtuber mode first
+          deactivateVtuber();
+          vtuberMode = false;
+
+          toggleTutorialVideo(`${videoFileName}`);
+          clearInterval(tutorialButtonInterval);
+          tutorialButtonTime = 0;
+        }
+      }
+
+      // trigger vtuber mode
+      if (isMenu) {
+        if (vtuberButtonTime >= vtuberButtonRequiredTime) {
+          // deactivate other modes first
+          skeletonMode = false;
+          deactivateTutorialVideo();
+          // toggle vtuber mode
+          vtuberMode = !vtuberMode;
+          toggleVtuber();
+          clearInterval(vtuberButtonInterval);
+          vtuberButtonTime = 0;
+        }
+      }
+
+      // trigger clear all
+      if (isMenu) {
+        if (clearAllButtonTime >= clearAllButtonRequiredTime) {
+          // deactivate all modes
+          deactivateVtuber();
+          vtuberMode = false;
+          deactivateTutorialVideo();
+          skeletonMode = false;
+
+          clearInterval(clearAllButtonInterval);
+          clearAllButtonTime = 0;
+        }
+      }
+
+      // reset timer for exit
+      if (!fingerOnExit && exitButtonTime > 0) {
+        clearInterval(exitButtonInterval);
+        exitButtonTime = 0;
+      }
+
+      // reset timer for menu
+      if (!fingerOnMenu && menuButtonTime > 0) {
+        clearInterval(menuButtonInterval);
+        menuButtonTime = 0;
+      }
+
+      // reset timer for skeleton
+      if (!fingerOnSkeleton && skeletonButtonTime > 0) {
+        clearInterval(skeletonButtonInterval);
+        skeletonButtonTime = 0;
+      }
+
+      // reset timer for tutorial
+      if (!fingerOnTutorial && tutorialButtonTime > 0) {
+        clearInterval(tutorialButtonInterval);
+        tutorialButtonTime = 0;
+      }
+
+      // reset timer for vtuber
+      if (!fingerOnVtuber && vtuberButtonTime > 0) {
+        clearInterval(vtuberButtonInterval);
+        vtuberButtonTime = 0;
+      }
+
+      // reset timer for clear all
+      if (!fingerOnClearAll && clearAllButtonTime > 0) {
+        clearInterval(clearAllButtonInterval);
+        clearAllButtonTime = 0;
+      }
+
+      // draw circle for exit
+      canvasCtx.strokeStyle = "black";
+      canvasCtx.globalAlpha = 0.5;
+      canvasCtx.lineWidth = 5;
+      canvasCtx.beginPath();
+      canvasCtx.arc(
+        50,
+        guideCanvas.height - 50,
+        45,
+        0,
+        Math.PI * 2 * (exitButtonTime / exitButtonRequiredTime)
+      );
+      canvasCtx.stroke();
+      canvasCtx.globalAlpha = 1.0;
+
+      // draw circle for menu
+      canvasCtx.strokeStyle = "black";
+      canvasCtx.globalAlpha = 0.5;
+      canvasCtx.lineWidth = 5;
+      canvasCtx.beginPath();
+      canvasCtx.arc(
+        guideCanvas.width - 50,
+        50,
+        45,
+        0,
+        Math.PI * 2 * (menuButtonTime / menuButtonRequiredTime)
+      );
+      canvasCtx.stroke();
+      canvasCtx.globalAlpha = 1.0;
+
+      // draw circle for skeleton
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 250 + 50,
+          150 + 50,
+          45,
+          0,
+          Math.PI * 2 * (skeletonButtonTime / skeletonButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
+
+      // draw circle for tutorial
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 150 + 50,
+          150 + 50,
+          45,
+          0,
+          Math.PI * 2 * (tutorialButtonTime / tutorialButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
+
+      // draw circle for vtuber
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 250 + 50,
+          250 + 50,
+          45,
+          0,
+          Math.PI * 2 * (vtuberButtonTime / vtuberButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
+
+      // draw circle for clear all
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 150 + 50,
+          250 + 50,
+          45,
+          0,
+          Math.PI * 2 * (clearAllButtonTime / clearAllButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
       }
     }
 
-    // trigger exit
-    if (exitButtonTime >= exitButtonRequiredTime) {
-      window.location.href = "exercise.html";
-      isExit = true;
-      return;
+    /**** UI End ****/
+  };
+
+  /***************************/
+  /***** Draw Result End *****/
+  /***************************/
+
+  /****************************/
+  /**** Run Holistic Start ****/
+  /****************************/
+
+  /* SETUP MEDIAPIPE HOLISTIC INSTANCE */
+  const holistic = new Holistic({
+    locateFile: (file) => {
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/${file}`;
+    },
+  });
+
+  holistic.setOptions({
+    modelComplexity: 1,
+    smoothLandmarks: true,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.7,
+    refineFaceLandmarks: true,
+  });
+
+  const onResults = (results) => {
+    // Draw landmark guides
+    drawResults(results);
+
+    // Animate model
+    if (vtuberMode) {
+      if (!animated) {
+        animate();
+        animated = true;
+      }
+      animateVRM(currentVrm, results);
     }
+  };
 
-    // trigger menu
-    if (menuButtonTime >= menuButtonRequiredTime) {
-      console.log("open menu");
-      isMenu = true;
-    }
+  // Pass holistic a callback function
+  holistic.onResults(onResults);
 
-    // reset timer for exit
-    if (!fingerOnExit && exitButtonTime > 0) {
-      clearInterval(exitButtonInterval);
-      exitButtonTime = 0;
-    }
+  /****************************/
+  /***** Run Holistic End *****/
+  /****************************/
 
-    // reset timer for menu
-    if (!fingerOnMenu && menuButtonTime > 0) {
-      clearInterval(menuButtonInterval);
-      menuButtonTime = 0;
-    }
+  // Use `Mediapipe` utils to get camera - lower resolution = higher fps
+  // resolution : 1280x960, 1024x768, 960x720, 800x600, 640x480, 480x360
+  const camera = new Camera(videoElement, {
+    onFrame: async () => {
+      await holistic.send({ image: videoElement });
+    },
+    width: 768,
+    height: 1024,
+  });
+  camera.start();
+}
 
-    // draw circle for exit
-    canvasCtx.strokeStyle = "black";
-    canvasCtx.globalAlpha = 0.5;
-    canvasCtx.lineWidth = 5;
-    canvasCtx.beginPath();
-    canvasCtx.arc(
-      50,
-      guideCanvas.height - 50,
-      45,
-      0,
-      Math.PI * 2 * (exitButtonTime / exitButtonRequiredTime)
-    );
-    canvasCtx.stroke();
-    canvasCtx.globalAlpha = 1.0;
-
-    // draw circle for menu
-    canvasCtx.strokeStyle = "black";
-    canvasCtx.globalAlpha = 0.5;
-    canvasCtx.lineWidth = 5;
-    canvasCtx.beginPath();
-    canvasCtx.arc(
-      guideCanvas.width - 50,
-      50,
-      45,
-      0,
-      Math.PI * 2 * (menuButtonTime / menuButtonRequiredTime)
-    );
-    canvasCtx.stroke();
-    canvasCtx.globalAlpha = 1.0;
-  }
-
-  // if (isMenu) {
-  //   // set square 1
-  //   canvasCtx.rect(guideCanvas.width - 250, guideCanvas.height / 2, 100, 100);
-  //   // set square 2
-  //   canvasCtx.rect(guideCanvas.width - 150, guideCanvas.height / 2, 100, 100);
-  //   // set square 3
-  //   canvasCtx.rect(
-  //     guideCanvas.width - 250,
-  //     guideCanvas.height / 2 + 100,
-  //     100,
-  //     100
-  //   );
-  //   // set square 4
-  //   canvasCtx.rect(
-  //     guideCanvas.width - 150,
-  //     guideCanvas.height / 2 + 100,
-  //     100,
-  //     100
-  //   );
-  //   // draw squares
-  //   canvasCtx.strokeStyle = "black";
-  //   canvasCtx.fillStyle = "white";
-  //   canvasCtx.globalAlpha = 0.5;
-  //   canvasCtx.lineWidth = 2;
-  //   canvasCtx.fill();
-  //   canvasCtx.stroke();
-  //   canvasCtx.globalAlpha = 1.0;
-
-  //   // draw exit menu text
-  //   canvasCtx.font = "0.9rem Arial";
-  //   canvasCtx.fillStyle = "black";
-  //   canvasCtx.fillText(
-  //     "Exit Menu",
-  //     guideCanvas.width - 150 + 17,
-  //     guideCanvas.height / 2 + 100 + 55
-  //   );
-  // }
-  /**** UI End ****/
-};
-
-/***************************/
-/***** Draw Result End *****/
-/***************************/
-
-/****************************/
-/**** Run Holistic Start ****/
-/****************************/
-
-/* SETUP MEDIAPIPE HOLISTIC INSTANCE */
-const holistic = new Holistic({
-  locateFile: (file) => {
-    return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/${file}`;
-  },
-});
-
-holistic.setOptions({
-  modelComplexity: 1,
-  smoothLandmarks: true,
-  minDetectionConfidence: 0.7,
-  minTrackingConfidence: 0.7,
-  refineFaceLandmarks: true,
-});
-
-const onResults = (results) => {
-  // Draw landmark guides
-  drawResults(results);
-
-  // Animate model
-  if (selectedVtuber) {
-    animateVRM(currentVrm, results);
-  }
-};
-
-// Pass holistic a callback function
-holistic.onResults(onResults);
-
-/****************************/
-/***** Run Holistic End *****/
-/****************************/
-
-// Use `Mediapipe` utils to get camera - lower resolution = higher fps
-// resolution : 1280x960, 1024x768, 960x720, 800x600, 640x480, 480x360
-const camera = new Camera(videoElement, {
-  onFrame: async () => {
-    await holistic.send({ image: videoElement });
-  },
-  width: 768,
-  height: 1024,
-});
-camera.start();
+init();

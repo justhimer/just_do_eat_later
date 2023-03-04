@@ -22,7 +22,12 @@ function activateTilt() {
 }
 
 function pleaseLogin() {
-  Swal.fire("Please Log In :)");
+  Swal.fire({
+    title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">Please Log In</h3>`,
+    confirmButtonText: `<div style="color: #3b3836; font-family: sans-serif; font-weight: bold;">OK</div>`,
+    confirmButtonColor: "#ffaa33",
+    background: "#3b3836",
+  });
 }
 
 function activateClickOnExs() {
@@ -36,18 +41,20 @@ function activateClickOnExs() {
     const id = event.currentTarget.id.split("-")[1];
     const ex = await getExDetails(id);
     const exName = ex.name.toUpperCase();
-    const query = ex.name.split(" ").join("_");
+    const exID = ex.id;
     const video = ex.sample_video;
     const isLoggedIn = await getStatus();
     await Swal.fire({
-      title: `${exName}`,
+      title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${exName}</h3>`,
       html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
       showCloseButton: true,
-      confirmButtonText: "Just Do!",
+      confirmButtonText: `<div style="color: #3b3836; font-family: sans-serif; font-weight: bold;">Just Do!</div>`,
+      confirmButtonColor: "#ffaa33",
+      background: "#3b3836",
     }).then((result) => {
       if (result.isConfirmed) {
         if (isLoggedIn) {
-          window.location.href = `do.html?exName=${query}`;
+          window.location.href = `do.html?ex_id=${exID}`;
         } else {
           pleaseLogin();
         }
@@ -112,7 +119,7 @@ function init() {
             </div>
             <div class="card-stats card${cardNum}">
                 <div class="stat right-border">
-                <div class="value">${ex.calories}<sup>kJ</sup></div>
+                <div class="value">${ex.calories}<sup></sup></div>
                 <div class="type">Calories</div>
                 </div>
                 <div class="stat left-border">
