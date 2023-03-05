@@ -20,13 +20,13 @@ GOOGLE
 ======= */
 /* #region session */
 nav .material-symbols-outlined {
-    color: #FFAA33;
-    font-size: 3rem;
+    color: #FFAA33 !important;
+    font-size: 3rem !important;
     font-variation-settings:
         'FILL' 0,
         'wght' 400,
         'GRAD' 0,
-        'opsz' 48
+        'opsz' 48 !important
 }
 .other_container {
     margin: 2rem;
@@ -44,7 +44,7 @@ WRAPPER
 /* #region session */
 .wrapper {
     font-family: 'Encode Sans Condensed', sans-serif;
-    font-weight: 600;
+    font-weight: 600 !important;
     width: 100%;
     position: absolute;
     /* background: linear-gradient(to top right, #4ECA78, #D0DB68); */
@@ -207,32 +207,32 @@ NAVIGATION
 ========== */
 /* #region session */
 nav {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    display: flex;
-    z-index: 200;
-    pointer-events: none;
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    z-index: 200 !important;
+    pointer-events: none !important;
 }
 
 nav .nav_ul {
-    margin: 0 auto 0 auto;
-    pointer-events: none;
-    text-align: center;
+    margin: 0 auto 0 auto !important;
+    pointer-events: none !important;
+    text-align: center !important;
 }
 
 .nav_ul.shown{
-    pointer-events: auto;
+    pointer-events: auto !important;
 }
 
 nav li {
-    font-size: 30px;
-    color: #FFAA33;
-    user-select: none;
+    font-size: 30px !important;
+    color: #FFAA33 !important;
+    user-select: none !important;
     transform: translate(-20px, 20px) scale(.9);
     transition: 0s;
     opacity: 0.0001;
@@ -241,7 +241,7 @@ nav li {
 }
 
 nav li+li {
-    margin-top: 30px;
+    margin-top: 30px !important;
 }
 
 #toggle-btn.shown~.wrapper nav li {
@@ -319,7 +319,7 @@ CONTENT
 }
 
 #content h1 {
-    font-size: calc(4vmin + 1em);
+    font-size: calc(4vmin + 1em) !important;
     text-align: center;
     margin: auto;
     color: #fff;
@@ -345,17 +345,17 @@ body {
 .nav:focus,
 .nav:active,
 .nav:link {
-    text-decoration: none;
-    outline: 0;
+    text-decoration: none !important;
+    outline: 0 !important;
 }
 
 .nav {
-    color: currentColor;
+    color: currentColor !important;
     transition: .2s ease-in-out;
 }
 
 .nav_ul {
-    padding: 0;
+    padding: 0 !important;
     list-style: none;
 }
 
@@ -399,8 +399,8 @@ OTHER SHIT
 }
 
 nav a{
-    color: inherit;
-    text-decoration: none;
+    color: inherit !important;
+    text-decoration: none !important;
 }
 
 #toggle-btn.shown~.wrapper nav .icon_container {
