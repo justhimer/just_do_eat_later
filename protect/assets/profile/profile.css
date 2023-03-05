@@ -1,466 +1,143 @@
-/* #table_arrange{
-    padding: 1rem;
-    display: grid;
-    justify-items: center;
-    gap: 0.5rem 0.5rem;
-}
-
-#account_label{
-grid-row: 1 / span 1;
-grid-column: 1/ span 2;
-}
-#account_container{
-grid-row: 1/ span 1;
-grid-column: 3 / span 3;
-}
-
-#personal_label{
-grid-row: 2 / span 1;
-grid-column: 1/ span 2;
-}
-#personal_detail_container{
-grid-row: 2 / span 1;
-grid-column: 3 / span 3;
-}
-
-#body_label{
-grid-row: 3 / span 1;
-grid-column: 1 / span 2;
-}
-#body_container{
-grid-row: 3 / span 1;
-grid-column: 3 / span 3;
-}
-#img_container{
-    width: fit-content;
-}
-#img_preview{
-    height: 7rem;
-    width: auto;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-}
-.label{
-    position: relative;
-    padding: 1rem;
-}
-
-.label_icon{
-    position: absolute;
-    top: -0.5rem; right: -1rem;
-    border-radius: 50%;
-    border: 2px solid black;
-}
-#icon_form{
-    display: none;
-}
-#icon_form.shown{
-    display: inline-flex;
-} */
-
-
-/** Inspired by: http://graphicburger.com/flat-design-ui-components/ **/
-/** Line-chart and donut-chart made by @kseso https://codepen.io/Kseso/pen/phiyL **/
-
-
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-body {
-    background: #1f253d;
-}
-
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding-left: 0;
-}
-
-h1 {
-    font-size: 23px;
-}
-
-h2 {
-    font-size: 17px;
-}
-
-p {
-    font-size: 15px;
-}
-
-a {
-    text-decoration: none;
-    font-size: 15px;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-h1,
-h2,
-p,
-a,
-span {
-    color: #fff;
-}
-
-.scnd-font-color {
-    color: #9099b7;
-}
-
-.input-container {
-    position: relative;
-}
-
-input[type=text] {
-    width: 260px;
-    height: 50px;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    padding-left: 45px;
-    background: #50597b;
-    color: #fff;
-    border: solid 1px #1f253d;
-    border-radius: 5px;
-}
-
-input[type=text]::-webkit-input-placeholder {
-    /* WebKit browsers */
-    color: #fff;
-}
-
-input[type=text]:-moz-input-placeholder {
-    /* Mozilla Firefox 4 to 18 */
-    color: #fff;
-}
-
-input[type=text]::-moz-input-placeholder {
-    /* Mozilla Firefox 19+ */
-    color: #fff;
-}
-
-input[type=text]:-ms-input-placeholder {
-    /* Internet Explorer 10+ */
-    color: #fff;
-}
-
-input[type=text]:focus {
-    outline: none;
-    /* removes the default orange border when focus */
-    border: 1px solid #11a8ab;
-}
-
-.input-icon {
-    font-size: 22px;
-    position: absolute;
-    left: 31px;
-    top: 10px;
-}
-
-.input-icon.password-icon {
-    left: 35px;
-}
-
-.horizontal-list {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.horizontal-list li {
-    float: left;
-}
-
-.clear {
-    clear: both;
-}
-
-.icon {
-    font-size: 25px;
-}
-
-.titular {
-    display: block;
-    line-height: 60px;
-    margin: 0;
-    text-align: center;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-.button {
-    display: block;
-    width: 175px;
-    line-height: 50px;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    margin: 0 auto;
-    border-radius: 5px;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-
-.button:hover {
-    text-decoration: none;
-}
-
-.arrow-btn-container {
-    position: relative;
-}
-
-.arrow-btn {
-    position: absolute;
-    display: block;
-    width: 60px;
-    height: 60px;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-
-.arrow-btn:hover {
-    text-decoration: none;
-}
-
-.arrow-btn.left {
-    border-top-left-radius: 5px;
-}
-
-.arrow-btn.right {
-    border-top-right-radius: 5px;
-    right: 0;
-    top: 0;
-}
-
-.arrow-btn .icon {
-    display: block;
-    font-size: 18px;
-    border: 2px solid #fff;
-    border-radius: 100%;
-    line-height: 17px;
-    width: 21px;
-    margin: 20px auto;
-    text-align: center;
-}
-
-.arrow-btn.left .icon {
-    padding-right: 2px;
-}
-
-.profile-picture {
-    border-radius: 100%;
-    overflow: hidden;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-}
-
-.big-profile-picture {
-    margin: 0 auto;
-    border: 5px solid #50597b;
-    width: 150px;
-    height: 150px;
-}
-
-.small-profile-picture {
-    border: 2px solid #50597b;
-    width: 40px;
-    height: 40px;
-}
-
-
-/** MAIN CONTAINER **/
-
-.main-container {
-    position: relative;
-    padding: 2rem;
-    font-family: 'Ubuntu', sans-serif;
-    width: 950px;
-    height: 1725px;
-    margin: 6em auto;
-}
-
-/** CONTAINERS **/
-.container {
-    float: left;
-    width: 300px;
-}
-
-.block {
-    margin-bottom: 25px;
-    background: #394264;
-    border-radius: 5px;
-}
-
-/******************************************** LEFT CONTAINER *****************************************/
-
-.left-container{
-position: sticky;
-top: 2rem;
-}
-
-.menu-box {
-    height: fit-content;
-}
-
-.menu-box .titular {
-    background: #11a8ab;
-}
-
-.menu-box-menu .icon {
-    display: inline-block;
-    vertical-align: top;
-    width: 28px;
-    margin-left: 20px;
-    margin-right: 15px;
-}
-
-.menu-box-number {
-    width: 36px;
-    line-height: 22px;
-    background: #50597b;
-    text-align: center;
-    border-radius: 15px;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    -webkit-transition: all .3s;
-    transition: all .3s;
-}
-
-.menu-box-menu li {
-    padding: 1rem;
-    height: fit-content;
-    position: relative;
-}
-
-.menu-box-tab {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 2rem;
-    display: block;
-    border-bottom: 1px solid #1f253d;
-    -webkit-transition: background .2s;
-    transition: background .2s;
-}
-
-.menu-box-tab:hover {
-    background: #50597b;
-    border-top: 1px solid #1f253d;
-    text-decoration: none;
-}
-
-.menu-box-tab:hover .icon {
-    color: #fff;
-}
-
-.menu-box-tab:hover .menu-box-number {
-    background: #e64c65;
-}
-
-/************************************************** MIDDLE CONTAINER **********************************/
-.middle-container {
-    margin: 0 25px;
-}
-
-.profile {
-    height: 410px;
-}
-
-.add-button .icon {
-    float: right;
-    line-height: 18px;
-    width: 23px;
-    border: 2px solid;
-    border-radius: 100%;
-    font-size: 18px;
-    text-align: center;
-    margin: 10px;
-}
-
-.add-button .icon:hover {
-    color: #e64c65;
-    border-color: #e64c65;
-}
-
-.user-name {
-    margin: 25px 0 16px;
-    text-align: center;
-}
-
-.profile-description {
-    width: 210px;
-    margin: 0 auto;
-    text-align: center;
-}
-.weather {
-    height: 555px;
-}
-
-.weather .titular {
-    background: #cc324b;
-}
-
-.weather .titular .icon {
-    padding-right: 15px;
-    font-size: 26px;
-}
-
-.weather .current-day {
-    height: 135px;
-    background: #e64c65;
-}
-
-.weather .current-day p {
-    margin: 0;
-    padding-left: 50px;
-}
-
-.current-day-date {
-    font-size: 16px;
-    padding-top: 16px;
-}
-
-.current-day-temperature {
-    font-size: 70px;
-}
-
-.weather .next-days p {
-    margin: 0;
-    display: inline-block;
-    font-size: 16px;
-}
-
-.weather .next-days a {
-    display: block;
-    line-height: 58px;
-    border-bottom: 1px solid #1f253d;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-
-.weather .next-days a:hover {
-    background: #50597b;
-}
-
-.weather .next-days a:hover .day {
-    color: #e64c65;
-}
-
-.weather .next-days-date {
-    padding-left: 20px;
-}
-
-.weather .next-days-temperature {
-    float: right;
-    padding-right: 20px;
-}
-
-.weather .next-days-temperature .icon {
-    padding-left: 10px;
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,900|Montserrat|Roboto');
+ body {
+	 background: linear-gradient(to right, #3fb6a8, #7ed386);
+}
+ .container-x.test2 {
+	 background: #fff;
+	 width: 540px;
+	 height: 420px;
+	 margin: 0 auto;
+	 position: relative;
+	 margin-top: 10%;
+	 box-shadow: 2px 5px 20px rgba(119, 119, 119, .5);
+}
+.test2 .logo {
+	 float: right;
+	 margin-right: 12px;
+	 margin-top: 12px;
+	 font-family: 'Nunito Sans', sans-serif;
+	 color: #3dbb3d;
+	 font-weight: 900;
+	 font-size: 1.5em;
+	 letter-spacing: 1px;
+}
+.test2 .CTA {
+	 width: 80px;
+	 height: 40px;
+	 right: -20px;
+	 bottom: 0;
+	 margin-bottom: 90px;
+	 position: absolute;
+	 z-index: 1;
+	 background: #7ed386;
+	 font-size: 1em;
+	 transform: rotate(-90deg);
+	 transition: all 0.5s ease-in-out;
+	 cursor: pointer;
+}
+.test2 .CTA h1 {
+	 color: #fff;
+	 margin-top: 10px;
+	 margin-left: 9px;
+}
+.test2 .CTA:hover {
+	 background: #3fb6a8;
+	 transform: scale(1.1);
+}
+.test2 .leftbox {
+	 float: left;
+	 top: -5%;
+	 left: 5%;
+	 position: absolute;
+	 width: 15%;
+	 height: 110%;
+	 background: #7ed386;
+	 box-shadow: 3px 3px 10px rgba(119, 119, 119, .5);
+}
+.test2 .nav a {
+	 list-style: none;
+	 padding: 35px;
+	 color: #fff;
+	 font-size: 1.1em;
+	 display: block;
+	 transition: all 0.3s ease-in-out;
+}
+ .test2 .nav a:hover {
+	 color: #3fb6a8;
+	 transform: scale(1.2);
+	 cursor: pointer;
+}
+.test2 .nav a:first-child {
+	 margin-top: 7px;
+}
+ .active {
+	 color: #3fb6a8;
+}
+ .rightbox {
+	 float: right;
+	 width: 60%;
+	 height: 100%;
+}
+.test2 .profile, .payment, .subscription, .privacy, .settings {
+	 transition: opacity 0.5s ease-in;
+	 position: absolute;
+	 width: 70%;
+}
+.test2 h1 {
+	 font-family: 'Montserrat', sans-serif;
+	 color: #7ed386;
+	 font-size: 1em;
+	 margin-top: 40px;
+	 margin-bottom: 35px;
+}
+.test2 h2 {
+	 color: #777;
+	 font-family: 'Roboto', sans-serif;
+	 width: 80%;
+	 text-transform: uppercase;
+	 font-size: 8px;
+	 letter-spacing: 1px;
+	 margin-left: 2px;
+}
+.test2 p {
+	 border-width: 1px;
+	 border-style: solid;
+	 border-image: linear-gradient(to right, #3fb6a8, rgba(126, 211, 134, .5)) 1 0%;
+	 border-top: 0;
+	 width: 80%;
+	 font-family: 'Montserrat', sans-serif;
+	 font-size: 0.7em;
+	 padding: 7px 0;
+	 color: #070707;
+}
+.test2 span {
+	 font-size: 0.5em;
+	 color: #777;
+}
+.test2 .btn {
+	 float: right;
+	 font-family: 'Roboto', sans-serif;
+	 text-transform: uppercase;
+	 font-size: 10px;
+	 border: none;
+	 color: #3fb6a8;
+}
+.test2 .btn:hover {
+	 text-decoration: underline;
+	 font-weight: 900;
+}
+.test2 input {
+	 border: 1px solid #ddd;
+	 font-family: 'Roboto', sans-serif;
+	 padding: 2px;
+	 margin: 0;
+}
+.test2 .privacy h2 {
+	 margin-top: 25px;
+}
+.test2 .settings h2 {
+	 margin-top: 25px;
+}
+.test2 .noshow {
+	 opacity: 0;
 }
