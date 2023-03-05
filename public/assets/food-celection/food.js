@@ -1,9 +1,11 @@
-// async function foodboad1addEventListener() {
-//     foodboad1.addEventListener('click', async (event) => {
-//         event.preventDefault()
+const foodlist = document.querySelector("#food-list");
+let foodElems = document.querySelectorAll(".card");
+let foods;
+
+// async function foodElemsaddEventListener() {
+//     foodElems.addEventListener('click', async (event) => {
 //         await Swal.fire({
 //             title: 'Meatballs-with-Spanakopita-Rice(Regular)',
-//             text: 'Protein:41.62g,Energy:2238.4KJ,Calories:536.3cal,Fat Total:17.47g,Saturated Fat:5.79g,Carbohydrate:48.88g,Sugar:2.74g,Sodium:256.2mg,Fiber:2.7g',
 //             imageUrl: '/Meatballs-with-Spanakopita-Rice_1120x.jpeg',
 //             imageWidth: 300,
 //             imageHeight: 300,
@@ -20,7 +22,6 @@
 
 //                 Swal.fire({
 //                     title: 'Large',
-//                     text: 'Protein:59.71g,Energy:2983.2KJ,Calories:714.6cal,Fat Total:23.66g,Saturated Fat:8.19g,Carbohydrate:60.04g,Sugar:2.99g,Sodium:343.68mg,Fiber:3.24g',
 //                     showCloseButton: true,
 //                     confirmButtonText: 'Add to cart',
 //                 })
@@ -30,45 +31,39 @@
 
 // }
 
-async function main() {
-    let res = await fetch('shop/allFood')
-    let data = await res.json()
-    // console.log(data)
-}
-main()
 
 
-let foods = [
+// let foods = [
 
-    {
-        name: 'ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES',
-        meta: {
-            allergens: ['Gluten, Wheat, Sesame,Soy'],
-            description: "A delectable classic with Asian Chicken Stir Fry & Hokkien Noodles!",
-            image: "AsianChickenStirFryWorkoutMeals_1120x.jpg",
-            ingredients: ['Water, Higher Welfare Chicken (18%), Hokkien Noodl…rn Starch, White Sesame Seeds, Salt, Black Pepper'],
-            name: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES",
-            preparation: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
-            type: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES",
-            type_id: 22
-        },
-        portion: {
-            regular: {
-                name: 'regular',
-                calories: 240,
-                food_id: 22
-            }
-        }
+//     {
+//         name: 'ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES',
+//         meta: {
+//             allergens: ['Gluten, Wheat, Sesame,Soy'],
+//             description: "A delectable classic with Asian Chicken Stir Fry & Hokkien Noodles!",
+//             image: "AsianChickenStirFryWorkoutMeals_1120x.jpg",
+//             ingredients: ['Water, Higher Welfare Chicken (18%), Hokkien Noodl…rn Starch, White Sesame Seeds, Salt, Black Pepper'],
+//             name: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES",
+//             preparation: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
+//             type: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES",
+//             type_id: 22
+//         },
+//         portion: {
+//             regular: {
+//                 name: 'regular',
+//                 calories: 240,
+//                 food_id: 22
+//             }
+//         }
 
-    }
-]
+//     }
+// ]
 
 
-let dummyFood = {
-    title: 'BEEF-MEX-LOADED(Regular)',
-    description: 'Protein:32.44g,Energy:1692.98KJ,Calories:406.75cal,Fat Total:15.04g,Saturated Fat:6.85g,Carbohydrate:35.58g,Sugar:8.15g,Sodium:210.45mg,Fiber:4.95g',
-    imgURL: '/BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.jpeg'
-}
+// let dummyFood = {
+//     title: 'BEEF-MEX-LOADED(Regular)',
+//     description: 'Protein:32.44g,Energy:1692.98KJ,Calories:406.75cal,Fat Total:15.04g,Saturated Fat:6.85g,Carbohydrate:35.58g,Sugar:8.15g,Sodium:210.45mg,Fiber:4.95g',
+//     imgURL: '/BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.jpeg'
+// }
 
 // async function foodboad2addEventListener() {
 //     foodboad2.addEventListener('click', async (event) => {
@@ -125,7 +120,7 @@ let dummyFood = {
 ////////////////////////////////
 
 async function getFoodDetails(id) {
-    const res = await fetch(`/food/${id}`);
+    const res = await fetch(`/shop/allFood`);
     const result = await res.json();
     return result.data;
 }
@@ -139,100 +134,118 @@ function activateTilt() {
 }
 
 function activateClickOnFood() {
-    const foodElems = document.querySelectorAll(".card");
 
+    console.log(foodElems);
     for (let foodElem of foodElems) {
         foodElem.addEventListener("click", showFoodDetails);
     }
 
     async function showFoodDetails(event) {
-        event.preventDefault()
-        const id = event.currentTarget.id.split("-")[1];
-        const food = await getFoodDetails(id);
-        const foodName = food.name.toUpperCase();
-        const query = food.name.split(" ").join("_");
-        await Swal.fire({
-            title: `${foodName}`,
-            text: 'Protein:41.62g,Energy:2238.4KJ,Calories:536.3cal,Fat Total:17.47g,Saturated Fat:5.79g,Carbohydrate:48.88g,Sugar:2.74g,Sodium:256.2mg,Fiber:2.7g',
-            imageUrl: '/Meatballs-with-Spanakopita-Rice_1120x.jpeg',
-            imageWidth: 300,
-            imageHeight: 300,
-            imageAlt: 'Meatballs-with-Spanakopita-Rice',
-            showCloseButton: true,
-            confirmButtonText: 'Large',
-            showDenyButton: true,
-            denyButtonText: `Add to cart`,
-            denyButtonColor: '#3085d6',
-        }).then((result) => {
-            console.log({ result })
-            if (result.isConfirmed) {
+        const id = parseInt(event.currentTarget.id.split("-")[1]);
+        console.log('id = ', id);
+        console.log("test");
+        const name = foods[id].name;
+        console.log(name);
+        if (!foods[id].portion.Large) {
+            await Swal.fire({
+                title: `${name}`,
+                imageUrl: `/food_uploads/${foods[id].meta.image}`,
+                imageWidth: 300,
+                imageHeight: 300,
+                showCloseButton: true,
+                showDenyButton: true,
+                showConfirmButton: false,
+                denyButtonText: `Add to cart`,
+                denyButtonColor: '#3085d6',
+            })
+        } else {
+            await Swal.fire({
+                title: `${name}`,
+                imageUrl: `/food_uploads/${foods[id].meta.image}`,
+                imageWidth: 300,
+                imageHeight: 300,
+                showCloseButton: true,
+                confirmButtonText: 'Large',
+                showDenyButton: true,
+                denyButtonText: `Add to cart`,
+                denyButtonColor: '#3085d6',
+            }).then((result) => {
                 console.log({ result })
+                if (result.isConfirmed) {
+                    console.log({ result })
 
-                Swal.fire({
-                    title: 'Large',
-                    text: 'Protein:59.71g,Energy:2983.2KJ,Calories:714.6cal,Fat Total:23.66g,Saturated Fat:8.19g,Carbohydrate:60.04g,Sugar:2.99g,Sodium:343.68mg,Fiber:3.24g',
-                    showCloseButton: true,
-                    confirmButtonText: 'Add to cart',
-                })
-            }
-        })
-
+                    Swal.fire({
+                        title: 'Large',
+                        showCloseButton: true,
+                        confirmButtonText: 'Add to cart',
+                    })
+                }
+            })
+        }
 
     }
 }
 
 function init() {
     // query selectors
-    const foodlist = document.querySelector("#food-list");
+    loadFood();
 
     async function loadFood() {
-        const res = await fetch("/food/addFood");
+        const res = await fetch("/shop/allFood");
         const result = await res.json();
-        const foods = result.data;
-
+        foods = result.data;
+        console.log("foods: ", foods)
         // refresh exercise-list
-        await showfoodPreview(foods);
+        showfoodPreview(foods);
 
         activateTilt();
         activateClickOnFood();
 
-        async function showfoodPreview(foods) {
+        function showfoodPreview(foods) {
             // clear the list 
             foodlist.innerHTML = "";
 
-            if (foods.length === 0) {
+            if (foods.length == 0) {
                 foodlist.innerHTML = `<div class="not-found"> - No Results - </div>`;
+                return
             }
-
+            for (let i = 0; i < foods.length; i++) {
+                let htmlString = `
+        <div class="card" id="food-${i}">
+            <div class="card-image card1"
+            style="
+                background: url('/food_uploads/${foods[i].meta.image}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;">
+            </div>
+            <div class="card-text card1">
+                <h2>${foods[i].name}</h2>
+                <p>${foods[i].meta.description}</p>
+            </div>
+            <div class="card-stats card1">
+                <div class="stat right-border">
+                <div class="value">${foods[i].portion}</div>
+                <div class="type">Calories</div>
+                </div>
+                <div class="stat left-border">
+                <div class="type">per</div>
+                <div class="value">serving</div>
+                </div>
+            </div>
+        </div>
+        `;
+                foodlist.innerHTML += htmlString;
+            }
             // prepare html
-            let htmlString = `
-                <div class="card" id="food-${food_id}">
-                    <div class="card-image card${cardNum}" 
-                    style="
-                        background: url('/food_uploads/${foods}');
-                        background-size: cover;
-                        background-position: center;
-                        background-repeat: no-repeat;">
-                    </div>
-                <div class="card-text card${cardNum}">
-                    <h2>${foodName}</h2>
-                </div>
-                <div class="card-stats card${cardNum}">
-                        <div class="stat right-border">
-                        <div class="value">${food.calories}<sup>kJ</sup></div>
-                        <div class="type">Calories</div>
-                        </div>
-                        <div class="stat left-border">
-                        <div class="type">per</div>
-                        <div class="value">serving</div>
-                        </div>
-                    </div>
-                </div>
-      `;
-            exsList.innerHTML += htmlString;
+            foodElems = document.querySelectorAll(".card");
+
+
+
 
         }
-        loadFood();
+
     }
+
 }
 init();

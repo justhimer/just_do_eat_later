@@ -16,7 +16,7 @@ import { TransactionService } from './services/transactionService';
 import { ExerciseController } from './controllers/exerciseController';
 import { ExerciseService } from './services/exerciseService';
 import { chooseexerciseRoutes } from './routes/exerciseRoutes';
-import * as schedule from 'node-schedule';
+// import * as schedule from 'node-schedule';
 import { testScheduleJob, testTime } from './util/scheduler';
 /* #region session */
 /* #endregion */
@@ -71,7 +71,7 @@ app.use('/shop', makeShopRoutes());
 
 
 export const exerciseService = new ExerciseService(knex);
-export const exerciseController = new ExerciseController(exerciseService,userService);
+export const exerciseController = new ExerciseController(exerciseService, userService);
 app.use('/exercise', chooseexerciseRoutes())
 /* #endregion */
 

@@ -68,6 +68,8 @@ body {
     grid-area: text;
     margin: 25px;
     transform: translateZ(30px);
+    overflow: scroll;
+    height: inherit;
 }
 
 .card-text .date {
@@ -79,11 +81,12 @@ body {
     color: grey;
     font-size: 15px;
     font-weight: 300;
+
 }
 
 .card-text h2 {
     margin-top: 0px;
-    font-size: 28px;
+    font-size: 18px;
 }
 
 .card-stats {

@@ -39,21 +39,21 @@ function activateClickOnExs() {
     const exID = ex.id;
     const video = ex.sample_video;
     const isLoggedIn = await getStatus();
-    const userID = await 
-    await Swal.fire({
-      title: `${exName}`,
-      html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
-      showCloseButton: true,
-      confirmButtonText: "Just Do!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (isLoggedIn) {
-          window.location.href = `do.html?ex_id=${exID}`;
-        } else {
-          pleaseLogin();
+    const userID = await
+      await Swal.fire({
+        title: `${exName}`,
+        html: `<video width="468" height="320" src="/ex_uploads/videos/${video}" controls autoplay></video>`,
+        showCloseButton: true,
+        confirmButtonText: "Just Do!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (isLoggedIn) {
+            window.location.href = `do.html?ex_id=${exID}`;
+          } else {
+            pleaseLogin();
+          }
         }
-      }
-    });
+      });
   }
 }
 
@@ -73,7 +73,7 @@ function init() {
     activateClickOnExs();
   }
 
-  async function showExsPreview(exercises) {
+  function showExsPreview(exercises) {
     // clear the list
     exsList.innerHTML = "";
 
