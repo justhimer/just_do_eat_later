@@ -20,6 +20,7 @@
   <!-- local css -->
   <link href="/assets/common/common.css" rel="stylesheet">
   <link href="./assets/exercises/iam.css" rel="stylesheet">
+  <link href="./assets/exercises/radio.css" rel="stylesheet">
   <link href="./assets/exercises/exercise.css" rel="stylesheet">
 
   <title>exercise</title>
@@ -43,17 +44,37 @@
 
   <div class="corner-box">My Calories</div>
 
-  <!-- <header class="content">
-    <h1 id=" h1" class="nav">Just Do!</h1>
-  </header> -->
-
-  <!-- <div class="title-container">
-        <div class="title">Choose Your Exercises</div>
-    </div> -->
+  <div class="radio-container">
+    <div class="radio-buttons">
+      <svg class="filter" version="1.1">
+        <defs>
+          <filter id="gooeyness">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="gooey" />
+            <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+      <div class="radios-boxes">
+        <div class="radios">
+          <input type="radio" name="radio" id="radio1" class="radio active" value="r">
+          <input type="radio" name="radio" id="radio2" class="radio" value="k">
+          <input type="radio" name="radio" id="radio3" class="radio" value="t">
+          <input type="radio" name="radio" id="radio4" class="radio" value="s">
+          <div class="ball pos0"></div>
+        </div>
+        <div class="labels">
+          <label for="radio1" class="label active">All</label>
+          <label for="radio2" class="label">High</label>
+          <label for="radio3" class="label">Mid</label>
+          <label for="radio4" class="label">Low</label>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="container">
     <div class="cards-container" id="exs-list">
-        <!-- <div class="loading">Loading&#8230;</div> -->
     </div>
   </div>
 
@@ -75,6 +96,7 @@
   <!-- notiflix -->
   <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-3.2.6.min.js"></script>
 
+  <script src="/assets/exercises/radio.js"></script>
   <script src="/assets/exercises/exercise.js"></script>
 
 </body>
