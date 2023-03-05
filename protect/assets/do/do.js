@@ -1,24 +1,60 @@
 import { calculateAngle } from "./do_utils.js";
 import { exercises } from "./do_models.js";
 
+function toggleTutorialVideo(videoFileName) {
+  const tutorialElem = document.querySelector("#tutorial");
+  if (!tutorialElem.innerHTML) {
+    tutorialElem.innerHTML = `<video width="468" height="320" src="ex_uploads/videos/${videoFileName}" autoplay loop></video>`;
+  } else {
+    tutorialElem.innerHTML = "";
+  }
+}
+
+function deactivateTutorialVideo() {
+  const tutorialElem = document.querySelector("#tutorial");
+  tutorialElem.innerHTML = "";
+}
+
+function toggleVtuber() {
+  const mainElem = document.querySelector("#main");
+  const videoContainerElem = document.querySelector('.video-container');
+  mainElem.classList.toggle("corner");
+  if (mainElem.classList.contains('corner')) {
+    videoContainerElem.style.backgroundColor = "";
+  } else {
+    videoContainerElem.style.backgroundColor = "#3b3836";
+  }
+}
+
+function deactivateVtuber() {
+  const mainElem = document.querySelector("#main");
+  const videoContainerElem = document.querySelector('.video-container');
+  mainElem.className = "preview";
+  videoContainerElem.style.backgroundColor = "#3b3836";
+}
+
 async function init() {
+  // get data
   const exID = parseInt(document.URL.split("?")[1].replace("ex_id=", ""));
   const res = await fetch(`/exercise/one/${exID}`);
   const result = await res.json();
   const ex = result.data;
   const exName = ex.name.split(" ").join("_");
+  const videoFileName = ex.sample_video;
   const caloriesPerRepes = parseFloat(ex.calories);
   let caloriesBurnt = 0;
 
   // modes
-  let selectedVtuber = false;
   let developmentMode = false;
+  let vtuberMode = false;
+  let animated = false;
+  let skeletonMode = false;
   const closeModeValue = 0.08; // larger than this value, close mode will be activated
   let closeMode = false;
 
   // set exit timer
   let isExit = false;
-  const exitButtonRequiredTime = 80;
+  const exitButtonRequiredTime = 60;
   let exitButtonTime = 0;
   let exitButtonInterval = setInterval(() => {
     exitButtonTime++;
@@ -27,12 +63,48 @@ async function init() {
 
   // set menu timer
   let isMenu = false;
-  const menuButtonRequiredTime = 80;
+  const menuButtonRequiredTime = 60;
   let menuButtonTime = 0;
   let menuButtonInterval = setInterval(() => {
     menuButtonTime++;
   }, 100);
   clearInterval(menuButtonInterval);
+
+  // set skeleton mode timer
+  const skeletonButtonRequiredTime = 60;
+  let skeletonButtonTime = 0;
+  let skeletonButtonInterval = setInterval(() => {
+    skeletonButtonTime++;
+  }, 100);
+  clearInterval(skeletonButtonInterval);
+
+  // set tutorial mode timer
+  const tutorialButtonRequiredTime = 60;
+  let tutorialButtonTime = 0;
+  let tutorialButtonInterval = setInterval(() => {
+    tutorialButtonTime++;
+  }, 100);
+  clearInterval(tutorialButtonInterval);
+
+  // set vtuber mode timer
+  const vtuberButtonRequiredTime = 60;
+  let vtuberButtonTime = 0;
+  let vtuberButtonInterval = setInterval(() => {
+    vtuberButtonTime++;
+  }, 100);
+  clearInterval(vtuberButtonInterval);
+
+  // set clear-all timer
+  const clearAllButtonRequiredTime = 60;
+  let clearAllButtonTime = 0;
+  let clearAllButtonInterval = setInterval(() => {
+    clearAllButtonTime++;
+  }, 100);
+  clearInterval(clearAllButtonInterval);
+
+  // set menu animation effect variables
+  const size = 100;
+  let sizeXY = 0;
 
   // setup poses variables
   const visT = 0.0001; // visibilityThreshold, larger than visT means visible
@@ -84,342 +156,339 @@ async function init() {
   /**** Vtuber Setup Start ****/
   /****************************/
 
+  /* #region vtuber */
   let currentVrm;
   let animateVRM;
 
-  if (selectedVtuber) {
-    //Import Helper Functions from Kalidokit
-    const remap = Kalidokit.Utils.remap;
-    const clamp = Kalidokit.Utils.clamp;
-    const lerp = Kalidokit.Vector.lerp;
+  //Import Helper Functions from Kalidokit
+  const remap = Kalidokit.Utils.remap;
+  const clamp = Kalidokit.Utils.clamp;
+  const lerp = Kalidokit.Vector.lerp;
 
-    // renderer
-    const renderer = new THREE.WebGLRenderer({ alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    document.body.appendChild(renderer.domElement);
+  // renderer
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  document.body.appendChild(renderer.domElement);
 
-    // camera
-    const orbitCamera = new THREE.PerspectiveCamera(
-      35,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    orbitCamera.position.set(0.0, 1.4, 0.7);
+  // camera
+  const orbitCamera = new THREE.PerspectiveCamera(
+    35,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+  orbitCamera.position.set(0.0, 1.4, 0.7);
 
-    // controls
-    const orbitControls = new THREE.OrbitControls(
-      orbitCamera,
-      renderer.domElement
-    );
-    orbitControls.screenSpacePanning = true;
-    orbitControls.target.set(0.0, 1.4, 0.0);
-    orbitControls.update();
+  // controls
+  const orbitControls = new THREE.OrbitControls(
+    orbitCamera,
+    renderer.domElement
+  );
+  orbitControls.screenSpacePanning = true;
+  orbitControls.target.set(0.0, 1.4, 0.0);
+  orbitControls.update();
 
-    // scene
-    const scene = new THREE.Scene();
+  // scene
+  const scene = new THREE.Scene();
 
-    // light
-    const light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(1.0, 1.0, 1.0).normalize();
-    scene.add(light);
+  // light
+  const light = new THREE.DirectionalLight(0xffffff);
+  light.position.set(1.0, 1.0, 1.0).normalize();
+  scene.add(light);
 
-    // Main Render Loop
-    const clock = new THREE.Clock();
+  // Main Render Loop
+  const clock = new THREE.Clock();
 
-    function animate() {
-      requestAnimationFrame(animate);
+  function animate() {
+    requestAnimationFrame(animate);
 
-      if (currentVrm) {
-        // Update model to render physics
-        currentVrm.update(clock.getDelta());
-      }
-      renderer.render(scene, orbitCamera);
+    if (currentVrm) {
+      // Update model to render physics
+      currentVrm.update(clock.getDelta());
     }
-    animate();
+    renderer.render(scene, orbitCamera);
+  }
 
-    /* VRM CHARACTER SETUP */
+  /* VRM CHARACTER SETUP */
 
-    // Import Character VRM
-    const loader = new THREE.GLTFLoader();
-    loader.crossOrigin = "anonymous";
-    // Import model from URL, add your own model here
-    loader.load(
-      "assets/do/29e07830-2317-4b15-a044-135e73c7f840_Ashtra.vrm",
+  // Import Character VRM
+  const loader = new THREE.GLTFLoader();
+  loader.crossOrigin = "anonymous";
+  // Import model from URL, add your own model here
+  loader.load(
+    "assets/do/29e07830-2317-4b15-a044-135e73c7f840_Ashtra.vrm",
 
-      (gltf) => {
-        THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);
+    (gltf) => {
+      THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);
 
-        THREE.VRM.from(gltf).then((vrm) => {
-          scene.add(vrm.scene);
-          currentVrm = vrm;
-          currentVrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
-        });
-      },
+      THREE.VRM.from(gltf).then((vrm) => {
+        scene.add(vrm.scene);
+        currentVrm = vrm;
+        currentVrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
+      });
+    },
 
-      (progress) =>
-        console.log(
-          "Loading model...",
-          100.0 * (progress.loaded / progress.total),
-          "%"
-        ),
+    (progress) =>
+      console.log(
+        "Loading model...",
+        100.0 * (progress.loaded / progress.total),
+        "%"
+      ),
 
-      (error) => console.error(error)
+    (error) => console.error(error)
+  );
+
+  // Animate Rotation Helper function
+  const rigRotation = (
+    name,
+    rotation = { x: 0, y: 0, z: 0 },
+    dampener = 1,
+    lerpAmount = 0.3
+  ) => {
+    if (!currentVrm) {
+      return;
+    }
+    const Part = currentVrm.humanoid.getBoneNode(
+      THREE.VRMSchema.HumanoidBoneName[name]
+    );
+    if (!Part) {
+      return;
+    }
+
+    let euler = new THREE.Euler(
+      rotation.x * dampener,
+      rotation.y * dampener,
+      rotation.z * dampener
+    );
+    let quaternion = new THREE.Quaternion().setFromEuler(euler);
+    Part.quaternion.slerp(quaternion, lerpAmount); // interpolate
+  };
+
+  // Animate Position Helper Function
+  const rigPosition = (
+    name,
+    position = { x: 0, y: 0, z: 0 },
+    dampener = 1,
+    lerpAmount = 0.3
+  ) => {
+    if (!currentVrm) {
+      return;
+    }
+    const Part = currentVrm.humanoid.getBoneNode(
+      THREE.VRMSchema.HumanoidBoneName[name]
+    );
+    if (!Part) {
+      return;
+    }
+    let vector = new THREE.Vector3(
+      position.x * dampener,
+      position.y * dampener,
+      position.z * dampener
+    );
+    Part.position.lerp(vector, lerpAmount); // interpolate
+  };
+
+  let oldLookTarget = new THREE.Euler();
+  const rigFace = (riggedFace) => {
+    if (!currentVrm) {
+      return;
+    }
+    rigRotation("Neck", riggedFace.head, 0.7);
+
+    // Blendshapes and Preset Name Schema
+    const Blendshape = currentVrm.blendShapeProxy;
+    const PresetName = THREE.VRMSchema.BlendShapePresetName;
+
+    // Simple example without winking. Interpolate based on old blendshape, then stabilize blink with `Kalidokit` helper function.
+    // for VRM, 1 is closed, 0 is open.
+    riggedFace.eye.l = lerp(
+      clamp(1 - riggedFace.eye.l, 0, 1),
+      Blendshape.getValue(PresetName.Blink),
+      0.5
+    );
+    riggedFace.eye.r = lerp(
+      clamp(1 - riggedFace.eye.r, 0, 1),
+      Blendshape.getValue(PresetName.Blink),
+      0.5
+    );
+    riggedFace.eye = Kalidokit.Face.stabilizeBlink(
+      riggedFace.eye,
+      riggedFace.head.y
+    );
+    Blendshape.setValue(PresetName.Blink, riggedFace.eye.l);
+
+    // Interpolate and set mouth blendshapes
+    Blendshape.setValue(
+      PresetName.I,
+      lerp(riggedFace.mouth.shape.I, Blendshape.getValue(PresetName.I), 0.5)
+    );
+    Blendshape.setValue(
+      PresetName.A,
+      lerp(riggedFace.mouth.shape.A, Blendshape.getValue(PresetName.A), 0.5)
+    );
+    Blendshape.setValue(
+      PresetName.E,
+      lerp(riggedFace.mouth.shape.E, Blendshape.getValue(PresetName.E), 0.5)
+    );
+    Blendshape.setValue(
+      PresetName.O,
+      lerp(riggedFace.mouth.shape.O, Blendshape.getValue(PresetName.O), 0.5)
+    );
+    Blendshape.setValue(
+      PresetName.U,
+      lerp(riggedFace.mouth.shape.U, Blendshape.getValue(PresetName.U), 0.5)
     );
 
-    // Animate Rotation Helper function
-    const rigRotation = (
-      name,
-      rotation = { x: 0, y: 0, z: 0 },
-      dampener = 1,
-      lerpAmount = 0.3
-    ) => {
-      if (!currentVrm) {
-        return;
-      }
-      const Part = currentVrm.humanoid.getBoneNode(
-        THREE.VRMSchema.HumanoidBoneName[name]
-      );
-      if (!Part) {
-        return;
-      }
+    //PUPILS
+    //interpolate pupil and keep a copy of the value
+    let lookTarget = new THREE.Euler(
+      lerp(oldLookTarget.x, riggedFace.pupil.y, 0.4),
+      lerp(oldLookTarget.y, riggedFace.pupil.x, 0.4),
+      0,
+      "XYZ"
+    );
+    oldLookTarget.copy(lookTarget);
+    currentVrm.lookAt.applyer.lookAt(lookTarget);
+  };
 
-      let euler = new THREE.Euler(
-        rotation.x * dampener,
-        rotation.y * dampener,
-        rotation.z * dampener
-      );
-      let quaternion = new THREE.Quaternion().setFromEuler(euler);
-      Part.quaternion.slerp(quaternion, lerpAmount); // interpolate
-    };
+  /* VRM Character Animator */
+  animateVRM = (vrm, results) => {
+    if (!vrm) {
+      return;
+    }
+    // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
+    let riggedPose, riggedLeftHand, riggedRightHand, riggedFace;
 
-    // Animate Position Helper Function
-    const rigPosition = (
-      name,
-      position = { x: 0, y: 0, z: 0 },
-      dampener = 1,
-      lerpAmount = 0.3
-    ) => {
-      if (!currentVrm) {
-        return;
-      }
-      const Part = currentVrm.humanoid.getBoneNode(
-        THREE.VRMSchema.HumanoidBoneName[name]
-      );
-      if (!Part) {
-        return;
-      }
-      let vector = new THREE.Vector3(
-        position.x * dampener,
-        position.y * dampener,
-        position.z * dampener
-      );
-      Part.position.lerp(vector, lerpAmount); // interpolate
-    };
+    const faceLandmarks = results.faceLandmarks;
+    // Pose 3D Landmarks are with respect to Hip distance in meters
+    const pose3DLandmarks = results.ea;
+    // Pose 2D landmarks are with respect to videoWidth and videoHeight
+    const pose2DLandmarks = results.poseLandmarks;
+    // Be careful, hand landmarks may be reversed
+    const leftHandLandmarks = results.rightHandLandmarks;
+    const rightHandLandmarks = results.leftHandLandmarks;
 
-    let oldLookTarget = new THREE.Euler();
-    const rigFace = (riggedFace) => {
-      if (!currentVrm) {
-        return;
-      }
-      rigRotation("Neck", riggedFace.head, 0.7);
+    // Animate Face
+    if (faceLandmarks) {
+      riggedFace = Kalidokit.Face.solve(faceLandmarks, {
+        runtime: "mediapipe",
+        video: videoElement,
+      });
+      rigFace(riggedFace);
+    }
 
-      // Blendshapes and Preset Name Schema
-      const Blendshape = currentVrm.blendShapeProxy;
-      const PresetName = THREE.VRMSchema.BlendShapePresetName;
-
-      // Simple example without winking. Interpolate based on old blendshape, then stabilize blink with `Kalidokit` helper function.
-      // for VRM, 1 is closed, 0 is open.
-      riggedFace.eye.l = lerp(
-        clamp(1 - riggedFace.eye.l, 0, 1),
-        Blendshape.getValue(PresetName.Blink),
-        0.5
-      );
-      riggedFace.eye.r = lerp(
-        clamp(1 - riggedFace.eye.r, 0, 1),
-        Blendshape.getValue(PresetName.Blink),
-        0.5
-      );
-      riggedFace.eye = Kalidokit.Face.stabilizeBlink(
-        riggedFace.eye,
-        riggedFace.head.y
-      );
-      Blendshape.setValue(PresetName.Blink, riggedFace.eye.l);
-
-      // Interpolate and set mouth blendshapes
-      Blendshape.setValue(
-        PresetName.I,
-        lerp(riggedFace.mouth.shape.I, Blendshape.getValue(PresetName.I), 0.5)
-      );
-      Blendshape.setValue(
-        PresetName.A,
-        lerp(riggedFace.mouth.shape.A, Blendshape.getValue(PresetName.A), 0.5)
-      );
-      Blendshape.setValue(
-        PresetName.E,
-        lerp(riggedFace.mouth.shape.E, Blendshape.getValue(PresetName.E), 0.5)
-      );
-      Blendshape.setValue(
-        PresetName.O,
-        lerp(riggedFace.mouth.shape.O, Blendshape.getValue(PresetName.O), 0.5)
-      );
-      Blendshape.setValue(
-        PresetName.U,
-        lerp(riggedFace.mouth.shape.U, Blendshape.getValue(PresetName.U), 0.5)
+    // Animate Pose
+    if (pose2DLandmarks && pose3DLandmarks) {
+      riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
+        runtime: "mediapipe",
+        video: videoElement,
+      });
+      rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
+      rigPosition(
+        "Hips",
+        {
+          x: -riggedPose.Hips.position.x, // Reverse direction
+          y: riggedPose.Hips.position.y + 1, // Add a bit of height
+          z: -riggedPose.Hips.position.z, // Reverse direction
+        },
+        1,
+        0.07
       );
 
-      //PUPILS
-      //interpolate pupil and keep a copy of the value
-      let lookTarget = new THREE.Euler(
-        lerp(oldLookTarget.x, riggedFace.pupil.y, 0.4),
-        lerp(oldLookTarget.y, riggedFace.pupil.x, 0.4),
-        0,
-        "XYZ"
+      rigRotation("Chest", riggedPose.Spine, 0.25, 0.3);
+      rigRotation("Spine", riggedPose.Spine, 0.45, 0.3);
+
+      rigRotation("RightUpperArm", riggedPose.RightUpperArm, 1, 0.3);
+      rigRotation("RightLowerArm", riggedPose.RightLowerArm, 1, 0.3);
+      rigRotation("LeftUpperArm", riggedPose.LeftUpperArm, 1, 0.3);
+      rigRotation("LeftLowerArm", riggedPose.LeftLowerArm, 1, 0.3);
+
+      rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, 0.3);
+      rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, 0.3);
+      rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, 0.3);
+      rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, 0.3);
+    }
+
+    // Animate Hands
+    if (leftHandLandmarks) {
+      riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left");
+      rigRotation("LeftHand", {
+        // Combine pose rotation Z and hand rotation X Y
+        z: riggedPose.LeftHand.z,
+        y: riggedLeftHand.LeftWrist.y,
+        x: riggedLeftHand.LeftWrist.x,
+      });
+      rigRotation("LeftRingProximal", riggedLeftHand.LeftRingProximal);
+      rigRotation("LeftRingIntermediate", riggedLeftHand.LeftRingIntermediate);
+      rigRotation("LeftRingDistal", riggedLeftHand.LeftRingDistal);
+      rigRotation("LeftIndexProximal", riggedLeftHand.LeftIndexProximal);
+      rigRotation(
+        "LeftIndexIntermediate",
+        riggedLeftHand.LeftIndexIntermediate
       );
-      oldLookTarget.copy(lookTarget);
-      currentVrm.lookAt.applyer.lookAt(lookTarget);
-    };
+      rigRotation("LeftIndexDistal", riggedLeftHand.LeftIndexDistal);
+      rigRotation("LeftMiddleProximal", riggedLeftHand.LeftMiddleProximal);
+      rigRotation(
+        "LeftMiddleIntermediate",
+        riggedLeftHand.LeftMiddleIntermediate
+      );
+      rigRotation("LeftMiddleDistal", riggedLeftHand.LeftMiddleDistal);
+      rigRotation("LeftThumbProximal", riggedLeftHand.LeftThumbProximal);
+      rigRotation(
+        "LeftThumbIntermediate",
+        riggedLeftHand.LeftThumbIntermediate
+      );
+      rigRotation("LeftThumbDistal", riggedLeftHand.LeftThumbDistal);
+      rigRotation("LeftLittleProximal", riggedLeftHand.LeftLittleProximal);
+      rigRotation(
+        "LeftLittleIntermediate",
+        riggedLeftHand.LeftLittleIntermediate
+      );
+      rigRotation("LeftLittleDistal", riggedLeftHand.LeftLittleDistal);
+    }
+    if (rightHandLandmarks) {
+      riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
+      rigRotation("RightHand", {
+        // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
+        z: riggedPose.RightHand.z,
+        y: riggedRightHand.RightWrist.y,
+        x: riggedRightHand.RightWrist.x,
+      });
+      rigRotation("RightRingProximal", riggedRightHand.RightRingProximal);
+      rigRotation(
+        "RightRingIntermediate",
+        riggedRightHand.RightRingIntermediate
+      );
+      rigRotation("RightRingDistal", riggedRightHand.RightRingDistal);
+      rigRotation("RightIndexProximal", riggedRightHand.RightIndexProximal);
+      rigRotation(
+        "RightIndexIntermediate",
+        riggedRightHand.RightIndexIntermediate
+      );
+      rigRotation("RightIndexDistal", riggedRightHand.RightIndexDistal);
+      rigRotation("RightMiddleProximal", riggedRightHand.RightMiddleProximal);
+      rigRotation(
+        "RightMiddleIntermediate",
+        riggedRightHand.RightMiddleIntermediate
+      );
+      rigRotation("RightMiddleDistal", riggedRightHand.RightMiddleDistal);
+      rigRotation("RightThumbProximal", riggedRightHand.RightThumbProximal);
+      rigRotation(
+        "RightThumbIntermediate",
+        riggedRightHand.RightThumbIntermediate
+      );
+      rigRotation("RightThumbDistal", riggedRightHand.RightThumbDistal);
+      rigRotation("RightLittleProximal", riggedRightHand.RightLittleProximal);
+      rigRotation(
+        "RightLittleIntermediate",
+        riggedRightHand.RightLittleIntermediate
+      );
+      rigRotation("RightLittleDistal", riggedRightHand.RightLittleDistal);
+    }
+  };
 
-    /* VRM Character Animator */
-    animateVRM = (vrm, results) => {
-      if (!vrm) {
-        return;
-      }
-      // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
-      let riggedPose, riggedLeftHand, riggedRightHand, riggedFace;
-
-      const faceLandmarks = results.faceLandmarks;
-      // Pose 3D Landmarks are with respect to Hip distance in meters
-      const pose3DLandmarks = results.ea;
-      // Pose 2D landmarks are with respect to videoWidth and videoHeight
-      const pose2DLandmarks = results.poseLandmarks;
-      // Be careful, hand landmarks may be reversed
-      const leftHandLandmarks = results.rightHandLandmarks;
-      const rightHandLandmarks = results.leftHandLandmarks;
-
-      // Animate Face
-      if (faceLandmarks) {
-        riggedFace = Kalidokit.Face.solve(faceLandmarks, {
-          runtime: "mediapipe",
-          video: videoElement,
-        });
-        rigFace(riggedFace);
-      }
-
-      // Animate Pose
-      if (pose2DLandmarks && pose3DLandmarks) {
-        riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
-          runtime: "mediapipe",
-          video: videoElement,
-        });
-        rigRotation("Hips", riggedPose.Hips.rotation, 0.7);
-        rigPosition(
-          "Hips",
-          {
-            x: -riggedPose.Hips.position.x, // Reverse direction
-            y: riggedPose.Hips.position.y + 1, // Add a bit of height
-            z: -riggedPose.Hips.position.z, // Reverse direction
-          },
-          1,
-          0.07
-        );
-
-        rigRotation("Chest", riggedPose.Spine, 0.25, 0.3);
-        rigRotation("Spine", riggedPose.Spine, 0.45, 0.3);
-
-        rigRotation("RightUpperArm", riggedPose.RightUpperArm, 1, 0.3);
-        rigRotation("RightLowerArm", riggedPose.RightLowerArm, 1, 0.3);
-        rigRotation("LeftUpperArm", riggedPose.LeftUpperArm, 1, 0.3);
-        rigRotation("LeftLowerArm", riggedPose.LeftLowerArm, 1, 0.3);
-
-        rigRotation("LeftUpperLeg", riggedPose.LeftUpperLeg, 1, 0.3);
-        rigRotation("LeftLowerLeg", riggedPose.LeftLowerLeg, 1, 0.3);
-        rigRotation("RightUpperLeg", riggedPose.RightUpperLeg, 1, 0.3);
-        rigRotation("RightLowerLeg", riggedPose.RightLowerLeg, 1, 0.3);
-      }
-
-      // Animate Hands
-      if (leftHandLandmarks) {
-        riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left");
-        rigRotation("LeftHand", {
-          // Combine pose rotation Z and hand rotation X Y
-          z: riggedPose.LeftHand.z,
-          y: riggedLeftHand.LeftWrist.y,
-          x: riggedLeftHand.LeftWrist.x,
-        });
-        rigRotation("LeftRingProximal", riggedLeftHand.LeftRingProximal);
-        rigRotation(
-          "LeftRingIntermediate",
-          riggedLeftHand.LeftRingIntermediate
-        );
-        rigRotation("LeftRingDistal", riggedLeftHand.LeftRingDistal);
-        rigRotation("LeftIndexProximal", riggedLeftHand.LeftIndexProximal);
-        rigRotation(
-          "LeftIndexIntermediate",
-          riggedLeftHand.LeftIndexIntermediate
-        );
-        rigRotation("LeftIndexDistal", riggedLeftHand.LeftIndexDistal);
-        rigRotation("LeftMiddleProximal", riggedLeftHand.LeftMiddleProximal);
-        rigRotation(
-          "LeftMiddleIntermediate",
-          riggedLeftHand.LeftMiddleIntermediate
-        );
-        rigRotation("LeftMiddleDistal", riggedLeftHand.LeftMiddleDistal);
-        rigRotation("LeftThumbProximal", riggedLeftHand.LeftThumbProximal);
-        rigRotation(
-          "LeftThumbIntermediate",
-          riggedLeftHand.LeftThumbIntermediate
-        );
-        rigRotation("LeftThumbDistal", riggedLeftHand.LeftThumbDistal);
-        rigRotation("LeftLittleProximal", riggedLeftHand.LeftLittleProximal);
-        rigRotation(
-          "LeftLittleIntermediate",
-          riggedLeftHand.LeftLittleIntermediate
-        );
-        rigRotation("LeftLittleDistal", riggedLeftHand.LeftLittleDistal);
-      }
-      if (rightHandLandmarks) {
-        riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
-        rigRotation("RightHand", {
-          // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
-          z: riggedPose.RightHand.z,
-          y: riggedRightHand.RightWrist.y,
-          x: riggedRightHand.RightWrist.x,
-        });
-        rigRotation("RightRingProximal", riggedRightHand.RightRingProximal);
-        rigRotation(
-          "RightRingIntermediate",
-          riggedRightHand.RightRingIntermediate
-        );
-        rigRotation("RightRingDistal", riggedRightHand.RightRingDistal);
-        rigRotation("RightIndexProximal", riggedRightHand.RightIndexProximal);
-        rigRotation(
-          "RightIndexIntermediate",
-          riggedRightHand.RightIndexIntermediate
-        );
-        rigRotation("RightIndexDistal", riggedRightHand.RightIndexDistal);
-        rigRotation("RightMiddleProximal", riggedRightHand.RightMiddleProximal);
-        rigRotation(
-          "RightMiddleIntermediate",
-          riggedRightHand.RightMiddleIntermediate
-        );
-        rigRotation("RightMiddleDistal", riggedRightHand.RightMiddleDistal);
-        rigRotation("RightThumbProximal", riggedRightHand.RightThumbProximal);
-        rigRotation(
-          "RightThumbIntermediate",
-          riggedRightHand.RightThumbIntermediate
-        );
-        rigRotation("RightThumbDistal", riggedRightHand.RightThumbDistal);
-        rigRotation("RightLittleProximal", riggedRightHand.RightLittleProximal);
-        rigRotation(
-          "RightLittleIntermediate",
-          riggedRightHand.RightLittleIntermediate
-        );
-        rigRotation("RightLittleDistal", riggedRightHand.RightLittleDistal);
-      }
-    };
-  }
+  /* #endregion vtuber */
 
   /****************************/
   /***** Vtuber Setup End *****/
@@ -433,7 +502,7 @@ async function init() {
     guideCanvas = document.querySelector("canvas.guides");
 
   /* draw canvas */
-  const drawResults = (results) => {
+  const drawResults = async (results) => {
     if (!results.poseLandmarks || isExit) {
       return;
     }
@@ -460,7 +529,7 @@ async function init() {
     canvasCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
 
     // draw all landmarks and connectors
-    if (developmentMode) {
+    if (skeletonMode) {
       drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
         color: "#00cff7",
         lineWidth: 2,
@@ -718,16 +787,23 @@ async function init() {
 
     // visualize counter
     if (closeMode) {
-      canvasCtx.font = "2.2rem Arial";
+      canvasCtx.font = "2.5rem Arial";
       canvasCtx.fillStyle = "#000000";
       canvasCtx.fillText(
-        `${exName.toUpperCase().split("_").join(" ")}
-        Repes: ${repes}
-        Burnt: ${caloriesBurnt.toFixed(1)}`,
+        `${exName.toUpperCase().split("_").join(" ")}`,
         10,
         40
-        // canvasElement.width * 2/5,
-        // canvasElement.height / 2
+      );
+      canvasCtx.font = "2rem Arial";
+      canvasCtx.fillText(
+        `Calories: ${caloriesBurnt.toFixed(1)}`,
+        10,
+        80
+      );
+      canvasCtx.fillText(
+        `Repes: ${repes}`,
+        10,
+        120
       );
     } else {
       canvasCtx.font = "20rem Arial";
@@ -748,34 +824,40 @@ async function init() {
       // set menu square
       canvasCtx.rect(guideCanvas.width - 100, 0, 100, 100);
 
-      if (isMenu) {
-        // set square 1
+      if (isMenu || (sizeXY > 0)) {
+        if (isMenu && sizeXY < size) {
+          sizeXY += 20;
+        }
+        if (!isMenu && sizeXY > 0) {
+          sizeXY -= 20;
+        }
+        // set square 1 (skeleton)
         canvasCtx.rect(
           guideCanvas.width - 250,
-          guideCanvas.height / 2,
-          100,
-          100
+          150,
+          sizeXY,
+          sizeXY
         );
-        // set square 2
+        // set square 2 (tutorial)
         canvasCtx.rect(
           guideCanvas.width - 150,
-          guideCanvas.height / 2,
-          100,
-          100
+          150,
+          sizeXY,
+          sizeXY
         );
-        // set square 3
+        // set square 3 (vtuber)
         canvasCtx.rect(
           guideCanvas.width - 250,
-          guideCanvas.height / 2 + 100,
-          100,
-          100
+          250,
+          sizeXY,
+          sizeXY
         );
-        // set square 4
+        // set square 4 (clear all)
         canvasCtx.rect(
           guideCanvas.width - 150,
-          guideCanvas.height / 2 + 100,
-          100,
-          100
+          250,
+          sizeXY,
+          sizeXY
         );
       }
 
@@ -806,19 +888,50 @@ async function init() {
       }
 
       if (isMenu) {
-        // draw exit menu text
+        // draw skeleton text
         canvasCtx.font = "0.9rem Arial";
         canvasCtx.fillStyle = "black";
         canvasCtx.fillText(
-          "Exit Menu",
-          guideCanvas.width - 150 + 17,
-          guideCanvas.height / 2 + 100 + 55
+          "Skeleton",
+          guideCanvas.width - 250 + 20,
+          150 + 55
+        );
+
+        // draw tutorial text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Tutorial",
+          guideCanvas.width - 150 + 27,
+          150 + 55
+        );
+
+        // draw vtuber text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Vtuber",
+          guideCanvas.width - 250 + 28,
+          250 + 55
+        );
+
+        // draw clear all text
+        canvasCtx.font = "0.9rem Arial";
+        canvasCtx.fillStyle = "black";
+        canvasCtx.fillText(
+          "Clear All",
+          guideCanvas.width - 150 + 22,
+          250 + 55
         );
       }
 
       // trigger button
       let fingerOnExit = false;
       let fingerOnMenu = false;
+      let fingerOnSkeleton = false;
+      let fingerOnTutorial = false;
+      let fingerOnVtuber = false;
+      let fingerOnClearAll = false;
       if (results.rightHandLandmarks) {
         if (results.rightHandLandmarks[8]) {
           const absX = results.rightHandLandmarks[8].x * guideCanvas.width;
@@ -848,6 +961,74 @@ async function init() {
               }, 100);
             }
           }
+
+          // pressing skeleton button
+          if (isMenu) {
+            if (
+              absX > 150 &&
+              absX < 250 &&
+              absY > 150 &&
+              absY < 250
+            ) {
+              fingerOnSkeleton = true;
+              if (skeletonButtonTime === 0) {
+                skeletonButtonInterval = setInterval(() => {
+                  skeletonButtonTime++;
+                }, 100);
+              }
+            }
+          }
+
+          // pressing tutorial button
+          if (isMenu) {
+            if (
+              absX > 50 &&
+              absX < 150 &&
+              absY > 150 &&
+              absY < 250
+            ) {
+              fingerOnTutorial = true;
+              if (tutorialButtonTime === 0) {
+                tutorialButtonInterval = setInterval(() => {
+                  tutorialButtonTime++;
+                }, 100);
+              }
+            }
+          }
+
+          // pressing vtuber button
+          if (isMenu) {
+            if (
+              absX > 150 &&
+              absX < 250 &&
+              absY > 250 &&
+              absY < 350
+            ) {
+              fingerOnVtuber = true;
+              if (vtuberButtonTime === 0) {
+                vtuberButtonInterval = setInterval(() => {
+                  vtuberButtonTime++;
+                }, 100);
+              }
+            }
+          }
+
+          // pressing clear all button
+          if (isMenu) {
+            if (
+              absX > 50 &&
+              absX < 150 &&
+              absY > 250 &&
+              absY < 350
+            ) {
+              fingerOnClearAll = true;
+              if (clearAllButtonTime === 0) {
+                clearAllButtonInterval = setInterval(() => {
+                  clearAllButtonTime++;
+                }, 100);
+              }
+            }
+          }
         }
       }
 
@@ -855,13 +1036,22 @@ async function init() {
       if (exitButtonTime >= exitButtonRequiredTime) {
         window.location.href = "exercise.html";
         isExit = true;
+        await fetch(`/exercise/completeExercise`, {
+          method: "post",
+          body: JSON.stringify({
+            exercise_id: exID,
+            repetitions: repes,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         return;
       }
 
       // trigger menu
       if (!isMenu) {
         if (menuButtonTime >= menuButtonRequiredTime) {
-          console.log("open menu");
           isMenu = true;
           clearInterval(menuButtonInterval);
           menuButtonTime = 0;
@@ -871,10 +1061,65 @@ async function init() {
       // trigger closing menu
       if (isMenu) {
         if (menuButtonTime >= menuButtonRequiredTime) {
-          console.log("open menu");
           isMenu = false;
           clearInterval(menuButtonInterval);
           menuButtonTime = 0;
+          sizeX = 0;
+          sizeY = 0;
+        }
+      }
+
+      // trigger skeleton mode
+      if (isMenu) {
+        if (skeletonButtonTime >= skeletonButtonRequiredTime) {
+          // deactivate vtuber mode first
+          deactivateVtuber();
+          vtuberMode = false;
+
+          skeletonMode = !skeletonMode;
+          clearInterval(skeletonButtonInterval);
+          skeletonButtonTime = 0;
+        }
+      }
+
+      // trigger tutorial mode
+      if (isMenu) {
+        if (tutorialButtonTime >= tutorialButtonRequiredTime) {
+          // deactivate vtuber mode first
+          deactivateVtuber();
+          vtuberMode = false;
+
+          toggleTutorialVideo(`${videoFileName}`);
+          clearInterval(tutorialButtonInterval);
+          tutorialButtonTime = 0;
+        }
+      }
+
+      // trigger vtuber mode
+      if (isMenu) {
+        if (vtuberButtonTime >= vtuberButtonRequiredTime) {
+          // deactivate other modes first
+          skeletonMode = false;
+          deactivateTutorialVideo();
+          // toggle vtuber mode
+          vtuberMode = !vtuberMode;
+          toggleVtuber();
+          clearInterval(vtuberButtonInterval);
+          vtuberButtonTime = 0;
+        }
+      }
+
+      // trigger clear all
+      if (isMenu) {
+        if (clearAllButtonTime >= clearAllButtonRequiredTime) {
+          // deactivate all modes
+          deactivateVtuber();
+          vtuberMode = false;
+          deactivateTutorialVideo();
+          skeletonMode = false;
+
+          clearInterval(clearAllButtonInterval);
+          clearAllButtonTime = 0;
         }
       }
 
@@ -888,6 +1133,30 @@ async function init() {
       if (!fingerOnMenu && menuButtonTime > 0) {
         clearInterval(menuButtonInterval);
         menuButtonTime = 0;
+      }
+
+      // reset timer for skeleton
+      if (!fingerOnSkeleton && skeletonButtonTime > 0) {
+        clearInterval(skeletonButtonInterval);
+        skeletonButtonTime = 0;
+      }
+
+      // reset timer for tutorial
+      if (!fingerOnTutorial && tutorialButtonTime > 0) {
+        clearInterval(tutorialButtonInterval);
+        tutorialButtonTime = 0;
+      }
+
+      // reset timer for vtuber
+      if (!fingerOnVtuber && vtuberButtonTime > 0) {
+        clearInterval(vtuberButtonInterval);
+        vtuberButtonTime = 0;
+      }
+
+      // reset timer for clear all
+      if (!fingerOnClearAll && clearAllButtonTime > 0) {
+        clearInterval(clearAllButtonInterval);
+        clearAllButtonTime = 0;
       }
 
       // draw circle for exit
@@ -919,6 +1188,74 @@ async function init() {
       );
       canvasCtx.stroke();
       canvasCtx.globalAlpha = 1.0;
+
+      // draw circle for skeleton
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 250 + 50,
+          150 + 50,
+          45,
+          0,
+          Math.PI * 2 * (skeletonButtonTime / skeletonButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
+
+      // draw circle for tutorial
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 150 + 50,
+          150 + 50,
+          45,
+          0,
+          Math.PI * 2 * (tutorialButtonTime / tutorialButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
+
+      // draw circle for vtuber
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 250 + 50,
+          250 + 50,
+          45,
+          0,
+          Math.PI * 2 * (vtuberButtonTime / vtuberButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
+
+      // draw circle for clear all
+      if (isMenu) {
+        canvasCtx.strokeStyle = "black";
+        canvasCtx.globalAlpha = 0.5;
+        canvasCtx.lineWidth = 5;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          guideCanvas.width - 150 + 50,
+          250 + 50,
+          45,
+          0,
+          Math.PI * 2 * (clearAllButtonTime / clearAllButtonRequiredTime)
+        );
+        canvasCtx.stroke();
+        canvasCtx.globalAlpha = 1.0;
+      }
     }
 
     /**** UI End ****/
@@ -952,7 +1289,11 @@ async function init() {
     drawResults(results);
 
     // Animate model
-    if (selectedVtuber) {
+    if (vtuberMode) {
+      if (!animated) {
+        animate();
+        animated = true;
+      }
       animateVRM(currentVrm, results);
     }
   };

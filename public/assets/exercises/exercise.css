@@ -2,16 +2,33 @@ h1 {
     font-size: calc(4vmin + 1em);
     text-align: center;
     margin: auto;
-    color: #ffaa33;
+    color: #3b3836;
+    /* color: #ffaa33; */
+    font-family: 'Encode Sans Condensed', sans-serif;
 }
 
-.content {
-    background-color: #3b3836;
-}
+/* .content {
+    padding: 1rem 0;
+} */
 
 body {
-    color: #ffaa33;
-    background-color: #3b3836;
+    color: #3b3836;
+    background-color: #cfc1ac;
+}
+
+.corner-box {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  height: 3rem;
+  width: 6.4rem;
+  background-color: #615c59;
+  color: #cfc1ac;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Righteous', sans-serif;
+  padding: 0.8rem 0;
+  font-weight: bold;
 }
 
 /*********************/
@@ -21,11 +38,11 @@ body {
 .container {
     width: 100vw;
     height: auto;
-    padding: 5rem 10rem;
+    padding: 3rem 2rem 3rem 9rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3b3836;
+    background-color: #cfc1ac;
     background-size: cover;
 }
 
@@ -54,6 +71,7 @@ body {
     transform-style: preserve-3d;
     perspective: 1000px;
     animation: popin .3s;
+    font-family: 'Encode Sans Condensed', sans-serif;
   }
   .card-image {
     grid-area: image;
@@ -118,30 +136,18 @@ body {
   }
   
   /*card2*/
-  /* .card-image.card2 {
-    background: url("./images/squat.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  } */
   .card-text.card2 .date {
-    color: rgb(228, 166, 8);
+    color: rgb(215, 157, 11);
   }
   .card-stats.card2 .border {
-    border-left: 1px solid  rgb(178, 130, 8);
-    border-right: 1px solid rgb(178, 130, 8);
+    border-left: 1px solid  rgb(215, 157, 11);
+    border-right: 1px solid rgb(215, 157, 11);
   }
   .card-stats.card2 {
-    background:  rgb(228, 166, 8);
+    background:  rgb(235, 171, 8);
   }
 
   /*card3*/
-  /* .card-image.card3 {
-    background: url("./images/lunges.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  } */
   .card-text.card3 .date {
     color: rgb(0, 189, 63);
   }
@@ -152,17 +158,18 @@ body {
   .card-stats.card3 {
     background: rgb(0, 189, 63);
   }
+
   .js-tilt-glare {
     border-radius: 18px;
   }
 
   @keyframes popin {
     from {
-        transform: scale(4)
+        transform: scale(1.2)
     }
 
     50% {
-        transform: scale(1.5)
+        transform: scale(0.8)
     }
 
     to {
@@ -300,3 +307,4 @@ body {
   /****************/
   /* loading ends */
   /****************/
+  

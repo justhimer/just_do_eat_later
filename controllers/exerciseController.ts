@@ -17,8 +17,13 @@ export class ExerciseController {
     getAllExercises = async (req: Request, res: Response) => {
         try {
 
+            const reqQueriesLength = Object.keys(req.query).length;
+            const queries = {
+                level: req.query.level,
+            }
+
             // get data from service
-            const exercises = await this.exerciseService.getAllExercises();
+            const exercises = await this.exerciseService.getAllExercises(reqQueriesLength, queries);
 
             // send data to client
             res.status(200).json({
