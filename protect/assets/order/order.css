@@ -1,13 +1,10 @@
 #pending_order_container{
     padding: 2rem;
-    margin: 2rem 2rem;
+    margin: 0 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid black;
     height: 80vh;
-    border-radius: 5px;
-    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
     overflow: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -15,10 +12,6 @@
 #pending_order_container::-webkit-scrollbar {
     display: none;
   }
-/* #main{
-    padding: 2rem;
-    margin-top: 2rem;
-} */
 
 .card {
     border: none
@@ -42,4 +35,12 @@
 
 .container{
     margin: auto 0 !important;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
+#main{
+    display: inline;
+
 }

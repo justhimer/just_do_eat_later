@@ -170,7 +170,7 @@ export class ShopService {
 
     async getAllOrders(user_id:number) :Promise<any>{
         let orders = (await this.knex.raw(`
-        select transactions.id as id, transactions.user_id as user_id, transactions.total_calories as calories, transactions.status as status, locations.title as title, locations.address as address 
+        select transactions.id as id, transactions.user_id as user_id, transactions.total_calories as calories, transactions.status as status, locations.title as title, locations.address as address, transactions.created_at::text 
         from transactions
         inner join locations
         on transactions.location_id = locations.id

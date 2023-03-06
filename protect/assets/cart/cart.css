@@ -158,6 +158,8 @@
 .card__info h2 {
   font-size: 14px;
   font-weight: 800;
+  display: flex;
+  justify-content: center;
 }
 .card__info p {
   font-size: 10px;
@@ -264,4 +266,9 @@
   justify-content:space-between;
   align-items: baseline;
   margin-top: auto;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
 }

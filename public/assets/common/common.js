@@ -181,4 +181,39 @@ async function menuLoader() {
 }
 
 
+const cornerElem = document.querySelector(".corner-box")?document.querySelector(".corner-box"):null ;
 
+if (cornerElem){
+    cornerElem.addEventListener("click", showCalories);
+}
+
+
+async function showCalories() {
+    const isLoggedIn = await getStatus();
+    if (isLoggedIn) {
+      const res = await fetch("/users/calories");
+      const result = await res.json();
+      const calories = result.calories;
+      Notiflix.Notify.info(`Remaining ${calories} calories`, {
+        width: "18rem",
+        fontSize: "1rem",
+        clickToClose: true,
+        info: {
+          background: "#615c59",
+          textColor: "#cfc1ac",
+          notiflixIconColor: "#cfc1ac",
+        },
+      });
+    } else {
+      Notiflix.Notify.warning("Please Login", {
+        width: "15rem",
+        fontSize: "1rem",
+        clickToClose: true,
+        warning: {
+          background: "#615c59",
+          textColor: "#cfc1ac",
+          notiflixIconColor: "#cfc1ac",
+        },
+      });
+    }
+  }

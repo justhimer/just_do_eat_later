@@ -11,34 +11,33 @@ export class ShopController {
         private shopService: ShopService,
         private userService: UserService,
         private transactionService: TransactionService
-        ) {}
+    ) { }
 
 
-    getAllFood = async (req:Request, res:Response) => {
+    getAllFood = async (req: Request, res: Response) => {
         try {
-            
-            let knexData = await this.shopService.getAllFood()
-            console.log('knexData: ',knexData);
-            
-            // let knexTypes = await this.shopService.getDistinctTypes()
-            
 
-            let resData:any = [];
+            let knexData = await this.shopService.getAllFood()
+
+            // let knexTypes = await this.shopService.getDistinctTypes()
+
+
+            let resData: any = [];
             let foodObject = {}
             knexData.forEach((element: any) => {
-                let allergensString = ()=>{
+                let allergensString = () => {
                     let array = []
                     for (let keys in element.allergens)
-                    array.push(element.allergens[keys])
+                        array.push(element.allergens[keys])
                     return array.join(",")
                 }
-                if (foodObject.hasOwnProperty(element.food_id)){
+                if (foodObject.hasOwnProperty(element.food_id)) {
                     foodObject[element.food_id]["portion"][element.portion] = {
                         name: element.portion,
                         calories: element.calories,
                         food_id: element.id
                     }
-                }else {
+                } else {
                     foodObject[element.food_id] = {}
                     foodObject[element.food_id]["name"] = `${element.name}`
                     foodObject[element.food_id]["meta"] = {
@@ -60,14 +59,14 @@ export class ShopController {
                     }
                 }
             });
-            for (let keys in foodObject){
+            for (let keys in foodObject) {
                 resData.push(foodObject[keys])
             }
 
-            console.log("resData: ",{resData});
-            
-            res.status(200).json(resData)
-            
+            console.log("resData: ", { resData });
+            let finalData = { data: resData }
+            res.status(200).json(finalData)
+
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -76,18 +75,26 @@ export class ShopController {
         }
     }
 
-    increaseFoodQuantity = async (req:Request, res:Response) => {
+    increaseFoodQuantity = async (req: Request, res: Response) => {
         try {
+            console.log('here');
+
             let foodId = req.body.food_details_id;
-            let foodQuantity = req.body.quantity;
+            let foodQuantity = req.body.quantity || 1;
+
+            console.log({
+                foodId,
+                foodQuantity
+            })
+
             let checkItem = await this.shopService.getItemCount(req.session.user!.id, foodId)
-            if (checkItem){
-                await this.shopService.addItem(req.session.user!.id,foodId,foodQuantity)
-                res.status(200).json({message:"Success"})
+            if (checkItem) {
+                await this.shopService.addItem(req.session.user!.id, foodId, foodQuantity)
+                res.status(200).json({ message: "Success" })
                 return
-            }else {
-                await this.shopService.createItem(req.session.user!.id,foodId,foodQuantity)
-                res.status(200).json({message:"Success"})
+            } else {
+                await this.shopService.createItem(req.session.user!.id, foodId, foodQuantity)
+                res.status(200).json({ message: "Success" })
                 return
             }
         } catch (error) {
@@ -97,23 +104,23 @@ export class ShopController {
             });
         }
     }
-    decreaseFoodQuantity = async (req:Request, res:Response) => {
+    decreaseFoodQuantity = async (req: Request, res: Response) => {
         try {
             let foodId = req.body.food_details_id;
             let foodQuantity = req.body.quantity;
-            console.log("foodID:",foodId,"foodQuantity",foodQuantity)
+            console.log("foodID:", foodId, "foodQuantity", foodQuantity)
             let checkItem = await this.shopService.getItemCount(req.session.user!.id, foodId)
             console.log("checkItem: ", checkItem)
-            if (checkItem < foodQuantity ){
-                res.status(400).json({message:"Decrease cannot be larger than quantity in shopping cart"})
-            }else if (checkItem == foodQuantity){
+            if (checkItem < foodQuantity) {
+                res.status(400).json({ message: "Decrease cannot be larger than quantity in shopping cart" })
+            } else if (checkItem == foodQuantity) {
                 console.log('deleting food')
                 await this.shopService.deleteItem(req.session.user!.id, foodId)
-                res.status(200).json({message:"Success"})
+                res.status(200).json({ message: "Success" })
                 return
-            }else{
+            } else {
                 await this.shopService.deleteUnit(req.session.user!.id, foodId, foodQuantity)
-                res.status(200).json({message:"Success"})
+                res.status(200).json({ message: "Success" })
                 return
             }
         } catch (error) {
@@ -123,11 +130,11 @@ export class ShopController {
             });
         }
     }
-    removeFood = async (req:Request, res:Response) => {
+    removeFood = async (req: Request, res: Response) => {
         try {
             let foodId = req.body.food_details_id;
             await this.shopService.deleteItem(req.session.user!.id, foodId)
-            res.status(200).json({message:"Success"})
+            res.status(200).json({ message: "Success" })
             return
         } catch (error) {
             console.log(error)
@@ -136,10 +143,10 @@ export class ShopController {
             });
         }
     }
-    deleteBasket = async (req:Request, res:Response) => {
-    try {
+    deleteBasket = async (req: Request, res: Response) => {
+        try {
             await this.shopService.deleteAll(req.session.user!.id)
-            res.status(200).json({message:"Success"})
+            res.status(200).json({ message: "Success" })
             return
         } catch (error) {
             console.log(error)
@@ -148,7 +155,7 @@ export class ShopController {
             });
         }
     }
-    getItemCount = async (req:Request, res:Response) => {
+    getItemCount = async (req: Request, res: Response) => {
         try {
             let foodId = req.body.food_details_id;
             let knexData = await this.shopService.getItemCount(req.session.user!.id, foodId);
@@ -160,7 +167,7 @@ export class ShopController {
             });
         }
     }
-    getTotalCount = async (req:Request, res:Response) => {
+    getTotalCount = async (req: Request, res: Response) => {
         try {
             let knexData = await this.shopService.getTotalCount(req.session.user!.id);
             res.status(200).json(knexData)
@@ -171,13 +178,13 @@ export class ShopController {
             });
         }
     }
-    previewBasket = async (req:Request, res:Response) => {
+    previewBasket = async (req: Request, res: Response) => {
         try {
             let knexData = await this.shopService.getAll(req.session.user!.id);
             let knexLocation = await this.shopService.getLocations();
             let resData = {
-                data:knexData,
-                location:knexLocation
+                data: knexData,
+                location: knexLocation
             }
             res.status(200).json(resData)
         } catch (error) {
@@ -187,28 +194,28 @@ export class ShopController {
             });
         }
     }
-    confirmOrder = async (req:Request, res:Response) => {
+    confirmOrder = async (req: Request, res: Response) => {
         try {
             let location_id = req.body.location_id
             let total_calories = req.body.total_calories
-            console.log("location_id: ",location_id,"total_calories: ",total_calories);
-            
+            console.log("location_id: ", location_id, "total_calories: ", total_calories);
+
             let currentUserCalories = (await this.userService.getCalroies(req.session.user!.id))['calories']
 
-            console.log("currentUserCalories: ",currentUserCalories);
-            
-            if (currentUserCalories - total_calories < 0){
-                res.status(400).json({message:"insufficient calories to purchase meal"})
-            }else {
-                console.log("submitting basket");
-                
-                let knexData = await this.shopService.submitBasket(req.session.user!.id,location_id,total_calories)
+            console.log("currentUserCalories: ", currentUserCalories);
 
-                console.log("knexData: ",knexData);
-                if (knexData.result){
+            if (currentUserCalories - total_calories < 0) {
+                res.status(400).json({ message: "insufficient calories to purchase meal" })
+            } else {
+                console.log("submitting basket");
+
+                let knexData = await this.shopService.submitBasket(req.session.user!.id, location_id, total_calories)
+
+                console.log("knexData: ", knexData);
+                if (knexData.result) {
                     await this.userService.calcCalories(req.session.user!.id)
-                    res.status(200).json({transaction_id:knexData.transaction_id})
-                }else{ 
+                    res.status(200).json({ transaction_id: knexData.transaction_id })
+                } else {
                     res.status(500).json({
                         message: '[USR003] - Server error'
                     });
@@ -221,12 +228,12 @@ export class ShopController {
             });
         }
     }
-    
-    allOrders = async (req:Request, res:Response) => {
+
+    allOrders = async (req: Request, res: Response) => {
         try {
             let knexData = await this.shopService.getAllOrders(req.session.user!.id)
-            console.log("knexData: ",knexData)
-            res.status(200).json({knexData})
+            console.log("knexData: ", knexData)
+            res.status(200).json({ knexData })
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -235,11 +242,11 @@ export class ShopController {
         }
     }
 
-    collctedOrder = async (req:Request, res:Response) => {
+    collctedOrder = async (req: Request, res: Response) => {
         try {
             let order = Number(req.params.id)
             await this.shopService.collectedOrder(order)
-            res.status(200).json({message:"success"})
+            res.status(200).json({ message: "success" })
         } catch (error) {
             console.log(error)
             res.status(500).json({

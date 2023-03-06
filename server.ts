@@ -71,7 +71,7 @@ app.use('/shop', makeShopRoutes());
 
 
 export const exerciseService = new ExerciseService(knex);
-export const exerciseController = new ExerciseController(exerciseService,userService);
+export const exerciseController = new ExerciseController(exerciseService, userService);
 app.use('/exercise', chooseexerciseRoutes())
 /* #endregion */
 
@@ -96,7 +96,7 @@ app.use((req, res) => {
 })
 /* #endregion */
 
-const job =  schedule.scheduleJob(emitTime,dailyPointDistribution)
+const job = schedule.scheduleJob(emitTime, dailyPointDistribution)
 
 /* #region start server */
 server.listen(PORT, () => {

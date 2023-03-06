@@ -44,7 +44,7 @@ async function loadOrders(){
                 orderContainer.innerHTML += `
                 <div class="container">
             <div class="row d-flex justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card">
                         <div class="invoice p-5">
                             <div class="payment mb-3 border-bottom table-responsive">
@@ -88,12 +88,12 @@ async function loadOrders(){
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <div class="col-md-5 text-center collected_status"><h3>Collection Status:</h3><br>
+                                <div class="col-md-12 text-center collected_status"><h3>Collection Status:</h3><br>
                                 <p>Complete!</p>
                                 </div></div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between footer p-3"> <span></span> <span>12 June, 2020</span> </div>
+                        <div class="d-flex justify-content-between footer p-3"> <span></span> <span>${element.created_at.split(" ")[0]}</span> </div>
                     </div>
                 </div>
             </div>
@@ -104,7 +104,7 @@ async function loadOrders(){
                 orderContainer.innerHTML += `
                 <div class="container">
             <div class="row d-flex justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card">
                         <div class="invoice p-5">
                             <div class="payment mb-3 border-bottom table-responsive">
@@ -148,12 +148,12 @@ async function loadOrders(){
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <div class="col-md-5 text-center collected_status"><h3>Collection Status:</h3><br>
+                                <div class="col-md-12 text-center collected_status"><h3>Collection Status:</h3><br>
                                 <button id="${element.id}" class="confirmation_btn">Picked Up!</button>
                                 </div></div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between footer p-3"> <span></span> <span>12 June, 2020</span> </div>
+                        <div class="d-flex justify-content-between footer p-3"> <span></span> <span>${element.created_at.split(" ")[0]}</span> </div>
                     </div>
                 </div>
             </div>
