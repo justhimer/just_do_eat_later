@@ -1,43 +1,45 @@
-.order_container{
-    margin: 2rem 1rem;
-    padding: 1rem;
-    border: 2px solid black;
-    height: 10rem;
+#pending_order_container{
+    padding: 2rem;
+    margin: 2rem 2rem;
     display: flex;
-}
-
-.order_no{
-    width: 3rem;
-    display: flex;
-    align-items: center;
-}
-
-.order_details{
-    margin: 0 1rem;
-    width:inherit;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-}
-.order_content{
-    max-height: auto;
-    display: flex;
-    overflow: scroll;
-    -ms-overflow-style: none;
-}
-.order_content::-webkit-scrollbar{
-    width: 0 !important
-}
-
-.collected_status{
-    width: 10rem;
-    display: flex;
-    align-items: center;
-}
-.collected_status{
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    text-align:start;
+    align-items: center;
+    border: 2px solid black;
+    height: 80vh;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
+    overflow: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+#pending_order_container::-webkit-scrollbar {
+    display: none;
+  }
+/* #main{
+    padding: 2rem;
+    margin-top: 2rem;
+} */
+
+.card {
+    border: none
+    }
+    .logo {
+    background-color: #eeeeeea8
+    }
+    .totals tr td {
+    font-size: 13px
+    }
+    .footer {
+    background-color: #eeeeeea8
+    }
+    .footer span {
+    font-size: 12px
+    }
+    .product-qty span {
+    font-size: 12px;
+    color: #dedbdb
+    }
+
+.container{
+    margin: auto 0 !important;
 }

@@ -9,69 +9,86 @@
     <link href="/assets/common/common.css" rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
     <title>Document</title>
 </head>
 
 <body>
-    <h1>profile</h1>
-    <div id="main">
-        <div id="img_container" class="label">
-        <img id="img_preview">
-        <span class="material-symbols-outlined label_icon" id="icon_edit">
-            drive_file_rename_outline
-        </span><br>
-        <form id="icon_form" class="">
-            <input id="icon_input" name="icon" type="file" accept="image/*">
-            <button id="icon_submit" type="button">
-                Submit
-            </button>
-            <input id="icon_reset" type="reset" >
-            <button id="icon_cancel" type="button">
-                Cancel
-            </button>
-        </form>
-        </div>
-        <div id="user_calorie_container" class="details details_calorie">
-            <h3>Calroies</h3>
-            <div id="user_calorie">
+
+    <div class="container-x test2">
+        <div class="leftbox">
+            <div class="nav">
+                <a id="profile" class="active"><i class="fa fa-user"></i></a>
+                <a id="payment"><i class="fa fa-credit-card"></i></a>
+                <a id="subscription"><i class="fa fa-tv"></i></a>
+                <a id="privacy"><i class="fa fa-tasks"></i></a>
             </div>
         </div>
-
-        <div id="table_arrange">
-            <div id="account_label" class="label label_account">
-                <div>Account Details</div>
-                <span class="material-symbols-outlined label_icon" id="account_edit">
+        <div class="rightbox">
+            <div id="img_container" class="profile">
+                <h1>Payment Info</h1>
+                <img id="img_preview">
+                <span class="material-symbols-outlined label_icon" id="icon_edit">
                     drive_file_rename_outline
-                </span>
-            </div>
-            <div id="account_container" class="details details_account">
+                </span><br>
+                <form id="icon_form" class="">
+                    <input id="icon_input" name="icon" type="file" accept="image/*">
+                    <button id="icon_submit" type="button">
+                        Submit
+                    </button>
+                    <input id="icon_reset" type="reset">
+                    <button id="icon_cancel" type="button">
+                        Cancel
+                    </button>
+                </form>
+                <div id="user_calorie_container" class="details details_calorie">
+                    <h3>Calroies</h3>
+                    <div id="user_calorie">
+                    </div>
+                </div>
             </div>
 
-            <div id="personal_label" class="label label_personal">
-                <div>Personal Details</div>
-                <span class="material-symbols-outlined label_icon" id="personal_edit">
-                    drive_file_rename_outline
-                </span>
-            </div>
-            <div id="personal_detail_container" class="details details_personal">
+            <div class="payment noshow">
+                <h1>Payment Info</h1>
+                <div id="account_label" class="label label_account">
+                    <div>Account Details</div>
+                    <span class="material-symbols-outlined label_icon" id="account_edit">
+                        drive_file_rename_outline
+                    </span>
+                </div>
+                <div id="account_container" class="details details_account">
+                </div>
             </div>
 
-
-            <div id="body_label" class="label label_body">
-                <div>Body Details</div>
-                <span class="material-symbols-outlined label_icon" id="body_edit">
-                    drive_file_rename_outline
-                </span>
+            <div class="subscription noshow">
+                <h1>Your Subscription</h1>
+                <div id="personal_label" class="label label_personal">
+                    <div>Personal Details</div>
+                    <span class="material-symbols-outlined label_icon" id="personal_edit">
+                        drive_file_rename_outline
+                    </span>
+                </div>
+                <div id="personal_detail_container" class="details details_personal">
+                </div>
             </div>
-            <div id="body_container" class="details details_body">
+
+            <div class="privacy noshow">
+                <h1>Privacy Settings</h1>
+                <div id="body_label" class="label label_body">
+                    <div>Body Details</div>
+                    <span class="material-symbols-outlined label_icon" id="body_edit">
+                        drive_file_rename_outline
+                    </span>
+                </div>
+                <div id="body_container" class="details details_body">
+                </div>
             </div>
 
         </div>
     </div>
 
-
     <div id="hamburger"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/assets/common/common.js"></script>
     <script src="/assets/profile/profile.js"></script>
 </body>

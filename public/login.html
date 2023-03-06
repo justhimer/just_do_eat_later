@@ -13,8 +13,139 @@
 </head>
 
 <body>
-    <a href="/">home</a><br>
-    <form id="login">
+
+    <div id="login_box">
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form id="signup-form">
+                    
+                        <h1>Create Account</h1>
+                        <a href="/connect/google" class="social-container">
+                            <div class="google-btn">
+                                <div class="google-icon-wrapper">
+                                    <img class="google-icon"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                                </div>
+                                <p class="btn-text"><b>Sign in with google</b></p>
+                            </div>
+                        </a>
+                        <span>or use your email for registration</span><br>
+                        <button id="signup-register" type="button" class="shown">Register</button>
+                        <div class="space-allocater hidden">
+                        <h3>Profile Picture:</h3><br>
+                        <img id="img_preview" src=""><br>
+                        <input type="file" name="icon" id="signup_icon" accept="image/*">
+                        <input id="signup_first_name" name="first_name" type="text" placeholder="First Name">
+                        <input id="signup_last_name" name="last_name" type="text" placeholder="Last Name">
+                        <input id="signup_email" name="email" type="email" placeholder="Email">
+                        <input id="signup_password" name="password" type="text" placeholder="Password">
+                        <input id="signup_confirm" name="confirm" type="text" placeholder="Confirm Password">
+                        <div class="supp-info">
+                            <p>Date of Birth:</p>
+                            <input type="date" name="date_of_birth" id="signup_date_of_birth">
+                        </div>
+                        <div class="supp-info">
+                            <p>Gender:</p>
+                            <div class="gender-box">
+                                <label for="gender_male">Male</label><input type="radio" id="gender_male" name="gender" value="Male">
+                                <label
+                                    for="gender_female">Female</label><input type="radio" id="gender_female" name="gender" value="Female">
+                            </div>
+                        </div>
+                        <div class="supp-info">
+                            <p>Height:</p>
+                            <input type="number" id="signup_height" name="height">
+                        </div>
+                        <div class="supp-info">
+                            <p>Weight:</p>
+                            <input type="number" id="signup_weight" name="weight">
+                        </div><br>
+                        <button type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form id="login-form">
+                        <h1>Sign in</h1>
+                        <a href="/connect/google" class="social-container">
+                            <div class="google-btn">
+                                <div class="google-icon-wrapper">
+                                    <img class="google-icon"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                                </div>
+                                <p class="btn-text"><b>Sign in with google</b></p>
+                            </div>
+                        </a>
+                        <span>or use your account</span><br>
+                        <div class="space-allocater">
+                        <input type="email" name="email" placeholder="Email" />
+                        <input type="password" name="password" placeholder="Password" /><br><br>
+                        <button type="submit">Sign In</button>
+                    </div>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your personal info</p>
+                        <button class="ghost" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Enter your personal details and start journey with us</p>
+                        <button class="ghost" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="continue_box">
+        <div class="container" id="container">
+            <div class="form-container sign-in-container">
+                <form id="continue">
+                    <div class="space-allocater">
+                    <div class="supp-info">
+                        <p>Date of Birth:</p>
+                        <input type="date" name="date_of_birth" id="continue_date_of_birth">
+                    </div>
+                    <div class="supp-info">
+                        <p>Gender:</p>
+                        <div class="gender-box">
+                            <label for="gender_male">Male</label><input type="radio" id="continue_gender_male" name="continue_gender" value="Male">
+                            <label
+                                for="gender_female">Female</label><input type="radio" id="continue_gender_female" name="continue_gender" value="Female">
+                        </div>
+                    </div>
+                    <div class="supp-info">
+                        <p>Height:</p>
+                        <input type="number" id="continue_height" name="height">
+                    </div>
+                    <div class="supp-info">
+                        <p>Weight:</p>
+                        <input type="number" id="continue_weight" name="weight">
+                    </div><br>
+                    <button type="submit">Complete Registration</button>
+                </div>
+            </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-right">
+                        <h1>Complete Registration</h1>
+                        <p>We need a few more details to get your account set up!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- <form id="login">
         <fieldset>
             <legend>login</legend>
             email: <input type="email" id="login_email" name="email"><br>
@@ -64,7 +195,7 @@
             weight: <input type="number" id="continue_weight" name="weight"><br>
             <input type="submit" value="Submit">
         </fieldset>
-    </form>
+    </form>  -->
 
     <div id="hamburger"></div>
     <script src="/assets/common/common.js"></script>

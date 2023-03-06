@@ -17,7 +17,7 @@ import { ExerciseController } from './controllers/exerciseController';
 import { ExerciseService } from './services/exerciseService';
 import { chooseexerciseRoutes } from './routes/exerciseRoutes';
 import * as schedule from 'node-schedule';
-import { testScheduleJob, testTime } from './util/scheduler';
+import { dailyPointDistribution, emitTime } from './util/scheduler';
 /* #region session */
 /* #endregion */
 
@@ -96,7 +96,7 @@ app.use((req, res) => {
 })
 /* #endregion */
 
-// const job = new schedule.scheduleJob(testTime,testScheduleJob())
+const job =  schedule.scheduleJob(emitTime,dailyPointDistribution)
 
 /* #region start server */
 server.listen(PORT, () => {

@@ -1,129 +1,26 @@
-const complete = document.querySelector('#complete_Exercise'),
-    food1 = document.querySelector('#add_food_1'),
-    food2 = document.querySelector('#add_food_2'),
-    removeUnit = document.querySelector('#remove_unit'),
-    removeFood = document.querySelector('#remove_food'),
-    deleteBasket = document.querySelector('#delete'),
-    itemCount = document.querySelector('#item_count'),
-    totalCount = document.querySelector('#total_count'),
-    confirmBasket = document.querySelector('#confirm'),
-    previewBasket = document.querySelector('#preview_basket')
-    body = document.querySelector('#test')
+var windowWidth = window.innerWidth;
 
+var horLength = document.querySelector(".element-wrapper").scrollWidth;
+var horLength2 = document.querySelector(".element-wrapper2").scrollWidth;
 
-    let totalCalories;
-    let setData = async function insideBasket(){
-        totalCalories = 0
-        resData = {}
-        let res = await fetch('/shop/orderPreview')
+var distFromTop = document.querySelector(".horizontal-section").offsetTop;
+var distFromTop2 = document.querySelector(".horizontal-section2").offsetTop;
 
-        let result = await res.json()
-        console.log(result)
-        result.data.forEach((element)=>{
-           totalCalories += element.calories
-        })
-    }
-setData()
-body.addEventListener('click',async (event)=>{
-    if(event.target == complete){
-        resData = {exercise_id:3,
-        repetitions:20}
-        let res = await fetch('/exercise/completeExercise',{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },body: JSON.stringify(resData)
-        })
+var scrollDistance = distFromTop + horLength - windowWidth;
+var scrollDistance2 = distFromTop2 + horLength2 - windowWidth;
 
-        let result = await res.json()
-        console.log(result)
-        
-    }else if (event.target == food1){
-        resData = {food_details_id:1,
-        quantity:1}
-        let res = await fetch('/shop/addFood',{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },body:JSON.stringify(resData)
-        })
+document.querySelector(".horizontal-section").style.height = horLength + "px";
 
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == food2){
-        resData = {food_details_id:4,
-            quantity:1}
-            let res = await fetch('/shop/addFood',{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },body:JSON.stringify(resData)
-            })
+document.querySelector(".horizontal-section2").style.height = horLength2 + "px";
 
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == removeUnit){
-        resData = {food_details_id:4,
-        quantity:2}
-        let res = await fetch('/shop/removeQuantity',{
-            method:"post",
-            headers:{
-                "Content-Type":"application/json"
-            },body:JSON.stringify(resData)
-        })
-
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == removeFood){
-        resData = {food_details_id:1}
-        let res = await fetch('/shop/removeFood',{
-            method:"post",
-            headers:{
-                "Content-Type":"application/json"
-            },body:JSON.stringify(resData)
-        })
-
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == deleteBasket){
-        resData = {}
-        let res = await fetch('/shop/deleteBasket')
-
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == itemCount){
-        resData = {food_details_id:1}
-        let res = await fetch('/shop/itemCount',{
-            method:"post",
-            headers:{
-                "Content-Type":"application/json"
-            },body:JSON.stringify(resData)
-        })
-
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == totalCount){
-        resData = {}
-        let res = await fetch('/shop/totalCount')
-
-        let result = await res.json()
-        console.log(result)
-    }else if (event.target == previewBasket){
-        setData()
-
-    }else if (event.target == confirmBasket){
-        resData = {location_id : 1,
-            total_calories:totalCalories
-        }
-        let res = await fetch('/shop/confirmOrder',{
-            method:"post",
-            headers:{
-                "Content-Type":"application/json"
-            },body:JSON.stringify(resData)
-        })
-
-        let result = await res.json()
-        console.log(result)
-    }
-})
-
+window.onscroll = function(){
+  var scrollTop = window.pageYOffset;
+  
+  if (scrollTop >= distFromTop && scrollTop <= scrollDistance) {
+    document.querySelector(".element-wrapper").style.transform = "translateX(-"+(scrollTop - distFromTop)+"px)";
+  }
+  
+  if (scrollTop >= distFromTop2 && scrollTop <= scrollDistance2) {
+    document.querySelector(".element-wrapper2").style.transform = "translateX(-"+(scrollTop - distFromTop2)+"px)";
+  }
+}
