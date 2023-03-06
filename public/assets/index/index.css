@@ -44,9 +44,9 @@ section.gsap:not(#sectionPin) {
   line-height: 1;
   font-weight: 800;
   margin-bottom: 1rem;
-  position: absolute;
-  top: 10vw;
-  left: 10vw;
+  /* position: absolute; */
+  /* top: 10vw; */
+  /* left: 10vw; */
   z-index: 4;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -100,4 +100,17 @@ section.gsap:not(#sectionPin) {
   display: flex;
   justify-content: center;
   flex-direction: row;
+}
+.gsap_img{
+  position: relative;
+}
+.gsap_img h1{
+  padding: 1rem;
+  position: absolute;
+  bottom: -4rem;
+  right: -8rem;
+  color: #e74c3c;
+  height: auto;
+  max-width: 35vw;
+  width: fit-content;
 }
