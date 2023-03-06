@@ -1,26 +1,57 @@
-var windowWidth = window.innerWidth;
+gsap.registerPlugin(ScrollTrigger);
 
-var horLength = document.querySelector(".element-wrapper").scrollWidth;
-var horLength2 = document.querySelector(".element-wrapper2").scrollWidth;
+const pageContainer = document.querySelector(".container");
 
-var distFromTop = document.querySelector(".horizontal-section").offsetTop;
-var distFromTop2 = document.querySelector(".horizontal-section2").offsetTop;
+/* SMOOTH SCROLL */
+const scroller = new LocomotiveScroll({
+  el: pageContainer,
+  smooth: true
+});
 
-var scrollDistance = distFromTop + horLength - windowWidth;
-var scrollDistance2 = distFromTop2 + horLength2 - windowWidth;
+scroller.on("scroll", ScrollTrigger.update);
 
-document.querySelector(".horizontal-section").style.height = horLength + "px";
+ScrollTrigger.scrollerProxy(pageContainer, {
+  scrollTop(value) {
+    return arguments.length
+      ? scroller.scrollTo(value, 0, 0)
+      : scroller.scroll.instance.scroll.y;
+  },
+  getBoundingClientRect() {
+    return {
+      left: 0,
+      top: 0,
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+  },
+  pinType: pageContainer.style.transform ? "transform" : "fixed"
+});
 
-document.querySelector(".horizontal-section2").style.height = horLength2 + "px";
+////////////////////////////////////
+////////////////////////////////////
+window.addEventListener("load", function () {
+  let pinBoxes = document.querySelectorAll(".pin-wrap > *");
+  let pinWrap = document.querySelector(".pin-wrap");
+  let pinWrapWidth = pinWrap.offsetWidth;
+  let horizontalScrollLength = pinWrapWidth - window.innerWidth;
 
-window.onscroll = function(){
-  var scrollTop = window.pageYOffset;
-  
-  if (scrollTop >= distFromTop && scrollTop <= scrollDistance) {
-    document.querySelector(".element-wrapper").style.transform = "translateX(-"+(scrollTop - distFromTop)+"px)";
-  }
-  
-  if (scrollTop >= distFromTop2 && scrollTop <= scrollDistance2) {
-    document.querySelector(".element-wrapper2").style.transform = "translateX(-"+(scrollTop - distFromTop2)+"px)";
-  }
-}
+  // Pinning and horizontal scrolling
+
+  gsap.to(".pin-wrap", {
+    scrollTrigger: {
+      scroller: pageContainer, //locomotive-scroll
+      scrub: true,
+      trigger: "#sectionPin",
+      pin: true,
+      // anticipatePin: 1,
+      start: "top top",
+      end: pinWrapWidth
+    },
+    x: -horizontalScrollLength,
+    ease: "none"
+  });
+
+  ScrollTrigger.addEventListener("refresh", () => scroller.update()); //locomotive-scroll
+
+  ScrollTrigger.refresh();
+});
