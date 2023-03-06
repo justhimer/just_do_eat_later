@@ -21,9 +21,6 @@ let locationData,
 
 
 async function main() {
-  await loadDetails()
-  initMap()
-  addToCart()
   async function main() {
     await loadDetails()
     initMap()
