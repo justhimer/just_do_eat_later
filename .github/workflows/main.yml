@@ -1,1 +1,49 @@
 
+# name: api.just_do_eat_later
+# on:
+#   push:
+#     branches:
+#       - "*"
+#   workflow_dispatch:
+
+# # env:
+# #   POSTGRES_DB: memo-wall-test
+# #   POSTGRES_USER: postgres
+# #   POSTGRES_PASSWORD: postgres
+# #   POSTGRES_HOST: postgres
+
+# jobs:
+#   # testing:
+#   #   runs-on: ubuntu-latest
+#   #   container: node:latest
+#   #   services:
+#   #     postgres:
+#   #       image: postgres
+#   #       env:
+#   #         POSTGRES_DB: ${{env.POSTGRES_DB}}
+#   #         POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+#   #       ports:
+#   #         - 5432:5432
+#   #   steps:
+#   #     - uses: actions/checkout@v3
+#   #     - run: |
+#   #         yarn install 
+#   #         yarn knex migrate:latest --env test
+#   #         yarn jest
+#   deploy:
+#     runs-on: ubuntu-latest
+#     # needs: testing
+#     steps:
+#       - name: ssh to pull latest version
+#         uses: appleboy/ssh-action@master
+#         with:
+#           script: |
+#             cd BAD009-Example
+#             git pull origin main
+#             yarn install
+#             yarn knex migrate:latest --env production
+#             forever restart -c 'yarn start'
+#           host: deploy.tecky.hk
+#           username: ubuntu
+#           port: 22
+#           key: ${{secrets.JDEL_SSH_PRIVATE_KEY}}

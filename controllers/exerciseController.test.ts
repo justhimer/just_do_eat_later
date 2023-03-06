@@ -13,12 +13,12 @@ describe('ExerciseController', () => {
     let res: Response;
     let fakeExercise: any;  // interface to be provided
     let fakeCalories: any;  // interface to be provided
-    beforeEach(() => {
-        // Step 1: Prepare the data and mock  [Arrange]
 
+    beforeEach(() => {
         // fake data
         exerciseService = new ExerciseService({} as any);
         userService = new UserService({} as any);
+        exerciseController = new ExerciseController(exerciseService, userService);
         fakeExercise = {
             id: 1,
             name: "ex1",
@@ -46,8 +46,6 @@ describe('ExerciseController', () => {
         userService.calcCalories = jest.fn(
             async( id :number ) => {}
         );
-        exerciseController = new ExerciseController(exerciseService, userService);
-
     })
 
     it('get all exercises', async() => {

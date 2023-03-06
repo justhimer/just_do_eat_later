@@ -6,7 +6,8 @@
   "author": "Justin Cheng <justinhimercheng01@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev server.ts"
+    "dev": "ts-node-dev server.ts",
+    "start": "ts-node server.ts"
   },
   "devDependencies": {
     "@types/express-session": "^1.17.6",
