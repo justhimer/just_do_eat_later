@@ -5,7 +5,7 @@ const reviewContainer = document.querySelector('#review_container')
 const locationContainer = document.querySelector('#chosen_container')
 const allContent = document.querySelector('#main')
 const confirmBtn = document.querySelector('#confirm')
-const deleteBtn = document.querySelector('#delete')
+// const deleteBtn = document.querySelector('#delete')
 const deleteArr = document.querySelectorAll('.card__delete')
 const minusArr = document.querySelectorAll('.card__minus')
 const addArr = document.querySelectorAll('.card__add')
@@ -24,6 +24,7 @@ async function main() {
   await loadDetails()
   initMap()
   addToCart()
+  updateContainer()
   async function main() {
     await loadDetails()
     initMap()
@@ -141,37 +142,38 @@ async function main() {
 
   async function getBasket() {
     const res = await fetch('/shop/orderPreview')
-
+    console.log('res');
     let resData = await res.json()
     return resData
   }
 
   async function loadDetails() {
     let data = await getBasket()
+    console.log('data = ', data);
     let userOrders = data.data
+    console.log('userOrders = ', userOrders);
     locationData = data.location
     foodCost = 0
     reviewContainer.innerHTML = ``
 
-    await userOrders.forEach((element) => {
+    await userOrders.forEach((foods) => {
       reviewContainer.innerHTML += `
-      <article id="${element.food_id}" class="card">
+      <article id="${i}" class="card">
         <div class="card__delete" ><p>X</p></div>
-        <img class="card__image" src="/food_uploads/${element.image}" />
+        <img class="card__image" src="/food_uploads/${foods[id].meta.image}" />
         <div class="card__data">
           <div class="card__info">
-            <h2>${element.food_name}</h2>
-            <p>(${element.portion})</p>
-            <h2>x <div class="card_food_quantity">${element.quantity}</div></h2>
+            <h2>${foods[id].name}</h2>
+            <p>(${foods[id].portion})</p>
+            <h2>x <div class="card_food_quantity">${foods[id].quantity}</div></h2>
           </div>
           <div class="final_hold">
             <button type="button" class="card__minus">-</button>
-            <h3 class="card__price">${element.calories * element.quantity} Cal</h3>
+            <h3 class="card__price">${foods[id].calories * foods[id].quantity} Cal</h3>
             <button type="button" class="card__add">+</button>
           </div>
         </div>
-      </article>
-`
+      </article>`
       foodCost += element.calories * element.quantity
     })
 
@@ -274,38 +276,35 @@ async function main() {
   }
 }
 
-deleteBtn.addEventListener('click', async (event) => {
-  if (!foodCost || !locationChose) {
-    console.log("foodCost: ", foodCost)
-    console.log("locationChose: ", locationChose)
-    alert("Are you sure to delete itmes?")
-    return
-  }
+// deleteBtn.addEventListener('click', async (event) => {
+//   if (!foodCost || !locationChose) {
+//     console.log("foodCost: ", foodCost)
+//     console.log("locationChose: ", locationChose)
+//     alert("Are you sure to delete itmes?")
+//     return
+//   }
 
-  let resData = {
-    location_id: locationChose,
-    total_calories: foodCost
-  }
-  let res = await fetch('/shop/deleteBasket', {
-    method: "get",
-    headers: {
-      "Content-Type": "application/json"
-    }, body: JSON.stringify(resData)
-  })
+//   let resData = {
+//     location_id: locationChose,
+//     total_calories: foodCost
+//   }
+//   let res = await fetch('/shop/deleteBasket', {
+//     method: "get",
+//     headers: {
+//       "Content-Type": "application/json"
+//     }, body: JSON.stringify(resData)
+//   })
 
-  let result = await res.json()
-  if (res.ok) {
-    window.location.href = "/"
-  } else {
-    alert(result.message)
-  }
-})
-
-
-function foodListener() {
+//   let result = await res.json()
+//   if (res.ok) {
+//     window.location.href = "/"
+//   } else {
+//     alert(result.message)
+//   }
+// })
 
 
-}
+
 function foodListener() {
   const deleteArr = document.querySelectorAll('.card__delete')
   const minusArr = document.querySelectorAll('.card__minus')
