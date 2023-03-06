@@ -114,3 +114,19 @@ section.gsap:not(#sectionPin) {
   max-width: 35vw;
   width: fit-content;
 }
+
+.corner-box {
+  position: fixed;
+  z-index: 999;
+  top: 10px;
+  right: 10px;
+  height: 3rem;
+  width: 6.4rem;
+  background-color: #615c59;
+  color: #cfc1ac;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Righteous', sans-serif;
+  padding: 0.8rem 0;
+  font-weight: bold;
+}
