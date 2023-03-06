@@ -47,11 +47,19 @@ export class ExerciseService {
     // }
 
     async getOneExercise(exercise_id: number): Promise<any>{
-        let exercise = await this.knex()
-        .select('*')
-        .from('exercises')
-        .where('id',exercise_id)
-        .first();
+        let exercise = await this.knex.select(
+            'ex.id',
+            'ex.name',
+            'int.level',
+            'ex.calories',
+            'ex.details',
+            'ex.thumbnail',
+            'ex.sample_video'
+          )
+          .from('exercises as ex')
+          .join('intensities as int', 'ex.intensity_id', 'int.id')
+          .where('ex.id', exercise_id)
+          .first();
     
         return exercise;
     }
