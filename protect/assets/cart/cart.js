@@ -133,10 +133,10 @@ async function main() {
 
   }
 
-  async function getBasket() {
+  // async function getBasket() {
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }
+  //   localStorage.setItem('cart', JSON.stringify(cart));
+  // }
 
 
 
@@ -156,20 +156,20 @@ async function main() {
     foodCost = 0
     reviewContainer.innerHTML = ``
 
-    await userOrders.forEach((foods) => {
+    await userOrders.forEach((element) => {
       reviewContainer.innerHTML += `
-      <article id="${i}" class="card">
+      <article id="${element.food_id}" class="card">
         <div class="card__delete" ><p>X</p></div>
-        <img class="card__image" src="/food_uploads/${foods[id].meta.image}" />
+        <img class="card__image" src="/food_uploads/${element.image}" />
         <div class="card__data">
           <div class="card__info">
-            <h2>${foods[id].name}</h2>
-            <p>(${foods[id].portion})</p>
-            <h2>x <div class="card_food_quantity">${foods[id].quantity}</div></h2>
+            <h2>${element.food_name}</h2>
+            <p>(${element.portion})</p>
+            <h2>x <div class="card_food_quantity">${element.quantity}</div></h2>
           </div>
           <div class="final_hold">
             <button type="button" class="card__minus">-</button>
-            <h3 class="card__price">${foods[id].calories * foods[id].quantity} Cal</h3>
+            <h3 class="card__price">${element.calories * element.quantity} Cal</h3>
             <button type="button" class="card__add">+</button>
           </div>
         </div>
