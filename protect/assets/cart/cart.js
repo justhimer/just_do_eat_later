@@ -2,6 +2,7 @@ const reviewContainer = document.querySelector('#review_container')
 const locationContainer = document.querySelector('#chosen_container')
 const allContent = document.querySelector('#main')
 const confirmBtn = document.querySelector('#confirm')
+const deleteBtn = document.querySelector('#delete')
 
 let locationData,
   locationChose,
@@ -11,16 +12,17 @@ let locationData,
 async function main() {
   await loadDetails()
   initMap()
-
+  addToCart()
 
 }
 main()
 
 
 ///////////////////////////// 
-const getFoodData = document.querySelector('#foodname_1')
+const getFoodData = document.querySelector('.card')
 
-function addToCart(food_name) {
+async function addToCart(food_name) {
+
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
   let existingfood = cart.find(item => item.id === food.id);
@@ -40,6 +42,7 @@ function addToCart(food_name) {
 
 
   localStorage.setItem('cart', JSON.stringify(cart));
+
 }
 
 async function loadDetails() {
@@ -141,6 +144,33 @@ async function loadDetails() {
     }
     let res = await fetch('/shop/confirmOrder', {
       method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      }, body: JSON.stringify(resData)
+    })
+
+    let result = await res.json()
+    if (res.ok) {
+      window.location.href = "/"
+    } else {
+      alert(result.message)
+    }
+  })
+
+  deleteBtn.addEventListener('click', async (event) => {
+    if (!foodCost || !locationChose) {
+      console.log("foodCost: ", foodCost)
+      console.log("locationChose: ", locationChose)
+      alert("Are you sure to delete itmes?")
+      return
+    }
+
+    let resData = {
+      location_id: locationChose,
+      total_calories: foodCost
+    }
+    let res = await fetch('/shop/deleteBasket', {
+      method: "get",
       headers: {
         "Content-Type": "application/json"
       }, body: JSON.stringify(resData)

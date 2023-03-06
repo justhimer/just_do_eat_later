@@ -77,6 +77,8 @@ export class ShopController {
 
     increaseFoodQuantity = async (req: Request, res: Response) => {
         try {
+            console.log('here');
+
             let foodId = req.body.food_details_id;
             let foodQuantity = req.body.quantity;
             let checkItem = await this.shopService.getItemCount(req.session.user!.id, foodId)

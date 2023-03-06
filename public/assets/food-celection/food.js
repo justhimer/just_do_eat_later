@@ -1,123 +1,16 @@
+
 const foodlist = document.querySelector("#food-list");
 let foodElems = document.querySelectorAll(".card");
 let foods;
 
-// async function foodElemsaddEventListener() {
-//     foodElems.addEventListener('click', async (event) => {
-//         await Swal.fire({
-//             title: 'Meatballs-with-Spanakopita-Rice(Regular)',
-//             imageUrl: '/Meatballs-with-Spanakopita-Rice_1120x.jpeg',
-//             imageWidth: 300,
-//             imageHeight: 300,
-//             imageAlt: 'Meatballs-with-Spanakopita-Rice',
-//             showCloseButton: true,
-//             confirmButtonText: 'Large',
-//             showDenyButton: true,
-//             denyButtonText: `Add to cart`,
-//             denyButtonColor: '#3085d6',
-//         }).then((result) => {
-//             console.log({ result })
-//             if (result.isConfirmed) {
-//                 console.log({ result })
-
-//                 Swal.fire({
-//                     title: 'Large',
-//                     showCloseButton: true,
-//                     confirmButtonText: 'Add to cart',
-//                 })
-//             }
-//         })
-//     })
-
-// }
-
-
-
-// let foods = [
-
-//     {
-//         name: 'ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES',
-//         meta: {
-//             allergens: ['Gluten, Wheat, Sesame,Soy'],
-//             description: "A delectable classic with Asian Chicken Stir Fry & Hokkien Noodles!",
-//             image: "AsianChickenStirFryWorkoutMeals_1120x.jpg",
-//             ingredients: ['Water, Higher Welfare Chicken (18%), Hokkien Noodl…rn Starch, White Sesame Seeds, Salt, Black Pepper'],
-//             name: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES",
-//             preparation: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
-//             type: "ASIAN CHICKEN STIR FRY & HOKKIEN NOODLES",
-//             type_id: 22
-//         },
-//         portion: {
-//             regular: {
-//                 name: 'regular',
-//                 calories: 240,
-//                 food_id: 22
-//             }
-//         }
-
-//     }
-// ]
-
-
-// let dummyFood = {
-//     title: 'BEEF-MEX-LOADED(Regular)',
-//     description: 'Protein:32.44g,Energy:1692.98KJ,Calories:406.75cal,Fat Total:15.04g,Saturated Fat:6.85g,Carbohydrate:35.58g,Sugar:8.15g,Sodium:210.45mg,Fiber:4.95g',
-//     imgURL: '/BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.jpeg'
-// }
-
-// async function foodboad2addEventListener() {
-//     foodboad2.addEventListener('click', async (event) => {
-//         event.preventDefault()
-//         await Swal.fire({
-//             title: dummyFood.title,
-//             text: dummyFood.description,
-//             imageUrl: dummyFood.imgURL,
-//             imageWidth: 300,
-//             imageHeight: 300,
-//             imageAlt: dummyFood.title,
-//             showCloseButton: true,
-//             confirmButtonText: 'Large',
-//             showDenyButton: true,
-//             denyButtonText: `Add to cart`,
-//             denyButtonColor: '#3085d6',
-//         }).then(async (result) => {
-//             // isDenied = 'add to cart'
-//             // isConfirmed = 'large'
-//             const { isConfirmed, isDenied } = result
-//             if (isDenied) {
-//                 let res = await fetch('/cart', {
-//                     method: 'POST',
-//                     headers: {
-//                         "Content-Type": "application/json"
-//                     },
-//                     body: JSON.stringify(dummyFood)
-//                 })
-//                 if (res.ok) {
-//                     // let data = await res.json()
-//                     // console.log('data = ', data)
-//                     console.log('ok');
-//                 }
-//                 if (!res.ok) {
-//                     alert('not success')
-//                 }
-//             }
-//             if (isConfirmed) {
-//                 Swal.fire({
-//                     title: 'Large',
-//                     text: 'Protein:49.4g,Energy:2369.78KJ,Calories:570cal,Fat Total:22.71g,Saturated Fat:10.07g,Carbohydrate:42.03g,Sugar:9.94g,Sodium:264.7mg,Fiber:5.7g,',
-//                     showCloseButton: true,
-//                     confirmButtonText: 'Add to cart',
-//                 })
-//             }
-//         })
-//     })
-
-// }
-
-
-
-
-////////////////////////////////
+async function getStatus() {
+    const res = await fetch("/users/loginStatus");
+    if (res.ok) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 async function getFoodDetails(id) {
     const res = await fetch(`/shop/allFood`);
@@ -133,62 +26,12 @@ function activateTilt() {
     });
 }
 
-function activateClickOnFood() {
-
-    console.log(foodElems);
-    for (let foodElem of foodElems) {
-        foodElem.addEventListener("click", showFoodDetails);
-    }
-
-    async function showFoodDetails(event) {
-        const id = parseInt(event.currentTarget.id.split("-")[1]);
-        console.log('id = ', id);
-        console.log("test");
-        const name = foods[id].name;
-        console.log(name);
-        if (!foods[id].portion.Large) {
-            await Swal.fire({
-                title: `${name}`,
-                imageUrl: `/food_uploads/${foods[id].meta.image}`,
-                imageWidth: 300,
-                imageHeight: 300,
-                showCloseButton: true,
-                showDenyButton: true,
-                showConfirmButton: false,
-                denyButtonText: `Add to cart`,
-                denyButtonColor: '#3085d6',
-            })
-        } else {
-            await Swal.fire({
-                title: `${name}`,
-                imageUrl: `/food_uploads/${foods[id].meta.image}`,
-                imageWidth: 300,
-                imageHeight: 300,
-                showCloseButton: true,
-                confirmButtonText: 'Large',
-                showDenyButton: true,
-                denyButtonText: `Add to cart`,
-                denyButtonColor: '#3085d6',
-            }).then((result) => {
-                console.log({ result })
-                if (result.isConfirmed) {
-                    console.log({ result })
-
-                    Swal.fire({
-                        title: 'Large',
-                        showCloseButton: true,
-                        confirmButtonText: 'Add to cart',
-                    })
-                }
-            })
-        }
-
-    }
-}
-
 function init() {
     // query selectors
     loadFood();
+
+    const cornerElem = document.querySelector(".corner-box");
+    cornerElem.addEventListener("click", showCalories);
 
     async function loadFood() {
         const res = await fetch("/shop/allFood");
@@ -197,6 +40,7 @@ function init() {
         console.log("foods: ", foods)
         // refresh exercise-list
         showfoodPreview(foods);
+
 
         activateTilt();
         activateClickOnFood();
@@ -225,12 +69,12 @@ function init() {
             </div>
             <div class="card-stats card1">
                 <div class="stat right-border">
-                <div class="value">${foods[i].portion}</div>
-                <div class="type">Calories</div>
+                <div class="value">Allergens</div>
+                <div class="type">${foods[i].meta.allergens}</div>
                 </div>
                 <div class="stat left-border">
-                <div class="type">per</div>
-                <div class="value">serving</div>
+                    <div class="type">Click</div>
+                    <div class="value">HERE</div>
                 </div>
             </div>
         </div>
@@ -245,7 +89,142 @@ function init() {
 
         }
 
+        function activateClickOnFood() {
+
+            console.log(foodElems);
+            for (let foodElem of foodElems) {
+                foodElem.addEventListener("click", showFoodDetails);
+            }
+
+            function abc() {
+                console.log('hhihihihihoio');
+                const addfoodBtn = document.querySelector('.addtocart')
+
+                addfoodBtn.addEventListener('click', async (event) => {
+                    const id = parseInt(event.currentTarget.id.split('-')[1]);
+                    console.log('id = ', id);
+                    console.log('test')
+
+                    let res = await fetch('/shop/addFood', {
+                        method: "post",
+                        body: {
+                            food_details_id: id
+                        }
+                    })
+                    let result = await res.json()
+                    if (res.ok) {
+                        window.location.href = "/"
+                    } else {
+                        alert(result.message)
+                    }
+
+                    function addToCart() {
+
+
+                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                        let existingfood = cart.find(item => item.id === foods[id]);
+                        if (existingfood) {
+                            existingfood.quantity += 1;
+                        } else {
+
+                            cart.push({
+                                id: foods[id],
+                                name: foods[id].meta.name,
+                                calories: foods[id].portion.calories,
+                                quantity: 1,
+                            });
+                        }
+
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        alert("商品已添加到購物車！");
+
+                    }
+                    addToCart();
+                })
+            }
+
+
+
+            async function showFoodDetails(event) {
+                const id = parseInt(event.currentTarget.id.split("-")[1]);
+                console.log('id = ', id);
+                console.log("test");
+                const name = foods[id].name;
+                console.log('name= ', name);
+                if (!foods[id].portion.Large) {
+                    await Swal.fire({
+                        title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${name}</h3>`,
+                        html: `<image width="300" height="300" src="/food_uploads/${foods[id].meta.image}"></image>
+                        <button  class="addtocart" id="addtocart-${id}" value="addtocart">Add to cart</button>
+                        `,
+                        background: "#3b3836",
+                        confirmButtonColor: "#ffaa33",
+                    }).then(abc())
+                } else {
+                    await Swal.fire({
+                        title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${name}</h3>`,
+                        html: `<image width="300" height="300" src="/food_uploads/${foods[id].meta.image}"></image>
+                        <button class="addtocart" id="addtocart-${id}" value="addtocart">Add to cart</button>
+                        `,
+
+
+                        confirmButtonText: `<div style="color: #3b3836; font-family: sans-serif; font-weight: bold;">Large</div>`,
+                        background: "#3b3836",
+                        confirmButtonColor: "#ffaa33",
+                    }).then((result) => {
+                        console.log({ result })
+                        if (result.isConfirmed) {
+                            console.log({ result })
+
+                            Swal.fire({
+                                title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${name}</h3>`,
+                                showCloseButton: true,
+                                confirmButtonText: 'Add to cart',
+                                confirmButtonColor: "#ffaa33",
+
+                            }).then(abc())
+                        }
+                    }).then(abc())
+                }
+            }
+        }
+
+    }
+
+
+
+
+    async function showCalories() {
+        const isLoggedIn = await getStatus();
+        if (isLoggedIn) {
+            const res = await fetch("/users/calories");
+            const result = await res.json();
+            const calories = result.calories;
+            Notiflix.Notify.info(`Remaining ${calories} calories`, {
+                width: "18rem",
+                fontSize: "1rem",
+                clickToClose: true,
+                info: {
+                    background: "#615c59",
+                    textColor: "#cfc1ac",
+                    notiflixIconColor: "#cfc1ac",
+                },
+            });
+        } else {
+            Notiflix.Notify.warning("Please Login", {
+                width: "15rem",
+                fontSize: "1rem",
+                clickToClose: true,
+                warning: {
+                    background: "#615c59",
+                    textColor: "#cfc1ac",
+                    notiflixIconColor: "#cfc1ac",
+                },
+            });
+        }
     }
 
 }
 init();
+///////////////////////////// 
+
