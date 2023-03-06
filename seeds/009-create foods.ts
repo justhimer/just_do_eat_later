@@ -39,9 +39,9 @@ export async function seed(knex: Knex): Promise<void> {
 
     await knex("foods").insert([
         {
-            name: "MEATBALLS WITH SPANAKOPITA RICE",
+            name: "MEATBALLS  RICE",
             image: "Meatballs-with-Spanakopita-Rice_1120x.webp",
-            description: "Prized for its high nutritional value, our Meatballs, and Spanakopita Rice dish is an excellent food source, low in fat and packed with vitamins and minerals and a guaranteed source of Vitamin E, B and Potassium boosts your well-being and energy level.",
+            description: "Our Meatballs and Spanakopita Rice dish is a highly nutritious, low-fat source of Vitamin E, B, and Potassium that boosts energy and well-being.",
             ingredients: { ingredients: "Spanakopita rice (44.1%), Basmati Rice (99.9%), Curly Kale (24%), Olive Oil (3.4%), Beef Meatballs (44.1%), Tomato and Basil Sauce (11.8%), Carrots (5.5%), Onions (4.4%), Olive Oil (2.6%), Basil (0.66%), Salt (0.22%), Dried basil (0.09%), White pepper (0.04%)." },
             allergens: { allergens: "null" },
             preparation: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
@@ -50,7 +50,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "BEEF MEX LOADED & SWEET POTATO",
             image: "BEEF-MEX-LOADED-_-SWEET-POTATO_1120x.webp",
-            description: "Experience our tantalising and aromatic Mexican beef loaded with enticing sweet potato packed with wholesome and additive-free ingredients.  This mouthwatering, natural, and flavoursome meal is loaded with pure fiber, vitamins, and minerals guaranteed to boost your body function and immune system. ",
+            description: "Enjoy our natural and flavorful Mexican beef with sweet potato - a wholesome meal that boosts your immune system and body function.",
             ingredients: { ingredients: "Sweet Potato (55%), Chilli Con Carne (41.7%), Carrots (5.9%), Diced Tomatoes (5.9%), Red Chilli Peppers (5.9%), Kidney Beans (5.9%), Onions (0.88%), Lemon Juice (0.59%), Ground Cinnamon (0.29%), Garlic (0.29%), Cumin Seeds (0.29%), Chilli Powder (0.29%), Mozzarella Cheese (3.3%), Salt, Non-animal Rennet." },
             allergens: { allergens: "Dairy" },
             preparation: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
@@ -59,7 +59,7 @@ export async function seed(knex: Knex): Promise<void> {
         {
             name: "CREAMY CHICKEN KORMA",
             image: "Creamy-Chicken-Korma_1120x.webp",
-            description: "Boost and turbocharge your digestive health with this rich, slow-cooked, and creamy Korma dish which is guaranteed to improve both your digestive health and brain function. Wise men know that Curry is not only great for your heart but also for the reduction of blood pressure by lowering blood sugar levels with the use of centuries-old herbs and spices.",
+            description: "Improve your digestive health and brain function with our slow-cooked Korma dish, rich in ancient herbs and spices that can lower blood sugar and blood pressure levels.",
             ingredients: { ingredients: "Chicken (41.5%), Coconut Milk Canned (33.2%), Peas (10.4%), Broccoli (6.5%), Coriander Seeds (1.2%), Onions (1.1%), Ginger Paste (1%), Chaat Masala Spice Blend (0.79%), Garlic (0.62%), Turmeric (0.46%)." },
             allergens: { allergens: "null" },
             preparation: "From Fresh: Remove cardboard sleeve; Microwave for 1 ½ - 2 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY!|| From Frozen: Remove cardboard sleeve; Microwave for 3 - 5 mins ;Let the meal stand for 30 / 40 seconds ;Remove the film and ENJOY! ",
@@ -103,7 +103,7 @@ export async function seed(knex: Knex): Promise<void> {
         },
         {
             name: "DELUXE CHICKEN & QUINOA BROWN RICE",
-            image: "Chicken Breast with Quinoa brown rice.",
+            image: "DeluxeChickenWorkoutMeals_1120x.jpg",
             description: "Chicken Breast with Quinoa brown rice.",
             ingredients: { ingredients: "Chicken Breast36%, Vegetable Quinoa Brown Rice 36%, Deluxe Sauce (Onion Brown, Mushroom, Thickened Cream, Butter unsalted, Parsley, Salt, Capsicum red, Chili, Oregano, Vegeta )27%" },
             allergens: { allergens: "Dairy" },
