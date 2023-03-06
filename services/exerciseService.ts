@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import { exerciseDetails } from '../util/interfaces'
+import { ExerciseDetails } from '../util/interfaces'
 
 export class ExerciseService {
 
@@ -46,7 +46,7 @@ export class ExerciseService {
     //     return allTypes
     // }
 
-    async getExercise(exercise_id:number): Promise<any>{
+    async getOneExercise(exercise_id: number): Promise<any>{
         let exercise = await this.knex()
         .select('*')
         .from('exercises')

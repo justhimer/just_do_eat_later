@@ -1,5 +1,5 @@
 import type {Knex} from 'knex'
-import { transactionDetails } from '../util/interfaces';
+import { TransactionDetails } from '../util/interfaces';
 
 export class ShopService {
 
@@ -95,7 +95,7 @@ export class ShopService {
         return totalCount
     }
 
-    async getAll(id:number): Promise<transactionDetails[]>{
+    async getAll(id:number): Promise<TransactionDetails[]>{
         let allTransaction = (await this.knex.raw(`
         select shopping_cart.id as id , shopping_cart.food_detail_id as food_id , foods."name"  as food_name , shopping_cart.quantity as quantity , food_details.portion as portion, foods.image as image, foods.description as description, food_details.calories as calories
         from shopping_cart 

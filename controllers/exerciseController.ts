@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { ExerciseService } from "../services/exerciseService";
 import { UserService } from "../services/userService";
-import { knex } from "../util/db";
-
 
 
 export class ExerciseController {
@@ -41,7 +39,7 @@ export class ExerciseController {
     getOneExercise =async (req:Request, res:Response) => {
         try {
             let exercise_id = Number(req.params.exercise_id)
-            let exercise = await this.exerciseService.getExercise(exercise_id)
+            let exercise = await this.exerciseService.getOneExercise(exercise_id)
             res.status(200).json({
                 data: exercise,
                 message: "Get exercise success",
