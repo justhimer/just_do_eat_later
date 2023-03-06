@@ -6,9 +6,11 @@ const reviewContainer = document.querySelector('#review_container')
 const locationContainer = document.querySelector('#chosen_container')
 const allContent = document.querySelector('#main')
 const confirmBtn = document.querySelector('#confirm')
-const deleteArr = document.querySelectorAll('.card__delete')
-const minusArr = document.querySelectorAll('.card__minus')
-const addArr = document.querySelectorAll('.card__add')
+
+
+function wtf(){
+  console.log('clicked!')
+}
 
 let locationData,
   locationChose,
@@ -17,7 +19,8 @@ let locationData,
   async function main() {
     await loadDetails()
     initMap()
-    foodListener()
+  foodListener()
+    // console.log(deleteArr);
   }
   main()
 
@@ -119,6 +122,8 @@ function addToCart(food_name) {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+
+
 async function getBasket() {
     const res = await fetch('/shop/orderPreview')
 
@@ -131,17 +136,18 @@ async function getBasket() {
     let userOrders = data.data
     locationData = data.location
     foodCost = 0
+    reviewContainer.innerHTML = ``
 
     await userOrders.forEach((element) => {
       reviewContainer.innerHTML += `
       <article id="${element.food_id}" class="card">
-        <div class="card__delete"><p>X</p></div>
+        <div class="card__delete" ><p>X</p></div>
         <img class="card__image" src="/food_uploads/${element.image}" />
         <div class="card__data">
           <div class="card__info">
             <h2>${element.food_name}</h2>
             <p>(${element.portion})</p>
-            <h2>x ${element.quantity}</h2>
+            <h2>x <div class="card_food_quantity">${element.quantity}</div></h2>
           </div>
           <div class="final_hold">
             <button type="button" class="card__minus">-</button>
@@ -156,6 +162,8 @@ async function getBasket() {
 
 
   }
+
+
 
 
   function initMap() {
@@ -245,6 +253,89 @@ async function getBasket() {
 
 
 function foodListener(){
-  
+  const deleteArr = document.querySelectorAll('.card__delete')
+  const minusArr = document.querySelectorAll('.card__minus')
+  const addArr = document.querySelectorAll('.card__add')
+
+  deleteArr.forEach((element)=>{
+    let food_id = element.parentElement.id
+    element.addEventListener('click',async ()=>{
+      let resData = JSON.stringify({
+        food_details_id:food_id,
+      })
+
+      const res = await fetch('/shop/removeFood',{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:resData
+      })
+
+      if (res.ok){
+        document.getElementById(`${food_id}`).remove()
+      }else{
+        alert("error")
+        return
+      }
+    })
+  })
+
+  minusArr.forEach((element)=>{
+    element.addEventListener('click',async ()=>{
+      let food_id = element.parentElement.parentElement.parentElement.id
+      let resData = JSON.stringify({
+        food_details_id:food_id,
+        quantity:1
+      })
+
+      const res = await fetch('/shop/removeQuantity',{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:resData
+      })
+
+      if (res.ok){
+        let oldQuantity = Number(document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML)
+        if(oldQuantity==1){
+          document.getElementById(`${food_id}`).remove()
+        }else{
+          document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML = oldQuantity-1
+        }
+        
+      }else{
+        alert("error")
+        return
+      }
+    })
+  })
+
+  addArr.forEach((element)=>{
+    element.addEventListener('click',async ()=>{
+      let food_id = element.parentElement.parentElement.parentElement.id
+      let resData = JSON.stringify({
+        food_details_id:food_id,
+        quantity:1
+      })
+
+      const res = await fetch('/shop/addFood',{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:resData
+      })
+
+      if (res.ok){
+        let oldQuantity = Number(document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML)
+        document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML = oldQuantity+1
+      }else{
+        alert("error")
+        return
+      }
+    })
+  })
   
 }
