@@ -267,3 +267,8 @@
   align-items: baseline;
   margin-top: auto;
 }
+
+body{
+  display: flex;
+  flex-direction: column;
+}

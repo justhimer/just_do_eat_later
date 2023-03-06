@@ -15,10 +15,6 @@
 #pending_order_container::-webkit-scrollbar {
     display: none;
   }
-/* #main{
-    padding: 2rem;
-    margin-top: 2rem;
-} */
 
 .card {
     border: none
@@ -42,4 +38,12 @@
 
 .container{
     margin: auto 0 !important;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
+#main{
+    display: inline;
+
 }
