@@ -98,9 +98,9 @@ function init() {
   // requirements in objact type, can be undefined
   async function loadExs(extraRequirements) {
     // loading screen
-    Notiflix.Loading.circle({
-      svgColor: "black",
-    });
+    // Notiflix.Loading.circle({
+    //   svgColor: "black",
+    // });
 
     // prepare fetch string
     let fetchString = "/exercise/all";
@@ -126,7 +126,8 @@ function init() {
     // refresh exercise-list
     await showExsPreview(exercises);
 
-    Notiflix.Loading.remove();
+    // remove loading screen
+    // Notiflix.Loading.remove();
     activateTilt();
     activateClickOnExs();
   }
