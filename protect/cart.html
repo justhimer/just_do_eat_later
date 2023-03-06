@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
   <link href="/assets/common/common.css" rel="stylesheet">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -12,12 +13,20 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
+=======
+  
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link href="/assets/cart/cart.css" rel="stylesheet">
+  <link href="/assets/common/common.css" rel="stylesheet">
+>>>>>>> ca2b8c0669610bb68cd520eb985bafafbbdd29da
   <title>Document</title>
 </head>
 
 <body>
 
   <div id="main">
+<<<<<<< HEAD
     <div class="accordion" id="confirmation_container">
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
@@ -89,16 +98,73 @@
 
     </div>
 
+=======
+
+    <!-- multistep form -->
+    <form id="multistepsform">
+      <!-- progressbar -->
+      <ul id="progressbar">
+        <li class="active">Food in Cart</li>
+        <li>Pick-up Location</li>
+        <li>Order Review</li>
+
+      </ul>
+      <!-- fieldsets -->
+      <fieldset >
+        <h2 class="fs-title">Food in Cart</h2>
+        <h3 class="fs-subtitle"></h3>
+        <div id="review_container" class="food_box"></div>
+
+        <input type="button" name="next" class="next action-button" value="Next" />
+      </fieldset>
+
+      <fieldset>
+        <h2 class="fs-title">Pick-up Location</h2>
+        <h3 class="fs-subtitle">Click on a marker to choose the pick-up location!</h3>
+        <div id="map"></div>
+        <div id="chosen_container">
+          <br>
+        </div>
+        
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <input type="button" name="next" class="next action-button" value="Next" />
+      </fieldset>
+      <fieldset>
+        <h2 class="fs-title">Order Review</h2>
+        <h3 class="fs-subtitle">Click "Confirm" to submit your order!</h3>
+        <div id="final_details">
+
+        </div>
+
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <button type="submit" id="confirm" class="submit action-button" value="Confirm">Confirm</button>
+      </fieldset>
+    </form>
+
+  </div>
+>>>>>>> ca2b8c0669610bb68cd520eb985bafafbbdd29da
 
     <div id="hamburger"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+
     <script src="/assets/common/common.js"></script>
     <script src="/assets/cart/cart.js" type="module"></script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"></script>
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAy_SQpiVPr38hMLZLWRqS6GHTaWtrdbm0&callback=initMap&v=weekly"
       defer></script>
+=======
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAy_SQpiVPr38hMLZLWRqS6GHTaWtrdbm0&callback=initMap"
+    defer></script>
+
+>>>>>>> ca2b8c0669610bb68cd520eb985bafafbbdd29da
 </body>
 
 </html>

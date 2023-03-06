@@ -1,12 +1,40 @@
-const loginForm = document.querySelector('#login')
-const signupForm = document.querySelector('#signup')
+const signUpButton = document.getElementById('signUp');
+const emailRegisterButton = document.querySelector('#signup-register')
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
+const signupFormContainer = document.querySelector('#signup-form .space-allocater')
+const loginForm = document.querySelector('#login-form')
+const signupForm = document.querySelector('#signup-form')
+const imgPreview = document.querySelector('#img_preview')
+const imgUpload = document.querySelector('#signup_icon')
 const continueForm = document.querySelector('#continue')
 
-window.onload = ()=>{
+
+emailRegisterButton.addEventListener('click',()=>{
+    emailRegisterButton.classList.add('hidden')
+    signupFormContainer.classList.remove('hidden')
+})
+
+imgUpload.addEventListener('change',()=>{
+    imgSwitch()
+})
+
+signUpButton.addEventListener('click', () => {
+	container.classList.add("right-panel-active");
+});
+
+signInButton.addEventListener('click', () => {
+	container.classList.remove("right-panel-active");
+});
+
+function main(){
+    checkStatus()
+    imgSwitch()
     login()
     signup()
     continueLogin()
 }
+main()
 
 function login(){
     loginForm.addEventListener('submit',async (event)=>{
@@ -77,7 +105,29 @@ function continueLogin(){
         })
 
         if (res.ok){
-            window.location.href = `localhost:8080/?message=Registration+Complete/`
+            window.location.href = `/?message=Registration+Complete/`
         }
     })
+}
+
+function imgSwitch(){
+    let [file] = imgUpload.files
+    if (file){
+        imgPreview.src = URL.createObjectURL(file)
+    }else{
+        imgPreview.src = `/user_upload/default_user_icon.png`;
+    }
+    
+}
+
+function checkStatus(){
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+      let value = params.registration; 
+      if (value == 'continue'){
+        document.getElementById('login_box').classList.add('hidden')
+      }else{
+        document.getElementById('continue_box').classList.add('hidden')
+      }
 }

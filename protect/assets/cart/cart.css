@@ -1,4 +1,267 @@
 #map {
-    width: inherit;
-    height: 60vh;
-  }
+  width: auto;
+  height: 60vh;
+}
+
+
+#multistepsform {
+  width: 80vw;
+  margin: 50px auto;
+  text-align: center;
+  position: relative;
+}
+#multistepsform fieldset {
+  background: white;
+  border: 0 none;
+  border-radius: 3px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+  padding: 20px 30px;
+  box-sizing: border-box;
+  width: 80%;
+  margin: 0 10%;
+  position: relative;
+}
+.food_box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+#multistepsform fieldset:not(:first-of-type) {
+  display: none;
+}
+#multistepsform input, #multistepsform textarea {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2c3e50;
+  font-size: 13px;
+}
+#multistepsform input:focus, #multistepsform textarea:focus {
+  border-color: #679b9b;
+  outline: none;
+  color: #637373;
+}
+#multistepsform .action-button {
+  width: 100px;
+  background: #ff9a76;
+  font-weight: bold;
+  color: #fff;
+  transition: 150ms;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px;
+}
+#multistepsform .action-button:hover, #multistepsform .action-button:focus {
+  box-shadow: 0 0 0 2px #f08a5d, 0 0 0 3px #ff9 76;
+  color: #fff;
+}
+#multistepsform .fs-title {
+  font-size: 15px;
+  text-transform: uppercase;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+#multistepsform .fs-subtitle {
+  font-weight: normal;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+}
+#multistepsform #progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  counter-reset: step;
+}
+#multistepsform #progressbar li {
+  list-style-type: none;
+  color: #679b9b;
+  text-transform: uppercase;
+  font-size: 9px;
+  width: 33.33%;
+  float: left;
+  position: relative;
+}
+#multistepsform #progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 20px;
+  line-height: 20px;
+  display: block;
+  font-size: 10px;
+  color: #fff;
+  background: #679b9b;
+  border-radius: 3px;
+  margin: 0 auto 5px auto;
+}
+#multistepsform #progressbar li:after {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background: #679b9b;
+  position: absolute;
+  left: -50%;
+  top: 9px;
+  z-index: -1;
+}
+#multistepsform #progressbar li:first-child:after {
+  content: none;
+}
+#multistepsform #progressbar li.active {
+  color: #ff9a76;
+}
+#multistepsform #progressbar li.active:before, #multistepsform #progressbar li.active:after {
+  background: #ff9a76;
+  color: white;
+}
+
+
+
+/* For the Food Cards */
+
+.card {
+  position: relative;
+  max-width: 15rem;
+  margin: 2rem 2rem;
+}
+.card__image {
+  position: absolute;
+  max-width: 130%;
+  right: 0;
+  margin: 0 auto;
+  /* top: -18%; */
+  z-index: 2;
+  transition: all 0.3s ease-out;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+  border-radius: 100%;
+}
+.card__data {
+  border-top-right-radius: 50%;
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: #ededed;
+  padding-top: calc(100% * 1.18);
+  transition: all 0.3s ease-out 0.1s;
+}
+.card__info {
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+.card__info h2 {
+  font-size: 14px;
+  font-weight: 800;
+}
+.card__info p {
+  font-size: 10px;
+  line-height: 14px;
+  color: #a2a2a2;
+}
+.card__action {
+  display: grid;
+  grid-template: 30px / 1fr 35px;
+}
+.card__price {
+  height: 30px;
+  padding: 0 10px 0 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+}
+.card__add {
+  overflow: hidden;
+  width: 35px;
+  height: 30px;
+  background-color: #222222;
+  border: none;
+  color: #fff;
+  border-top-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in;
+}
+.card__add:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+.card__add:active {
+  opacity: 1;
+  transform: scale(0.8);
+}
+
+.card__minus {
+  overflow: hidden;
+  width: 35px;
+  height: 30px;
+  background-color: #222222;
+  border: none;
+  color: #fff;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in;
+}
+.card__minus:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+.card__minus:active {
+  opacity: 1;
+  transform: scale(0.8);
+}
+
+.card__delete {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  overflow: hidden;
+  width: 35px;
+  height: 35px;
+  background-color: #222222;
+  border: none;
+  color: #fff;
+  border-radius: 100%;
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
+  padding: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card__delete:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+.card__delete:active {
+  opacity: 1;
+  transform: scale(0.8);
+}
+
+
+
+.card:hover .card__image {
+  transform: translateY(-5px);
+}
+.card:hover .card__data {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+.final_hold{
+  display: flex;
+  justify-content:space-between;
+  align-items: baseline;
+  margin-top: auto;
+}

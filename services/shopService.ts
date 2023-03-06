@@ -1,5 +1,5 @@
 import type {Knex} from 'knex'
-import { transactionDetails } from '../util/interfaces';
+import { TransactionDetails } from '../util/interfaces';
 
 export class ShopService {
 
@@ -95,7 +95,7 @@ export class ShopService {
         return totalCount
     }
 
-    async getAll(id:number): Promise<transactionDetails[]>{
+    async getAll(id:number): Promise<TransactionDetails[]>{
         let allTransaction = (await this.knex.raw(`
         select shopping_cart.id as id , shopping_cart.food_detail_id as food_id , foods."name"  as food_name , shopping_cart.quantity as quantity , food_details.portion as portion, foods.image as image, foods.description as description, food_details.calories as calories
         from shopping_cart 
@@ -177,7 +177,9 @@ export class ShopService {
         where user_id = ${user_id}
         order by transactions.created_at DESC
         `)).rows
-
+        if (orders.length < 1){
+            return {orders}
+        }
         let callArr:any = []
         orders.forEach((elem:any)=>{
             callArr.push(elem.id)
@@ -185,7 +187,7 @@ export class ShopService {
 
         console.log(orders)
         let food = (await this.knex.raw(`
-        select transaction_details.id as id, transaction_details.transaction_id as trans_id, food_details.portion as portion, foods."name" as "name", transaction_details.quantity 
+        select transaction_details.id as id, transaction_details.transaction_id as trans_id, food_details.portion as portion, food_details.calories as calories, foods."name" as "name", foods.image as image, transaction_details.quantity 
         from transaction_details
         inner join food_details
         on transaction_details.food_detail_id = food_details.id 

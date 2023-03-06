@@ -1,59 +1,143 @@
-#table_arrange{
-    padding: 1rem;
-    display: grid;
-    justify-items: center;
-    gap: 0.5rem 0.5rem;
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,900|Montserrat|Roboto');
+ body {
+	 background: linear-gradient(to right, #3fb6a8, #7ed386);
 }
-
-#account_label{
-grid-row: 1 / span 1;
-grid-column: 1/ span 2;
+ .container-x.test2 {
+	 background: #fff;
+	 width: 540px;
+	 height: 420px;
+	 margin: 0 auto;
+	 position: relative;
+	 margin-top: 10%;
+	 box-shadow: 2px 5px 20px rgba(119, 119, 119, .5);
 }
-#account_container{
-grid-row: 1/ span 1;
-grid-column: 3 / span 3;
+.test2 .logo {
+	 float: right;
+	 margin-right: 12px;
+	 margin-top: 12px;
+	 font-family: 'Nunito Sans', sans-serif;
+	 color: #3dbb3d;
+	 font-weight: 900;
+	 font-size: 1.5em;
+	 letter-spacing: 1px;
 }
-
-#personal_label{
-grid-row: 2 / span 1;
-grid-column: 1/ span 2;
+.test2 .CTA {
+	 width: 80px;
+	 height: 40px;
+	 right: -20px;
+	 bottom: 0;
+	 margin-bottom: 90px;
+	 position: absolute;
+	 z-index: 1;
+	 background: #7ed386;
+	 font-size: 1em;
+	 transform: rotate(-90deg);
+	 transition: all 0.5s ease-in-out;
+	 cursor: pointer;
 }
-#personal_detail_container{
-grid-row: 2 / span 1;
-grid-column: 3 / span 3;
+.test2 .CTA h1 {
+	 color: #fff;
+	 margin-top: 10px;
+	 margin-left: 9px;
 }
-
-#body_label{
-grid-row: 3 / span 1;
-grid-column: 1 / span 2;
+.test2 .CTA:hover {
+	 background: #3fb6a8;
+	 transform: scale(1.1);
 }
-#body_container{
-grid-row: 3 / span 1;
-grid-column: 3 / span 3;
+.test2 .leftbox {
+	 float: left;
+	 top: -5%;
+	 left: 5%;
+	 position: absolute;
+	 width: 15%;
+	 height: 110%;
+	 background: #7ed386;
+	 box-shadow: 3px 3px 10px rgba(119, 119, 119, .5);
 }
-#img_container{
-    width: fit-content;
+.test2 .nav a {
+	 list-style: none;
+	 padding: 35px;
+	 color: #fff;
+	 font-size: 1.1em;
+	 display: block;
+	 transition: all 0.3s ease-in-out;
 }
-#img_preview{
-    height: 7rem;
-    width: auto;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
+ .test2 .nav a:hover {
+	 color: #3fb6a8;
+	 transform: scale(1.2);
+	 cursor: pointer;
 }
-.label{
-    position: relative;
-    padding: 1rem;
+.test2 .nav a:first-child {
+	 margin-top: 7px;
 }
-
-.label_icon{
-    position: absolute;
-    top: -0.5rem; right: -1rem;
-    border-radius: 50%;
-    border: 2px solid black;
+ .active {
+	 color: #3fb6a8;
 }
-#icon_form{
-    display: none;
+ .rightbox {
+	 float: right;
+	 width: 60%;
+	 height: 100%;
 }
-#icon_form.shown{
-    display: inline-flex;
+.test2 .profile, .payment, .subscription, .privacy, .settings {
+	 transition: opacity 0.5s ease-in;
+	 position: absolute;
+	 width: 70%;
+}
+.test2 h1 {
+	 font-family: 'Montserrat', sans-serif;
+	 color: #7ed386;
+	 font-size: 1em;
+	 margin-top: 40px;
+	 margin-bottom: 35px;
+}
+.test2 h2 {
+	 color: #777;
+	 font-family: 'Roboto', sans-serif;
+	 width: 80%;
+	 text-transform: uppercase;
+	 font-size: 8px;
+	 letter-spacing: 1px;
+	 margin-left: 2px;
+}
+.test2 p {
+	 border-width: 1px;
+	 border-style: solid;
+	 border-image: linear-gradient(to right, #3fb6a8, rgba(126, 211, 134, .5)) 1 0%;
+	 border-top: 0;
+	 width: 80%;
+	 font-family: 'Montserrat', sans-serif;
+	 font-size: 0.7em;
+	 padding: 7px 0;
+	 color: #070707;
+}
+.test2 span {
+	 font-size: 0.5em;
+	 color: #777;
+}
+.test2 .btn {
+	 float: right;
+	 font-family: 'Roboto', sans-serif;
+	 text-transform: uppercase;
+	 font-size: 10px;
+	 border: none;
+	 color: #3fb6a8;
+}
+.test2 .btn:hover {
+	 text-decoration: underline;
+	 font-weight: 900;
+}
+.test2 input {
+	 border: 1px solid #ddd;
+	 font-family: 'Roboto', sans-serif;
+	 padding: 2px;
+	 margin: 0;
+}
+.test2 .privacy h2 {
+	 margin-top: 25px;
+}
+.test2 .settings h2 {
+	 margin-top: 25px;
+}
+.test2 .noshow {
+	 opacity: 0;
 }

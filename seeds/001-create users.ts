@@ -19,6 +19,7 @@ export async function seed(knex: Knex): Promise<void> {
             birth_date: "1987-06-24",
             height: 170,
             weight: 70,
+            subscribed:true
         },
         {
             first_name: "Ronaldo",
@@ -26,11 +27,12 @@ export async function seed(knex: Knex): Promise<void> {
             email: "ronaldo@gamil.com",
             password: await hashPassword("123"),
             icon: "clong.jpeg",
-            calories: 3000,
+            calories: 0,
             gender: "M",
             birth_date: "1985-02-05",
             height: 187,
             weight: 80,
+            subscribed:true
         },
         {
             first_name: "Neymar",
@@ -38,11 +40,12 @@ export async function seed(knex: Knex): Promise<void> {
             email: "neymar@gamil.com",
             password: await hashPassword("123"),
             icon: "neymaer.jpeg",
-            calories: 3000,
+            calories: 0,
             gender: "M",
             birth_date: "1992-02-05",
             height: 170,
             weight: 75,
+            subscribed:true
         }
     ])
 }
