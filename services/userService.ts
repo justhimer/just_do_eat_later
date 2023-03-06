@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import type { User, UserSignup, signupIcon } from '../util/interfaces';
+import type { User, UserSignup, SignupIcon } from '../util/interfaces';
 import { hashPassword } from "../util/hash";
 
 export class UserService {

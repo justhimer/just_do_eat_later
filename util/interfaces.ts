@@ -19,18 +19,18 @@ export interface UserSignup {
     weight: number
 }
 
-export interface signupIcon {
+export interface SignupIcon {
     icon?: string | null
 }
 
-export interface transactionDetails {
+export interface TransactionDetails {
     id: number,
     food_details: number,
     quantity: number
 
 }
 
-export interface exerciseDetails {
+export interface ExerciseDetails {
     id: number,
     repetitions: number,
     caloriseburn: number,
