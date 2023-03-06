@@ -106,7 +106,8 @@ function init() {
                     let res = await fetch('/shop/addFood', {
                         method: "post",
                         body: JSON.stringify({
-                            food_details_id: id
+                            food_details_id: id,
+                            quantity: 1
                         }),
                         headers: {
                             "Content-Type": "application/json"
