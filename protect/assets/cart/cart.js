@@ -25,12 +25,6 @@ async function main() {
   initMap()
   addToCart()
   updateContainer()
-  async function main() {
-    await loadDetails()
-    initMap()
-    foodListener()
-    // console.log(deleteArr);
-  }
   main()
 
 
