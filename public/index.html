@@ -7,78 +7,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  
-  <!-- sweetalert2 style -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.0/sweetalert2.css"
-    integrity="sha512-JzSVRb7c802/njMbV97pjo1wuJAE/6v9CvthGTDxiaZij/TFpPQmQPTcdXyUVucsvLtJBT6YwRb5LhVxX3pQHQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
-
-  <!-- notiflix -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-3.2.6.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css" rel="stylesheet">
   
   <!-- local css -->
   <link href="/assets/common/common.css" rel="stylesheet">
+  <link href="/assets/index/index.css" rel="stylesheet">
   <link href="./assets/exercises/iam.css" rel="stylesheet">
-  <link href="./assets/exercises/radio.css" rel="stylesheet">
-  <link href="./assets/exercises/exercise.css" rel="stylesheet">
 
-  <title>exercise</title>
+  <title>Homepage</title>
 </head>
 
 <body>
-  <header class="Iam">
+  <div class="container">
+    <section data-bgcolor="#bcb8ad" data-textcolor="#032f35" class="non_gsap">
+      <div class="header_just_do">
+        <header class="Iam">
+        <p>Just Do</p>
+        <b>
+          <div class="innerIam">
+            it<br />
+            it later ??<br /> 
+            eat later !!<br /> 
+            不能逃避。<br />
+            逃げちゃだめだ!!
+            </div>
+        </b>
+        
+      </header></div>
+      
 
-    <p>Just Do</p>
-    <b>
-      <div class="innerIam">
-        it<br />
-        it later ??<br /> 
-        eat later !!<br /> 
-        不能逃避。<br />
-        逃げちゃだめだ!!
-        </div>
-    </b>
-    
-  </header>
+    </section>
 
-  <div class="corner-box">My Calories</div>
+    <section id="sectionPin" class="gsap">
+      <div class="pin-wrap">
+        <h2>The ONE stop shop for all your weight plans<br><br>
+            Create an Account and earn points by exercising<br><br>
+            Spend points on our selection of active foods
+        </h2>
+        <div class="gsap_img">
+          <img src="/index/initial-fitness-consultation.jpg" alt="">
+          <h1>Plan Smart</h1>
+        </div>
+        <div class="gsap_img"><img src="/index/gym-training.jpg" alt="">
+          <h1>Work Hard</h1>
+        </div>
+        <div class="gsap_img"><img src="/index/meal-plan.jpg" alt="">
+          <h1>Spend Points</h1>
+        </div>
 
-  <div class="radio-container">
-    <div class="radio-buttons">
-      <svg class="filter" version="1.1">
-        <defs>
-          <filter id="gooeyness">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="gooey" />
-            <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
-      <div class="radios-boxes">
-        <div class="radios">
-          <input type="radio" name="radio" id="radio1" class="radio active" value="r">
-          <input type="radio" name="radio" id="radio2" class="radio" value="k">
-          <input type="radio" name="radio" id="radio3" class="radio" value="t">
-          <input type="radio" name="radio" id="radio4" class="radio" value="s">
-          <div class="ball pos0"></div>
-        </div>
-        <div class="labels">
-          <label for="radio1" class="label active">All</label>
-          <label for="radio2" class="label">High</label>
-          <label for="radio3" class="label">Mid</label>
-          <label for="radio4" class="label">Low</label>
-        </div>
       </div>
-    </div>
-  </div>
-
-
-  <!-- tilt cards -->
-  <script src="./assets/exercises/vanilla-tilt.min.js"></script>
+    </section>
   </div>
 
   <div id="hamburger"></div>
+
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.min.js"></script>
+
+
+  <script src="assets/index/index.js"></script>
   <script src="/assets/common/common.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.0/sweetalert2.min.js"
@@ -88,8 +76,6 @@
 
   <!-- notiflix -->
   <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-3.2.6.min.js"></script>
-
-  <script src="/assets/exercises/radio.js"></script>
 
 </body>
 
