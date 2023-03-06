@@ -37,7 +37,6 @@ function init() {
         const res = await fetch("/shop/allFood");
         const result = await res.json();
         foods = result.data;
-        console.log("foods: ", foods)
         // refresh exercise-list
         showfoodPreview(foods);
 
@@ -97,7 +96,6 @@ function init() {
             }
 
             function addfood() {
-                console.log('hhihihihihoio');
                 const addfoodBtn = document.querySelector('.addtocart')
 
                 addfoodBtn.addEventListener('click', async (event) => {
@@ -108,7 +106,8 @@ function init() {
                     let res = await fetch('/shop/addFood', {
                         method: "post",
                         body: JSON.stringify({
-                            food_details_id: id
+                            food_details_id: id,
+                            quantity: 1
                         }),
                         headers: {
                             "Content-Type": "application/json"
@@ -150,10 +149,7 @@ function init() {
 
             async function showFoodDetails(event) {
                 const id = parseInt(event.currentTarget.id.split("-")[1]);
-                console.log('id = ', id);
-                console.log("test");
                 const name = foods[id].name;
-                console.log('name= ', name);
                 if (!foods[id].portion.Large) {
                     await Swal.fire({
                         title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${name}</h3>`,

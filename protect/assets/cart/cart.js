@@ -121,14 +121,16 @@ function addToCart(food_name) {
 
 async function getBasket() {
     const res = await fetch('/shop/orderPreview')
-
+    console.log('res');
     let resData = await res.json()
     return resData
   }
 
   async function loadDetails() {
     let data = await getBasket()
+    console.log('data = ', data);
     let userOrders = data.data
+    console.log('userOrders = ', userOrders);
     locationData = data.location
     foodCost = 0
     reviewContainer.innerHTML = ``
@@ -150,8 +152,7 @@ async function getBasket() {
             <button type="button" class="card__add">+</button>
           </div>
         </div>
-      </article>
-`
+      </article>`
       foodCost += element.calories * element.quantity
     })
 

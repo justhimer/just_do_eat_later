@@ -5,7 +5,7 @@ import { knex } from "../util/db";
 import { formidableIconUpdate, formidableUserDetails } from "../util/formidable";
 import fetch from 'cross-fetch'
 import { hashPassword } from "../util/hash";
-import {format} from "fecha";
+import { format } from "fecha";
 
 
 export class UserController {
@@ -14,31 +14,32 @@ export class UserController {
 
     loginGoogle = async (req: Request, res: Response) => {
         try {
+            console.log('session = ', req.session);
             // add codes here
             const accessToken = req.session?.['grant'].response.access_token;
-            const fetchRes = await (await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{
-                method:"GET",
-                headers:{
-                    "Authorization":`Bearer ${accessToken}`
+            const fetchRes = await (await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
                 }
             })).json()
             let user = (await knex
                 .select('*')
                 .from('users')
-                .where('email','=',`${fetchRes.email}`))[0]
-            
-           if (!user){
-            //falsy
-            let userPassword = await hashPassword('google')
-            let user = (await knex
-                .insert({
-                    first_name:`${fetchRes.given_name}`,
-                    last_name:`${fetchRes.family_name}`,
-                    email:`${fetchRes.email}`,
-                    password:`${userPassword}`
-                })
-                .into("users")
-                .returning("*"))[0]
+                .where('email', '=', `${fetchRes.email}`))[0]
+
+            if (!user) {
+                //falsy
+                let userPassword = await hashPassword('google')
+                let user = (await knex
+                    .insert({
+                        first_name: `${fetchRes.given_name}`,
+                        last_name: `${fetchRes.family_name}`,
+                        email: `${fetchRes.email}`,
+                        password: `${userPassword}`
+                    })
+                    .into("users")
+                    .returning("*"))[0]
                 req.session.user = {
                     id: user.id,
                     email: user.email,
@@ -47,23 +48,23 @@ export class UserController {
                     password: user.password,
                     icon: user.icon
                 }
-            res.redirect('/login.html?registration=continue')
-            return
-           }else{
-            //have user
-            req.session.user = {
-                id: user.id,
-                email: user.email,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                password: user.password,
-                icon: user.icon
+                res.redirect('/login.html?registration=continue')
+                return
+            } else {
+                //have user
+                req.session.user = {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    password: user.password,
+                    icon: user.icon
+                }
+                res.redirect('/?message=Successfully+Logged+In')
+                return
             }
-            res.redirect('/?message=Successfully+Logged+In')
-            return
-           }
-            
-            
+
+
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -74,7 +75,7 @@ export class UserController {
 
     login = async (req: Request, res: Response) => {
         try {
-            
+
             // get username & password
             let { email, password } = req.body;
             if (!email || !password) {
@@ -105,6 +106,7 @@ export class UserController {
             delete foundUser.password;
             req.session.user = foundUser;
 
+
             // return to client
             res.status(200).json({ message: "Log-in success" });
 
@@ -130,10 +132,10 @@ export class UserController {
 
     signUp = async (req: Request, res: Response) => {
         try {
-            if (!req.session.user){
+            if (!req.session.user) {
                 let data = await formidableUserDetails(req)
                 const reqData = data.fields
-                let user = await this.userService.createUser(reqData,data.icon)
+                let user = await this.userService.createUser(reqData, data.icon)
                 req.session.user = {
                     id: user.id,
                     email: user.email,
@@ -142,11 +144,11 @@ export class UserController {
                     password: user.password,
                     icon: user.icon
                 }
-                res.status(200).json({message:"Logged in"})
-            }else{res.status(400).json({message:"Already logged in"})}
+                res.status(200).json({ message: "Logged in" })
+            } else { res.status(400).json({ message: "Already logged in" }) }
         } catch (error) {
             console.log(error);
-            
+
             res.status(500).json({
                 message: '[USR004] - Server error'
             });
@@ -183,36 +185,36 @@ export class UserController {
         }
     }
 
-    googleContinue = async (req:Request,res:Response) => {
-        try{
+    googleContinue = async (req: Request, res: Response) => {
+        try {
             let reqData = req.body;
-            
-            let user = await this.userService.complete(reqData,req.session.user!.id);
-            
-                req.session.user = {
-                    id: user.id,
-                    email: user.email,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    password: user.password,
-                    icon: user.icon
-                };
-                res.status(200).json({message:"Registration Complete"});
-        }catch(error){
+
+            let user = await this.userService.complete(reqData, req.session.user!.id);
+
+            req.session.user = {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                password: user.password,
+                icon: user.icon
+            };
+            res.status(200).json({ message: "Registration Complete" });
+        } catch (error) {
             res.status(500).json({
                 message: '[USR007] - Server error'
             });
         }
-        
+
     }
 
-    loginStatus = async (req:Request, res:Response) => {
+    loginStatus = async (req: Request, res: Response) => {
         try {
-            if (req.session.user){
-                res.status(200).json({login:true})
+            if (req.session.user) {
+                res.status(200).json({ login: true })
                 return
-            }else{
-                res.status(400).json({login:false})
+            } else {
+                res.status(400).json({ login: false })
                 return
             }
         } catch (error) {
@@ -220,14 +222,14 @@ export class UserController {
                 message: '[USR007] - Server error'
             });
         }
-        
+
     }
 
-    updateImg = async (req:Request, res:Response) => {
+    updateImg = async (req: Request, res: Response) => {
         try {
             let data = (await formidableIconUpdate(req)).icon;
-            await this.userService.changeImg(data,req.session.user!.id);
-            res.status(200).json({message:'success'});
+            await this.userService.changeImg(data, req.session.user!.id);
+            res.status(200).json({ message: 'success' });
         } catch (error) {
             res.status(500).json({
                 message: '[USR007] - Server error'
@@ -235,10 +237,10 @@ export class UserController {
         }
     }
 
-    updateAccount = async (req:Request, res:Response) => {
+    updateAccount = async (req: Request, res: Response) => {
         try {
-            await this.userService.changeAccount(req.body,req.session.user!.id)
-            res.status(200).json({message: "success"})
+            await this.userService.changeAccount(req.body, req.session.user!.id)
+            res.status(200).json({ message: "success" })
         } catch (error) {
             res.status(500).json({
                 message: '[USR007] - Server error'
@@ -246,12 +248,12 @@ export class UserController {
         }
     }
 
-    updatePersonal = async (req:Request, res:Response) => {
+    updatePersonal = async (req: Request, res: Response) => {
         try {
             console.log('updatePersonal');
             console.log(req.body)
-            await this.userService.changePersonal(req.body,req.session.user!.id)
-            res.status(200).json({message: "success"})
+            await this.userService.changePersonal(req.body, req.session.user!.id)
+            res.status(200).json({ message: "success" })
         } catch (error) {
             res.status(500).json({
                 message: '[USR007] - Server error'
@@ -259,10 +261,10 @@ export class UserController {
         }
     }
 
-    updateBody = async (req:Request, res:Response) => {
+    updateBody = async (req: Request, res: Response) => {
         try {
-            await this.userService.changeBody(req.body,req.session.user!.id)
-            res.status(200).json({message: "success"})
+            await this.userService.changeBody(req.body, req.session.user!.id)
+            res.status(200).json({ message: "success" })
         } catch (error) {
             res.status(500).json({
                 message: '[USR007] - Server error'
@@ -270,44 +272,44 @@ export class UserController {
         }
     }
 
-    getDetails = async (req:Request, res:Response) => {
+    getDetails = async (req: Request, res: Response) => {
         try {
             let userId = req.session.user!.id;
             let knexData = await this.userService.userDetails(userId);
             console.log('pulled data')
             console.log(knexData)
-            if (!knexData.id){
-                res.status(403).json({return:"invalid input"})
+            if (!knexData.id) {
+                res.status(403).json({ return: "invalid input" })
                 return
-            }else{
+            } else {
                 let returningMessage =
                 {
-                    email:knexData.email,
+                    email: knexData.email,
                     password: "password",
-                    icon:knexData.icon,
-                    first_name:knexData.first_name,
-                    last_name:knexData.last_name,
-                    gender:knexData.gender,
-                    dob: knexData.birth_date? format(new Date(knexData.birth_date.toLocaleDateString('en-US',{timeZone:'Asia/Hong_Kong'})), 'YYYY-MM-DD'): "",
-                    height:knexData.height,
-                    weight:knexData.weight
+                    icon: knexData.icon,
+                    first_name: knexData.first_name,
+                    last_name: knexData.last_name,
+                    gender: knexData.gender,
+                    dob: knexData.birth_date ? format(new Date(knexData.birth_date.toLocaleDateString('en-US', { timeZone: 'Asia/Hong_Kong' })), 'YYYY-MM-DD') : "",
+                    height: knexData.height,
+                    weight: knexData.weight
                 }
                 res.status(200).json(returningMessage)
                 return
             }
         } catch (error) {
             console.log(error);
-            
+
             res.status(500).json({
                 message: '[USR007] - Server error'
             });
         }
     }
 
-    getCalories =async (req: Request, res:Response) => {
+    getCalories = async (req: Request, res: Response) => {
         try {
             console.log("calc calories");
-            
+
             await this.userService.calcCalories(req.session.user!.id)
 
             console.log('get calories')
@@ -316,9 +318,10 @@ export class UserController {
             res.status(200).json(knexData)
         } catch (error) {
             console.log(error);
-            
+
             res.status(500).json({
                 message: '[USR007] - Server error'
-        })
-    }}
+            })
+        }
+    }
 }
