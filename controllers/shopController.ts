@@ -80,7 +80,13 @@ export class ShopController {
             console.log('here');
 
             let foodId = req.body.food_details_id;
-            let foodQuantity = req.body.quantity;
+            let foodQuantity = req.body.quantity || 1;
+
+            console.log({
+                foodId,
+                foodQuantity
+            })
+
             let checkItem = await this.shopService.getItemCount(req.session.user!.id, foodId)
             if (checkItem) {
                 await this.shopService.addItem(req.session.user!.id, foodId, foodQuantity)

@@ -16,13 +16,8 @@ import { TransactionService } from './services/transactionService';
 import { ExerciseController } from './controllers/exerciseController';
 import { ExerciseService } from './services/exerciseService';
 import { chooseexerciseRoutes } from './routes/exerciseRoutes';
-<<<<<<< HEAD
-// import * as schedule from 'node-schedule';
-import { testScheduleJob, testTime } from './util/scheduler';
-=======
 import * as schedule from 'node-schedule';
 import { dailyPointDistribution, emitTime } from './util/scheduler';
->>>>>>> ca2b8c0669610bb68cd520eb985bafafbbdd29da
 /* #region session */
 /* #endregion */
 
@@ -101,7 +96,7 @@ app.use((req, res) => {
 })
 /* #endregion */
 
-const job =  schedule.scheduleJob(emitTime,dailyPointDistribution)
+const job = schedule.scheduleJob(emitTime, dailyPointDistribution)
 
 /* #region start server */
 server.listen(PORT, () => {

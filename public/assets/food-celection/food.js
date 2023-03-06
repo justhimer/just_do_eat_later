@@ -96,7 +96,7 @@ function init() {
                 foodElem.addEventListener("click", showFoodDetails);
             }
 
-            function abc() {
+            function addfood() {
                 console.log('hhihihihihoio');
                 const addfoodBtn = document.querySelector('.addtocart')
 
@@ -107,8 +107,11 @@ function init() {
 
                     let res = await fetch('/shop/addFood', {
                         method: "post",
-                        body: {
+                        body: JSON.stringify({
                             food_details_id: id
+                        }),
+                        headers: {
+                            "Content-Type": "application/json"
                         }
                     })
                     let result = await res.json()
@@ -159,7 +162,7 @@ function init() {
                         `,
                         background: "#3b3836",
                         confirmButtonColor: "#ffaa33",
-                    }).then(abc())
+                    }).then(addfood())
                 } else {
                     await Swal.fire({
                         title: `<h3 style="color: #ffaa33; font-family: 'Encode Sans Condensed', sans-serif;">${name}</h3>`,
@@ -182,9 +185,9 @@ function init() {
                                 confirmButtonText: 'Add to cart',
                                 confirmButtonColor: "#ffaa33",
 
-                            }).then(abc())
+                            }).then(addfood())
                         }
-                    }).then(abc())
+                    }).then(addfood())
                 }
             }
         }
