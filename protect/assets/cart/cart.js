@@ -11,13 +11,13 @@ let locationData,
   locationChose,
   foodCost
 
-  async function main() {
-    await loadDetails()
-    initMap()
+async function main() {
+  await loadDetails()
+  initMap()
   foodListener()
-    // console.log(deleteArr);
-  }
-  main()
+  // console.log(deleteArr);
+}
+main()
 
 
 
@@ -120,23 +120,23 @@ function addToCart(food_name) {
 
 
 async function getBasket() {
-    const res = await fetch('/shop/orderPreview')
-    console.log('res');
-    let resData = await res.json()
-    return resData
-  }
+  const res = await fetch('/shop/orderPreview')
+  console.log('res');
+  let resData = await res.json()
+  return resData
+}
 
-  async function loadDetails() {
-    let data = await getBasket()
-    console.log('data = ', data);
-    let userOrders = data.data
-    console.log('userOrders = ', userOrders);
-    locationData = data.location
-    foodCost = 0
-    reviewContainer.innerHTML = ``
+async function loadDetails() {
+  let data = await getBasket()
+  console.log('data = ', data);
+  let userOrders = data.data
+  console.log('userOrders = ', userOrders);
+  locationData = data.location
+  foodCost = 0
+  reviewContainer.innerHTML = ``
 
-    await userOrders.forEach((element) => {
-      reviewContainer.innerHTML += `
+  await userOrders.forEach((element) => {
+    reviewContainer.innerHTML += `
       <article id="${element.food_id}" class="card">
         <div class="card__delete" ><p>X</p></div>
         <img class="card__image" src="/food_uploads/${element.image}" />
@@ -148,190 +148,190 @@ async function getBasket() {
           </div>
           <div class="final_hold">
             <button type="button" class="card__minus">-</button>
-            <h3 class="card__price">${element.calories*element.quantity} Cal</h3>
+            <h3 class="card__price">${element.calories * element.quantity} Cal</h3>
             <button type="button" class="card__add">+</button>
           </div>
         </div>
       </article>`
-      foodCost += element.calories * element.quantity
+    foodCost += element.calories * element.quantity
+  })
+
+
+}
+
+
+
+
+function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 12,
+    center: { lat: 22.29023223431154, lng: 114.17045008119564 },
+
+  });
+  let infoWindow = new google.maps.InfoWindow();
+  let latlngbounds = new google.maps.LatLngBounds();
+
+  for (let keys in locationData) {
+    let data = locationData[keys]
+    let myLatlng = new google.maps.LatLng(data.point.x, data.point.y);
+    let marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map,
+      title: `test ${keys}`,
+      id: data.id
     })
 
+    async function markerClick(i, j) {
+      google.maps.event.addListener(i, "click", (e) => {
+        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + ` <h6>${j.title}</h6><br><p>${j.address}</p><br><p>${j.description}</p> ` + "</div>")
+        infoWindow.open(map, marker)
+        map.setZoom(15)
+        map.panTo(i.position)
+        locationChose = i.id
+        changeLocation()
+        updateContainer()
+        console.log(locationChose)
+      })
+    }
+
+    markerClick(marker, data)
 
   }
-
-
-
-
-  function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 12,
-      center: { lat: 22.29023223431154, lng: 114.17045008119564 },
-
-    });
-    let infoWindow = new google.maps.InfoWindow();
-    let latlngbounds = new google.maps.LatLngBounds();
-
-    for (let keys in locationData) {
-      let data = locationData[keys]
-      let myLatlng = new google.maps.LatLng(data.point.x, data.point.y);
-      let marker = new google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        title: `test ${keys}`,
-        id: data.id
-      })
-
-      async function markerClick(i, j) {
-        google.maps.event.addListener(i, "click", (e) => {
-          infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + ` <h6>${j.title}</h6><br><p>${j.address}</p><br><p>${j.description}</p> ` + "</div>")
-          infoWindow.open(map, marker)
-          map.setZoom(15)
-          map.panTo(i.position)
-          locationChose = i.id
-          changeLocation()
-          updateContainer()
-          console.log(locationChose)
-        })
-      }
-
-      markerClick(marker, data)
-
-    }
-    function changeLocation() {
-      if (!locationChose) {
-        locationContainer.innerHTML = `
+  function changeLocation() {
+    if (!locationChose) {
+      locationContainer.innerHTML = `
         <br>
       `
-      } else {
-        locationContainer.innerHTML = `
+    } else {
+      locationContainer.innerHTML = `
         <br>
       <div>${locationData[locationChose - 1].title}</div>
       <div>${locationData[locationChose - 1].address}</div>
       <div>${locationData[locationChose - 1].description}</div>
       `
-      }
     }
   }
+}
 
 
 
-  async function updateContainer() {
-    console.log(foodCost);
+async function updateContainer() {
+  console.log(foodCost);
+}
+
+confirmBtn.addEventListener('click', async (event) => {
+  event.preventDefault()
+  if (!foodCost || !locationChose) {
+    console.log("foodCost: ", foodCost)
+    console.log("locationChose: ", locationChose)
+    alert("Items empty")
+    return
   }
+  let resData = {
+    location_id: locationChose,
+    total_calories: foodCost
+  }
+  let res = await fetch('/shop/confirmOrder', {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json"
+    }, body: JSON.stringify(resData)
+  })
 
-    confirmBtn.addEventListener('click', async (event) => {
-      event.preventDefault()
-      if (!foodCost || !locationChose) {
-        console.log("foodCost: ", foodCost)
-        console.log("locationChose: ", locationChose)
-        alert("Items empty")
-        return
-      }
-      let resData = {
-        location_id: locationChose,
-        total_calories: foodCost
-      }
-      let res = await fetch('/shop/confirmOrder', {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        }, body: JSON.stringify(resData)
-      })
-
-      let result = await res.json()
-      if (res.ok) {
-        window.location.href = "/"
-      } else {
-        alert(result.message)
-        return
-      }
-    })
+  let result = await res.json()
+  if (res.ok) {
+    window.location.href = "/"
+  } else {
+    alert(result.message)
+    return
+  }
+})
 
 
-function foodListener(){
+function foodListener() {
   const deleteArr = document.querySelectorAll('.card__delete')
   const minusArr = document.querySelectorAll('.card__minus')
   const addArr = document.querySelectorAll('.card__add')
 
-  deleteArr.forEach((element)=>{
+  deleteArr.forEach((element) => {
     let food_id = element.parentElement.id
-    element.addEventListener('click',async ()=>{
+    element.addEventListener('click', async () => {
       let resData = JSON.stringify({
-        food_details_id:food_id,
+        food_details_id: food_id,
       })
 
-      const res = await fetch('/shop/removeFood',{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+      const res = await fetch('/shop/removeFood', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         },
-        body:resData
+        body: resData
       })
 
-      if (res.ok){
+      if (res.ok) {
         document.getElementById(`${food_id}`).remove()
-      }else{
+      } else {
         alert("error")
         return
       }
     })
   })
 
-  minusArr.forEach((element)=>{
-    element.addEventListener('click',async ()=>{
+  minusArr.forEach((element) => {
+    element.addEventListener('click', async () => {
       let food_id = element.parentElement.parentElement.parentElement.id
       let resData = JSON.stringify({
-        food_details_id:food_id,
-        quantity:1
+        food_details_id: food_id,
+        quantity: 1
       })
 
-      const res = await fetch('/shop/removeQuantity',{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+      const res = await fetch('/shop/removeQuantity', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         },
-        body:resData
+        body: resData
       })
 
-      if (res.ok){
+      if (res.ok) {
         let oldQuantity = Number(document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML)
-        if(oldQuantity==1){
+        if (oldQuantity == 1) {
           document.getElementById(`${food_id}`).remove()
-        }else{
-          document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML = oldQuantity-1
+        } else {
+          document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML = oldQuantity - 1
         }
-        
-      }else{
+
+      } else {
         alert("error")
         return
       }
     })
   })
 
-  addArr.forEach((element)=>{
-    element.addEventListener('click',async ()=>{
+  addArr.forEach((element) => {
+    element.addEventListener('click', async () => {
       let food_id = element.parentElement.parentElement.parentElement.id
       let resData = JSON.stringify({
-        food_details_id:food_id,
-        quantity:1
+        food_details_id: food_id,
+        quantity: 1
       })
 
-      const res = await fetch('/shop/addFood',{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+      const res = await fetch('/shop/addFood', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         },
-        body:resData
+        body: resData
       })
 
-      if (res.ok){
+      if (res.ok) {
         let oldQuantity = Number(document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML)
-        document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML = oldQuantity+1
-      }else{
+        document.querySelector(`article[id="${food_id}"] .card__info .card_food_quantity`).innerHTML = oldQuantity + 1
+      } else {
         alert("error")
         return
       }
     })
   })
-  
+
 }
