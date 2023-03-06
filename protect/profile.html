@@ -10,76 +10,92 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+    <link href="./assets/exercises/iam.css" rel="stylesheet">
+    <!-- notiflix -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-3.2.6.min.css" />
     <title>Document</title>
 </head>
 
 <body>
+    <header class="Iam">
+
+        <p>Just Do</p>
+        <b>
+          <div class="innerIam">
+            it<br />
+            it later ??<br /> 
+            eat later !!<br /> 
+            不能逃避。<br />
+            逃げちゃだめだ!!
+            </div>
+        </b>
+        
+      </header>
+      <div class="corner-box">My Calories</div>
 
     <div class="container-x test2">
         <div class="leftbox">
             <div class="nav">
-                <a id="profile" class="active"><i class="fa fa-user"></i></a>
-                <a id="payment"><i class="fa fa-credit-card"></i></a>
-                <a id="subscription"><i class="fa fa-tv"></i></a>
-                <a id="privacy"><i class="fa fa-tasks"></i></a>
+                <a id="profile" class="active"><i class="fa fa-credit-card"></i></a>
+                <a id="account"><i class="fa fa-tv"></i></a>
+                <a id="personal"><i class="fa fa-user"></i></a>
+                <a id="body"><i class="fa fa-tasks"></i></a>
             </div>
         </div>
-        <div class="rightbox">
-            <div id="img_container" class="profile">
-                <h1>Payment Info</h1>
-                <img id="img_preview">
-                <span class="material-symbols-outlined label_icon" id="icon_edit">
-                    drive_file_rename_outline
-                </span><br>
-                <form id="icon_form" class="">
-                    <input id="icon_input" name="icon" type="file" accept="image/*">
-                    <button id="icon_submit" type="button">
-                        Submit
-                    </button>
-                    <input id="icon_reset" type="reset">
-                    <button id="icon_cancel" type="button">
-                        Cancel
-                    </button>
-                </form>
-                <div id="user_calorie_container" class="details details_calorie">
-                    <h3>Calroies</h3>
-                    <div id="user_calorie">
+        <div class="rightbox" id="main">
+            <div class="profile">
+                <h1>Profile</h1>
+                <div id="img_container">
+                    <img id="img_preview">
+                    <span class="material-symbols-outlined label_icon" id="icon_edit">
+                        drive_file_rename_outline
+                    </span><br>
+                    <form id="icon_form" class="">
+                        <input id="icon_input" name="icon" type="file" accept="image/*">
+                        <button id="icon_submit" type="button">
+                            Submit
+                        </button>
+                        <input id="icon_reset" type="reset">
+                        <button id="icon_cancel" type="button">
+                            Cancel
+                        </button>
+                    </form>
+                    <div id="user_calorie_container" class="details details_calorie">
+                        <h3>Calroies</h3>
+                        <div id="user_calorie">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="payment noshow">
-                <h1>Payment Info</h1>
-                <div id="account_label" class="label label_account">
-                    <div>Account Details</div>
-                    <span class="material-symbols-outlined label_icon" id="account_edit">
-                        drive_file_rename_outline
-                    </span>
-                </div>
+
+
+            <div class="account noshow">
+                <span class="material-symbols-outlined label_icon" id="account_edit">
+                    drive_file_rename_outline
+                </span>
+
+                <h1>Account Details</h1>
                 <div id="account_container" class="details details_account">
                 </div>
             </div>
 
-            <div class="subscription noshow">
-                <h1>Your Subscription</h1>
-                <div id="personal_label" class="label label_personal">
-                    <div>Personal Details</div>
-                    <span class="material-symbols-outlined label_icon" id="personal_edit">
-                        drive_file_rename_outline
-                    </span>
-                </div>
+            <div class="personal noshow">
+                <span class="material-symbols-outlined label_icon" id="personal_edit">
+                    drive_file_rename_outline
+                </span>
+                <h1>Personal Details</h1>
                 <div id="personal_detail_container" class="details details_personal">
                 </div>
             </div>
 
-            <div class="privacy noshow">
-                <h1>Privacy Settings</h1>
-                <div id="body_label" class="label label_body">
-                    <div>Body Details</div>
-                    <span class="material-symbols-outlined label_icon" id="body_edit">
-                        drive_file_rename_outline
-                    </span>
-                </div>
+            <div class="body noshow">
+
+                <span class="material-symbols-outlined label_icon" id="body_edit">
+                    drive_file_rename_outline
+                </span>
+
+                <h1>Body Details</h1>
                 <div id="body_container" class="details details_body">
                 </div>
             </div>
@@ -89,6 +105,11 @@
 
     <div id="hamburger"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+      <!-- notiflix -->
+  <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-3.2.6.min.js"></script>
+
+
     <script src="/assets/common/common.js"></script>
     <script src="/assets/profile/profile.js"></script>
 </body>

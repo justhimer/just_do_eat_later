@@ -3,71 +3,35 @@ $('.nav a').click(function(e) {
     e.preventDefault();
     $('.nav a').removeClass('active');
     $(this).addClass('active');
-    if(this.id === !'payment'){
-      $('.payment').addClass('noshow');
+    if(this.id === !'profile'){
+      $('.profile').addClass('noshow');
+      $('.noshow').css('z-index',1);
     }
-    else if(this.id === 'payment') {
-      $('.payment').removeClass('noshow');
-      $('.rightbox').children().not('.payment').addClass('noshow');
-    }
-    else if (this.id === 'profile') {
+    else if(this.id === 'profile') {
       $('.profile').removeClass('noshow');
-       $('.rightbox').children().not('.profile').addClass('noshow');
+      $('.rightbox').children().not('.profile').addClass('noshow');
+      $('.noshow').css('z-index',1);
+      $('.profile').css('z-index',2);
     }
-    else if(this.id === 'subscription') {
-      $('.subscription').removeClass('noshow');
-      $('.rightbox').children().not('.subscription').addClass('noshow');
+    else if (this.id === 'account') {
+      $('.account').removeClass('noshow');
+       $('.rightbox').children().not('.account').addClass('noshow');
+       $('.noshow').css('z-index',1);
+       $('.account').css('z-index',2);
     }
-      else if(this.id === 'privacy') {
-      $('.privacy').removeClass('noshow');
-      $('.rightbox').children().not('.privacy').addClass('noshow');
+    else if(this.id === 'personal') {
+      $('.personal').removeClass('noshow');
+      $('.rightbox').children().not('.personal').addClass('noshow');
+      $('.noshow').css('z-index',1);
+      $('.personal').css('z-index',2);
     }
-    else if(this.id === 'settings') {
-      $('.settings').removeClass('noshow');
-      $('.rightbox').children().not('.settings').addClass('noshow');
+      else if(this.id === 'body') {
+      $('.body').removeClass('noshow');
+      $('.rightbox').children().not('.body').addClass('noshow');
+      $('.noshow').css('z-index',1);
+      $('.body').css('z-index',2);
     }
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const content = document.querySelector('#main')
@@ -123,6 +87,7 @@ async function loadDetails() {
 }
 
 content.addEventListener('click', (event) => {
+    console.log(event.target)
     if (event.target == accountBtn) {
         accountContainer.innerHTML = `
         <form id="account_form">
@@ -131,6 +96,7 @@ content.addEventListener('click', (event) => {
                     <div>Password:</div><input id="password" name="password" type="password" value="${passwordData}">
                     <br>
                     <div>Confirm Password:</div><input id="confirm" name="confirm" type="password" value="${passwordData}">
+                    <br>
                     <button id="account_submit" type="button">
                         Submit
                     </button>
@@ -154,6 +120,7 @@ content.addEventListener('click', (event) => {
                         <input id="female" value="female" name="gender" type="radio"><label for="female">Female</label>
                         <br>
                         <div>Date of Birth:</div><input id="dob" name="dob" type="date" value="${dobData}">
+                        <br>
                         <button id="personal_submit" type="button">
                             Submit
                         </button>
@@ -176,6 +143,7 @@ content.addEventListener('click', (event) => {
                         <input id="female" value="female" name="gender" type="radio" checked><label for="female">Female</label>
                         <br>
                         <div>Date of Birth:</div><input id="dob" name="dob" type="date" value="${dobData}">
+                        <br>
                         <button id="personal_submit" type="button">
                             Submit
                         </button>
@@ -198,6 +166,7 @@ content.addEventListener('click', (event) => {
                         <input id="female" value="female" name="gender" type="radio"><label for="female">Female</label>
                         <br>
                         <div>Date of Birth:</div><input id="dob" name="dob" type="date" value="${dobData}">
+                        <br>
                         <button id="personal_submit" type="button">
                             Submit
                         </button>
@@ -215,6 +184,7 @@ content.addEventListener('click', (event) => {
         <div>Height:</div><input id="height" name="height" type="number" value="${heightData}">
         <br>
         <div>Weight:</div><input id="weight" name="weight" type="number" value="${weightData}">
+        <br>
         <button id="body_submit" type="button">
             Submit
         </button>
@@ -386,11 +356,11 @@ async function refreshContent(section) {
         case 'body':
             bodyContainer.innerHTML = `
     <div id="height">
-                    Height: ${heightData}
+                    Height: ${heightData} cm
                 </div>
 
                 <div id="weight">
-                    Weight: ${weightData}
+                    Weight: ${weightData} kg
                 </div>
     `
             break;
