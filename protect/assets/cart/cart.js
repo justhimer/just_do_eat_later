@@ -6,18 +6,15 @@ const reviewContainer = document.querySelector('#review_container')
 const locationContainer = document.querySelector('#chosen_container')
 const allContent = document.querySelector('#main')
 const confirmBtn = document.querySelector('#confirm')
-<<<<<<< HEAD
 const deleteBtn = document.querySelector('#delete')
 const deleteArr = document.querySelectorAll('.card__delete')
 const minusArr = document.querySelectorAll('.card__minus')
 const addArr = document.querySelectorAll('.card__add')
-=======
 
 
-function wtf(){
+function wtf() {
   console.log('clicked!')
 }
->>>>>>> efb343a1dac1f06beca51efea1e7907407a5abc6
 
 let locationData,
   locationChose,
@@ -136,17 +133,14 @@ async function main() {
 
   }
 
-<<<<<<< HEAD
   async function getBasket() {
-=======
 
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
-
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
 
 
-async function getBasket() {
->>>>>>> efb343a1dac1f06beca51efea1e7907407a5abc6
+
+  async function getBasket() {
     const res = await fetch('/shop/orderPreview')
 
     let resData = await res.json()
