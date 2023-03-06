@@ -44,7 +44,7 @@ async function loadOrders(){
                 orderContainer.innerHTML += `
                 <div class="container">
             <div class="row d-flex justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card">
                         <div class="invoice p-5">
                             <div class="payment mb-3 border-bottom table-responsive">
@@ -104,7 +104,7 @@ async function loadOrders(){
                 orderContainer.innerHTML += `
                 <div class="container">
             <div class="row d-flex justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card">
                         <div class="invoice p-5">
                             <div class="payment mb-3 border-bottom table-responsive">

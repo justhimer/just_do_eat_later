@@ -96,6 +96,7 @@ content.addEventListener('click', (event) => {
                     <div>Password:</div><input id="password" name="password" type="password" value="${passwordData}">
                     <br>
                     <div>Confirm Password:</div><input id="confirm" name="confirm" type="password" value="${passwordData}">
+                    <br>
                     <button id="account_submit" type="button">
                         Submit
                     </button>
@@ -119,6 +120,7 @@ content.addEventListener('click', (event) => {
                         <input id="female" value="female" name="gender" type="radio"><label for="female">Female</label>
                         <br>
                         <div>Date of Birth:</div><input id="dob" name="dob" type="date" value="${dobData}">
+                        <br>
                         <button id="personal_submit" type="button">
                             Submit
                         </button>
@@ -141,6 +143,7 @@ content.addEventListener('click', (event) => {
                         <input id="female" value="female" name="gender" type="radio" checked><label for="female">Female</label>
                         <br>
                         <div>Date of Birth:</div><input id="dob" name="dob" type="date" value="${dobData}">
+                        <br>
                         <button id="personal_submit" type="button">
                             Submit
                         </button>
@@ -163,6 +166,7 @@ content.addEventListener('click', (event) => {
                         <input id="female" value="female" name="gender" type="radio"><label for="female">Female</label>
                         <br>
                         <div>Date of Birth:</div><input id="dob" name="dob" type="date" value="${dobData}">
+                        <br>
                         <button id="personal_submit" type="button">
                             Submit
                         </button>
@@ -180,6 +184,7 @@ content.addEventListener('click', (event) => {
         <div>Height:</div><input id="height" name="height" type="number" value="${heightData}">
         <br>
         <div>Weight:</div><input id="weight" name="weight" type="number" value="${weightData}">
+        <br>
         <button id="body_submit" type="button">
             Submit
         </button>
