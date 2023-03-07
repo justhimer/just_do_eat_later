@@ -3,7 +3,7 @@ node_modules
 exercise_demo
 cards_template
 project_template
-uploads/ex_uploads/videos
+# uploads/ex_uploads/videos
 .vscode
 .DS_Store
 .env
