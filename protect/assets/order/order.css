@@ -4,16 +4,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
-    overflow: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    flex-direction: column;
+    height: auto;
+    /* overflow: scroll; */
+    /*-ms-overflow-style: none;   IE and Edge */
+    /* scrollbar-width: none;  Firefox */
 }
 #pending_order_container::-webkit-scrollbar {
     display: none;
   }
 
 .card {
+    margin: auto !important;;
     border: none
     }
     .logo {
